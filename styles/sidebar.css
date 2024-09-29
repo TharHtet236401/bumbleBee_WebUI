@@ -1,0 +1,53 @@
+.side_bar {
+    width: 20%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #191921;
+}
+
+.logo_wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #732774;
+    padding: 1em;
+}
+
+.side_bar_options {
+    display: flex;
+    flex-direction: column;
+}
+
+.side_bar__option {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.75em;
+    cursor: pointer;
+    padding: 0.75em;
+    outline: none;
+}
+
+.side_bar__option svg {
+    margin-left: 5em;
+}
+
+.side_bar__option p {
+    color: rgb(228, 228, 228);
+    font-size: 1.25em;
+}
+
+.side_bar__option:nth-child(2n) {
+    background-color: #29292e;
+}
+
+.side_bar__option:nth-child(2n + 1) {
+    background-color: #39393c;
+}
+
+.side_bar__option:hover,
+.side_bar__option:focus {
+    background-color: #717173;
+}

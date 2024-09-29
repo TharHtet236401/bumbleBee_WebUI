@@ -1,0 +1,167 @@
+main {
+    display: flex;
+    flex-direction: row;
+}
+
+@media all and (max-width: 875px) {
+    main {
+        background-image: url('../assets/images/signUp_bg.jpg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    
+}
+
+.side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 65%;
+    height: 100vh;
+    background-image: url('../assets/images/signUp_bg.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+@media all and (max-width: 1260px) {
+    .side {
+        width: 55%;
+    }
+    
+}
+
+@media all and (max-width: 875px) {
+    .side {
+        display: none;
+    }
+    
+}
+
+.svg_wrapper {
+    padding: clamp(1em, 5%, 3em);
+    background-color: rgba(52, 52, 52, 0.9);
+    border-radius: 5px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* gap: 1em; */
+    width: 35%;
+    height: 100vh;
+    background-color: rgb(27, 31, 51);
+    padding: 3em 2em;
+    overflow-y: auto;
+}
+
+@media all and (max-width: 1260px) {
+    form {
+        width: 45%;
+    }
+    
+}
+
+@media all and (max-width: 875px) {
+    form {
+        width: 100%;
+        /* padding: 3em 2em; */
+        background-color: rgba(0, 0, 0, 0.775);
+        padding-block: clamp(1em, 15vw, 3em);
+        padding-inline: clamp(1em, 15vw, 8em);
+        margin: auto;
+    }
+    
+}
+
+form h1 {
+    color: #DFDDFF;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 1.25em;
+}
+
+
+@media all and (max-width: 875px) {
+    form h1 {
+        display: none;
+    }
+    
+}
+
+
+.logo {
+    display: none;
+}
+
+@media all and (max-width: 875px) {
+    .logo {
+        display: block;
+        margin-inline: auto;
+        margin-bottom: 1em;
+    }
+    
+}
+
+
+@media all and (max-width: 500px) {
+    .logo {
+        width: 298px;
+        height: 58px;
+    }
+    
+}
+
+.form_input_wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.form_input_wrapper + .form_input_wrapper  {
+    margin-top: 1em;
+}
+
+
+.form_input_wrapper label {
+    color: rgb(209, 209, 209);
+    font-size: 1.2em;
+    margin-bottom: 0.35em;
+}
+
+.form_input_wrapper input,
+.form_input_wrapper select {
+    height: 30px;
+    outline: none;
+    border-radius: 5px;
+    /* border: none; */
+    text-indent: 1em;
+    background-color: #d7d7d7;
+}
+
+.form_input_wrapper select {
+    text-indent: 0 ;
+    padding-left: 1em;
+}
+
+button {
+    width: max-content;
+    padding: 0.3em 0.6em;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #eae9fc;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background-color: #4037c5;
+    cursor: pointer;
+    margin-left: auto;
+    margin-top: 2em;
+}
+
+button:hover {
+    border: 2px solid #eae9fc;
+    color: #eae9fc;
+    background-color: transparent;
+}
