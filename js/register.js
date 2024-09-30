@@ -25,9 +25,9 @@ form.addEventListener("submit", async (e) => {
         email,
         phone,
         roles,
-    };
+    }; 
 
-    console.log(data)   
+    form.reset();
 
     const res = await fetch(
         "http://127.0.0.1:3000/api/auth/web/register",
@@ -39,9 +39,17 @@ form.addEventListener("submit", async (e) => {
             body: JSON.stringify(data),
         }
     );
+    
 
     const resData = await res.json();
-    console.log(resData);
+    
+    if (res.status === 200) {
+        alert("Register successful");
+        window.location.href = "http://127.0.0.1:5501/pages/signIn.html";
+    } else if (res.status === 401) {
+        alert("Register failed! Check console for more information");
+        console.log(resData);
+    }
 });
 
 function isPasswordSame(password, c_password) {

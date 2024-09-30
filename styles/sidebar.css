@@ -1,5 +1,6 @@
 .side_bar {
-    width: 20%;
+    width: max-content;
+    min-width: 20%;
     height: 100vh;
     display: flex;
     flex-direction: column;
