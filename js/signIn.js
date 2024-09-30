@@ -1,3 +1,5 @@
+import { checkCookie } from "../utils/cookies.js";
+
 const form = document.querySelector("form");
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -42,7 +44,7 @@ async function signIn(api, data) {
         },
         body: JSON.stringify(data),
     });
-    resData = await res.json();
+    const resData = await res.json();
     if (res.status === 200) {
         return { statusCode: 200, resData };
     } else {
@@ -50,21 +52,4 @@ async function signIn(api, data) {
     }
 }
 
-async function checkCookie(api) {
-    const res = await fetch(api, {
-        method: "GET",
-        credentials: 'include', 
-        headers: {
-            "Content-Type": "application/json",
-        },
-          // This allows the browser to send the cookies
-    });
-    
-    if (res.status === 200) {
-        console.log("Cookie exists");
-        const resData = await res.json();
-        return { statusCode: 200, resData };
-    } else if (res.status === 401) {
-        return { statusCode: 401 };
-    }
-}
+

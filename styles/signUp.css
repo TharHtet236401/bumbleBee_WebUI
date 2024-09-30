@@ -146,6 +146,10 @@ form h1 {
     padding-left: 1em;
 }
 
+.relationship_wrapper {
+    display: none;
+}
+
 button {
     width: max-content;
     padding: 0.3em 0.6em;
