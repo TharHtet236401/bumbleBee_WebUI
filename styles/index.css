@@ -1,0 +1,267 @@
+body {
+    display: flex;
+    width: 100vw;
+}
+
+main {
+    flex-grow: 1;
+    height: 100vh;
+    background-color: #242425;
+}
+
+.post_header_wrapper{
+    display: flex;
+    background-color: #343434;
+    align-items: center;
+    padding: 1.2em 2.4em;
+    height: 10%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.school_info {
+    display: flex;
+    align-items: center;
+}
+
+.school_info p {
+    color: #B4E0F7;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.school_name {
+    margin-left: 0.5em;
+}
+
+.class_name {
+    margin-left: 0.25em;
+}
+
+.school_logo_wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-image: url('../assets/images/gusto_logo.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.notification_icon {
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.create_post_btn {
+    background-color: #5e626a;
+    color: white;
+    padding: 0.75em 1.5em;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-left: 2em;
+}
+
+.create_post_btn:hover {
+    border: 2px solid #e9f1ff;
+    background-color: transparent;
+    color: #e9f1ff;
+}
+
+.posts_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+    padding: 2em;
+    height: 90%;
+    overflow-y: auto;
+}
+
+.post_card {
+    background-color: #424242;
+    padding: 2em;
+    width: 60%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.posted_by_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.profile_pic {
+    width: 55px;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    background-image: url('../assets/images/gusto_logo.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.posted_by_info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.5em;
+}
+
+.posted_by_name_role {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.options_wrapper {
+    margin-left: auto;
+    position: relative;
+}
+
+.options_modalBox {
+    min-width: 200px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    top: 2em;
+    right: 0;
+    background-color: #3a3e46;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 0.5em;
+    color: white;
+    z-index: 1;
+}
+
+.option_box {
+    display: flex;
+    justify-content: center;
+    gap: 0.75em;
+    padding: 0.5em;
+    cursor: pointer;
+    width: max-content;
+}
+
+.edit_option_box:hover p {
+    color: #BEEBB2;
+}
+
+.delete_option_box:hover p {
+    color: #FF6262;
+}
+
+.report_option_box:hover p {
+    color: #85BCED;
+}
+
+.more_options {
+    cursor: pointer;
+}
+
+.more_options:hover path{
+    fill: #A0DEDE;  
+}
+
+.name {
+    color: rgb(227, 226, 226);
+}
+
+.delimiter {
+    color: rgb(134, 134, 134);
+}
+
+.role {
+    color: #9CD798;
+}
+
+.post_type {
+    color: #848484;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.post_details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35em;
+}
+
+.title {
+    color: #BFD5F7;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.body {
+    color: #f1f1f1;
+    font-size: 1.1rem;
+}
+
+.post_images_wrapper {
+    margin-block: 1em;
+}
+
+.post_image {
+    border-radius: 5px;
+}
+
+.reactions_wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    width: max-content;
+    margin-top: 0.5em;
+}
+
+.heart_button {
+    cursor: pointer;
+}
+
+.like_count {
+    color: white;
+}
+
+.files_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1em;
+}
+
+.file {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    padding: 1em;
+    background-color: #242424;
+    border-radius: 5px;
+    color: white;
+    box-shadow: 0 0 10px rgba(30, 30, 30, 0.5);
+}
+
+.download_wrapper {
+    margin-left: auto;
+}
+
+.download_wrapper a{
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    color: white;
+    text-decoration: none;
+}
+
+.download_wrapper a p:hover{
+    color: #A0DEDE; 
+}
+
+.download_wrapper a svg:hover path{
+    fill: #cafcfc; 
+}
