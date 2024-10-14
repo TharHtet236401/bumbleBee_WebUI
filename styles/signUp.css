@@ -1,6 +1,7 @@
 main {
     display: flex;
     flex-direction: row;
+    height: 100vh;
 }
 
 @media all and (max-width: 875px) {
@@ -46,12 +47,11 @@ main {
 }
 
 form {
+    /* gap: 1em; */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    /* gap: 1em; */
     width: 35%;
-    height: 100vh;
+    height: 100%;
     background-color: rgb(27, 31, 51);
     padding: 3em 2em;
     overflow-y: auto;
@@ -83,6 +83,12 @@ form h1 {
     margin-bottom: 1.25em;
 }
 
+form h3{
+    color: #DFDDFF;
+    font-size: 2em;
+    font-weight: bold;
+    margin-block: 1.25em;
+}
 
 @media all and (max-width: 875px) {
     form h1 {
@@ -168,4 +174,8 @@ button:hover {
     border: 2px solid #eae9fc;
     color: #eae9fc;
     background-color: transparent;
+}
+
+.school_register_form {
+    display: none;
 }

@@ -9,11 +9,15 @@ main {
     background-color: #242425;
 }
 
-.post_header_wrapper{
+.display_flex {
+    display: flex !important;
+}
+
+.header_wrapper{
     display: flex;
     background-color: #343434;
     align-items: center;
-    padding: 1.2em 2.4em;
+    padding: 0.65em;
     height: 10%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -49,10 +53,11 @@ main {
 
 .notification_icon {
     margin-left: auto;
+    margin-right: 0.75em;
     cursor: pointer;
 }
 
-.create_post_btn {
+.create_btn {
     background-color: #5e626a;
     color: white;
     padding: 0.75em 1.5em;
@@ -65,10 +70,10 @@ main {
     margin-left: 2em;
 }
 
-.create_post_btn:hover {
-    border: 2px solid #e9f1ff;
+.create_btn:hover {
+    border: 2px solid #aff99e;
     background-color: transparent;
-    color: #e9f1ff;
+    color: #aff99e;
 }
 
 .posts_wrapper {
@@ -121,6 +126,7 @@ main {
 
 .options_wrapper {
     margin-left: auto;
+    margin-right: 1px;
     position: relative;
 }
 
@@ -209,6 +215,8 @@ main {
 }
 
 .post_image {
+    width: 300px;
+    aspect-ratio: 16/9;
     border-radius: 5px;
 }
 

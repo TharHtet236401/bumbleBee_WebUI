@@ -1,6 +1,6 @@
 .side_bar {
     position: relative;
-    width: 900px;
+    width: 300px; 
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -29,7 +29,7 @@
     padding: 0.5em;
     cursor: pointer;
     transform: translateY(-50%);
-    z-index: 99;
+    z-index: 1;
 }
 
 .rotate_collapse_btn {
@@ -83,8 +83,7 @@
     text-decoration: underline;
 }
 
-.side_bar__option:hover,
-.side_bar__option:focus {
+.side_bar__option:hover {
     background-color: #717173;
 }
 

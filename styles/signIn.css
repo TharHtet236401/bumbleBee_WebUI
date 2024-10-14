@@ -82,14 +82,12 @@ form h1 {
     margin-bottom: 1.25em;
 }
 
-
 @media all and (max-width: 875px) {
     form h1 {
         display: none;
     }
     
 }
-
 
 .logo {
     display: none;
@@ -118,11 +116,9 @@ form h1 {
     flex-direction: column;
 }
 
-
 .form_input_wrapper + .form_input_wrapper  {
     margin-top: 1em;
 }
-
 
 .form_input_wrapper label {
     color: rgb(209, 209, 209);
