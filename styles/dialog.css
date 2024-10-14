@@ -1,0 +1,246 @@
+dialog {
+    z-index: 3;
+}
+
+.dialog_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    color: white;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.95); /* To make the text visible against the dark background */
+}
+
+
+.dialog_title{
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 0.5em 1em;
+    background-color: rgb(65, 65, 65);
+    width: 300px;
+    border-radius: 5px;
+}
+
+.dialog_name {
+    color: rgb(154, 228, 248)
+}
+
+.dialog_content_wrapper {
+    display: flex;
+    gap: 1em;
+}
+
+.dialog_name_unassigned {
+    color: rgb(252, 114, 114);
+}
+
+.students_list_title {
+    margin-top: 0.7em;
+}
+
+.students_list {
+    background-color: rgb(58, 58, 58);
+    width: 620px;
+    max-height: 350px;
+    border-radius: 5px;
+    overflow-y: auto ;
+}
+
+.student_name {
+    padding: 1em;
+    cursor: pointer;
+}
+
+.student_name:nth-child(odd) {
+    background-color: rgb(95, 95, 95);
+}
+
+.student_name:hover {
+    background-color: rgb(110, 191, 249);
+}
+
+.dialog_btns {
+    position: absolute;
+    top: 2em;   
+    right: 3em;
+    display: flex;
+    justify-content: center;
+    gap: 1.35em;
+}
+
+
+.message_btn {
+    position: relative;
+}
+
+.message_btn svg {
+    cursor: pointer;
+}
+
+.message_btn svg:hover path{
+    fill: rgb(167, 242, 182);
+}
+
+.cross_btn {
+    cursor: pointer;
+}
+
+.teacher_requests_modal {
+    position: absolute;
+    right: 0;
+    background-color: rgb(58, 58, 58);
+    width: 300px;
+    max-height: 350px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    display: none;
+    flex-direction: column;
+    
+    border-radius: 5px;
+}
+
+.request {
+    display: flex;
+    padding: 1em;
+
+}
+
+.request:nth-child(even) {
+    background-color: rgb(95, 95, 95);
+}
+
+.offer_accept_reject {
+    display: flex;
+    margin-left: auto;
+    gap: 0.5em;
+}
+
+
+.accept_button {
+    cursor: pointer;
+}
+
+.accept_button:hover {
+    color: rgb(167, 242, 182);
+}
+
+.reject_button {
+    cursor: pointer;
+}
+
+.reject_button:hover {
+    color: rgb(255, 165, 165);
+}
+
+.cross_btn:hover path{
+    fill: rgb(253, 93, 93);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+
+}
+
+.input_box_wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.input_box_wrapper + .input_box_wrapper  {
+    margin-top: 1em;
+}
+
+.input_box_wrapper label {
+    color: rgb(209, 209, 209);
+    font-size: 1.5em;
+    font-weight: bold;
+    color: rgb(138, 219, 219);
+    margin-bottom: 0.35em;
+}
+
+.input_box_wrapper input {
+    width: 350px;
+    height: 30px;
+    outline: none;
+    border-radius: 5px;
+    border: none;
+    text-indent: 1em;
+    background-color: #d7d7d7;
+}
+
+button {
+    width: max-content;
+    padding: 0.3em 0.6em;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #eae9fc;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background-color: #4037c5;
+    cursor: pointer;
+    margin-left: auto;
+    margin-top: 2em;
+}
+
+button:hover {
+    border: 2px solid #eae9fc;
+    color: #eae9fc;
+    background-color: transparent;
+}
+
+.post_type_dropdown {
+    padding: 0.5em 1em;
+}
+
+/* Hide the default file input */
+.custom-file-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Style the custom label to look like a file input */
+.custom-file-label {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    color: #333 !important;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.post_image_input:hover .custom-file-label,
+.post_document_input:hover .custom-file-label {
+    background-color: #5d5d5d;
+    color: white !important;
+}
+
+.custom-file-label:active {
+    background-color: #d0d0d0;
+    border-color: #bbb;
+}
+
+/* Add focus styles when the label is clicked */
+.custom-file-label:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
