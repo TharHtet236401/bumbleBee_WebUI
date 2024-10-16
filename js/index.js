@@ -39,9 +39,13 @@ let posts_wrapper;
 
 let role;
 let classes = [];
+let requestIds = [];
+let currentClass;
+let currentRequest;
 let posts = [];
 let token;
 let classWrapper;
+let teacher_requests_modal;
 const teacherRequests = [];
 document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(
@@ -619,13 +623,18 @@ function addViewDetailsFunctionality() {
     view_detail_btns.forEach((btn, i) => {
         btn.addEventListener("click", async (e) => {  
 
+            currentClass = classes[i]._id;
             view_detail_dialog_schoolnameEl.textContent = classes[i].school.schoolName;
             view_detail_dialog_classnameEl.textContent = classes[i].className;
             view_detail_dialog_classcodeEl.textContent = classes[i].classCode;
             if (classes[i].teachers.length === 0) {
+                view_detail_dialog_teacherEl.classList.replace("dialog_name", "dialog_name_unassigned")
                 view_detail_dialog_teacherEl.textContent = "Unassigned";
             } else if (classes[i].teachers.length > 0) {
-                view_detail_dialog_teacherEl.textContent = classes[i].teachers[0];
+                view_detail_dialog_teacherEl.classList.replace("dialog_name_unassigned" ,"dialog_name")
+                view_detail_dialog_teacherEl.textContent = classes[i].teachers[0].userName;
+                console.log("current class" + currentClass)
+                // color: rgb(154, 228, 248)
             }
             if (classes[i].students.length === 0) {
                 view_detail_dialog_studentsEl.innerHTML = `<p  style="padding: 1em">No students assigned yet.`;
@@ -758,8 +767,71 @@ function getFileNameFromURL(url) {
 }
 
 
-const teacher_requests_modal = document.getElementById("teacher_requests_modal");
-console.log(teacher_requests_modal)
-teacher_request_btn.addEventListener("click", () => {
+teacher_requests_modal = document.getElementById("teacher_requests_modal");
+teacher_request_btn.addEventListener("click", async() => {
+    teacher_requests_modal.innerHTML = "";
     teacher_requests_modal.classList.toggle("display_flex");
+    const res = await fetch(`http://127.0.0.1:3000/api/request/readTeacherRequests?classId=${currentClass}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+        }
+    })
+
+    const resData = await res.json();
+
+    let allRequests = resData.result;
+    requestIds = [];
+    if(!allRequests){
+        teacher_requests_modal.innerHTML = `
+        <div class="request">
+            <p style="margin: auto"> No Requests at the moment</p>
+        </div>
+        `
+    }else{
+        for(let oneRequest of allRequests){
+            requestIds.push(oneRequest._id);
+            const request = `
+            <div class="request">
+                <p class="requested_by">${oneRequest.sender.userName}</p>
+                <div class="offer_accept_reject">
+                    <p class="accept_button">Accept</p>
+                    <p class="reject_button">Reject</p>
+                </div>
+            </div>
+        `
+            teacher_requests_modal.innerHTML += request;
+        }
+        respondFunctionality()
+    }
+
+
+    
 });
+
+function respondFunctionality() {
+
+    const requests = document.querySelectorAll(".request");
+    requests.forEach((req, i) => {
+        let username = req.querySelector(".requested_by").textContent;
+        let accept_button =  req.querySelector(".accept_button");
+        accept_button.addEventListener("click", async ()=> {
+            const res = await fetch('http://127.0.0.1:3000/api/request/respondTeacherReq', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ classId: currentClass, requestId: requestIds[i], response: true })
+            })
+
+            const resData = await res.json();
+            alert(resData.msg)
+            view_detail_dialog_teacherEl.textContent = username;
+            teacher_requests_modal.classList.toggle("display_flex");
+            view_detail_dialog_teacherEl.classList.replace("dialog_name_unassigned" ,"dialog_name")
+        })
+    })
+}
+
