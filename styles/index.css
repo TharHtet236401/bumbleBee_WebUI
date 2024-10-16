@@ -241,9 +241,11 @@ main {
     flex-direction: column;
     gap: 1em;
     margin-top: 1em;
+    width: 100%;
 }
 
 .file {
+    width: 100%;
     display: flex;
     gap: 0.5em;
     align-items: center;
