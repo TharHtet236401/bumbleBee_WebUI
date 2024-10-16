@@ -45,6 +45,7 @@ async function signIn(api, data) {
         body: JSON.stringify(data),
     });
     const resData = await res.json();
+    console.log(resData);
     if (res.status === 200) {
         return { statusCode: 200, resData };
     } else {
