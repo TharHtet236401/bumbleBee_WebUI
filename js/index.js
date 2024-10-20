@@ -18,6 +18,11 @@ const create_post_dialog_close_btn = document.getElementById('create_post_dialog
 const create_announcement_dialog_box = document.getElementById('create_announcement_dialog_box');
 const create_announcement_dialog_close_btn = document.getElementById('create_announcement_dialog_close_btn');
 
+const add_student_button = document.getElementById("add_student_button")
+const add_student_dialog_box = document.getElementById("add_student_dialog_box")
+const add_student_close_dialog_box = document.getElementById('add_student_dialog_close_btn')
+const add_student_form = document.getElementById("add_student_form");
+
 const imageInput = document.getElementById('post_image');
 const documentInput = document.getElementById('post_document');
 
@@ -77,6 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (role == "guardian") {
         dashboard_sidebar.style.display = "none";
+        add_student_button.style.display = "none"
     } else if (role == "teacher") {
         const classData = await getClasses(
             "http://127.0.0.1:3000/api/class/readByTeacherAndGuardian",
@@ -111,6 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             "http://127.0.0.1:3000/api/class/readByAdmin",
             token
         );
+        add_student_button.style.display = "none"
 
         console.log(classData.result)
         classes = classData.result.classes;
@@ -286,6 +293,10 @@ dashboard_sidebar.addEventListener("click", () => {
 
     join_class_dialog_close_btn.addEventListener("click", () => {
         join_class_dialog_box.close()
+    })
+
+    add_student_close_dialog_box.addEventListener("click", () => {
+        add_student_dialog_box.close()
     })
 });
 
@@ -1281,6 +1292,24 @@ teacher_request_btn.addEventListener("click", async() => {
 
     
 });
+
+add_student_button.addEventListener("click", async() => {
+    add_student_dialog_box.showModal()
+})
+
+add_student_form.addEventListener("submit", async(e)=> {
+    e.preventDefault();
+    const student_Name = e.target.student_name.value;
+    const student_DOB = e.target.student_dob.value;
+
+    // const res = await fetch(`http://127.0.0.1:3000/api/request/readTeacherRequests?classId=${currentClass}`, {
+    //     method: "GET",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //         authorization: `Bearer ${token}`,
+    //     }
+    // })
+})
 
 function respondFunctionality() {
 

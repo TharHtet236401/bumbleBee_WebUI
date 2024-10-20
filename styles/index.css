@@ -275,3 +275,23 @@ main {
 .download_wrapper a svg:hover path{
     fill: #cafcfc; 
 }
+
+#student_list_bg{
+    display: flex; 
+    margin: 0 auto;
+}
+
+#student_list_title_bg{
+    max-width: 20em;
+    margin-right: 30px; 
+}
+
+#add_student_button_bg{
+    display: flex; 
+    max-width: 10em;
+}
+
+#add_student_button{
+    margin: auto auto 0;
+
+}
