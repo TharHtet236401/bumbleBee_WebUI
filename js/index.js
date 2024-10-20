@@ -87,25 +87,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             classes = classData.result.classes;
         }
         console.log("bla bla bla classes " + JSON.stringify(classes))
-        
-        // dashboard_sidebar.style.display = "none";
-        // let classcode = prompt("Enter class code");
-        // if (classcode) {
-        //     const res = await fetch('http://127.0.0.1:3000/api/request/create', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             authorization: `Bearer ${token}`
-        //         },
-        //         body: JSON.stringify({ classCode: classcode })
-        //     })
-        //     const resData = await res.json();
-        //     console.log(resData)
-        // } else {
-        //     alert("Class Code is required to continue.");
-        //     // Optionally, reload the page if no classCode is entered
-        //     location.reload();
-        // }
+        classListNames = classes.map((classData) => classData.className);
+        classListGrades = classes.map((classData) => classData.grade);
+        const classNameGradeObj = classListNames.map((name, index) => ({
+            className: name,
+            gradeName: classListGrades[index]
+        }))
+            .sort((a, b) => a.gradeName - b.gradeName);
+        console.log(classNameGradeObj)
+        const classTypeSelectEl = document.getElementById("class_type")
+        for (const classData of classNameGradeObj) {
+            const optionEl = document.createElement("option");
+            optionEl.value = `${classData.className} (${classData.gradeName})`;
+            optionEl.innerText = `${classData.className} (${classData.gradeName})`;
+            
+            classTypeSelectEl.appendChild(optionEl);
+        }
+        console.log(classNameGradeObj)
     } else if (role == "admin") {
         const classData = await getClasses(
             "http://127.0.0.1:3000/api/class/readByAdmin",
@@ -1102,7 +1100,8 @@ function addViewDetailsFunctionality() {
                 view_detail_dialog_teacherEl.classList.replace("dialog_name", "dialog_name_unassigned")
                 view_detail_dialog_teacherEl.textContent = "Unassigned";
             } else if (classes[i].teachers.length > 0) {
-                view_detail_dialog_teacherEl.classList.replace("dialog_name_unassigned" ,"dialog_name")
+                view_detail_dialog_teacherEl.classList.replace("dialog_name_unassigned", "dialog_name")
+                console.log(classes[i].teachers[0].userName)
                 view_detail_dialog_teacherEl.textContent = classes[i].teachers[0].userName;
                 
                 // color: rgb(154, 228, 248)
