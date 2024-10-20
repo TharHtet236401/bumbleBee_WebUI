@@ -9,6 +9,9 @@ const class_detail_dialog_clost_btn = document.getElementById("class_detail_dial
 const create_class_dialog_box = document.getElementById("create_class_dialog_box");
 const create_class_dialog_close_btn = document.getElementById("create_class_dialog_close_btn");
 
+const join_class_dialog_box = document.getElementById("join_class_dialog_box");
+const join_class_dialog_close_btn = document.getElementById("join_class_dialog_box")
+
 const create_post_dialog_box = document.getElementById('create_post_dialog_box')
 const create_post_dialog_close_btn = document.getElementById('create_post_dialog_close_btn');
 
@@ -30,6 +33,7 @@ const announcement_txt = document.getElementById("announcement_txt");
 const chat_txt = document.getElementById("chat_txt");
 
 const create_class_form = document.getElementById("create_class_form");
+const join_class_form = document.getElementById("join_class_form")
 const create_feed_form = document.getElementById("create_feed_form");
 const create_announcement_form = document.getElementById("create_announcement_form");
 
@@ -47,7 +51,7 @@ let role;
 let classes = [];
 let requestIds = [];
 let currentClass;
-let currentRequest;
+let dashboardClassButton;
 let posts = [];
 let feeds = [];
 let announcements = [];
@@ -74,24 +78,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (role == "guardian") {
         dashboard_sidebar.style.display = "none";
     } else if (role == "teacher") {
-        dashboard_sidebar.style.display = "none";
-        let classcode = prompt("Enter class code");
-        if (classcode) {
-            const res = await fetch('http://127.0.0.1:3000/api/request/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ classCode: classcode })
-            })
-            const resData = await res.json();
-            console.log(resData)
-        } else {
-            alert("Class Code is required to continue.");
-            // Optionally, reload the page if no classCode is entered
-            location.reload();
+        const classData = await getClasses(
+            "http://127.0.0.1:3000/api/class/readByTeacherAndGuardian",
+            token
+        );
+
+        if(classData.result){
+            classes = classData.result.classes;
         }
+        console.log("bla bla bla classes " + JSON.stringify(classes))
+        
+        // dashboard_sidebar.style.display = "none";
+        // let classcode = prompt("Enter class code");
+        // if (classcode) {
+        //     const res = await fetch('http://127.0.0.1:3000/api/request/create', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             authorization: `Bearer ${token}`
+        //         },
+        //         body: JSON.stringify({ classCode: classcode })
+        //     })
+        //     const resData = await res.json();
+        //     console.log(resData)
+        // } else {
+        //     alert("Class Code is required to continue.");
+        //     // Optionally, reload the page if no classCode is entered
+        //     location.reload();
+        // }
     } else if (role == "admin") {
         const classData = await getClasses(
             "http://127.0.0.1:3000/api/class/readByAdmin",
@@ -100,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         console.log(classData.result)
         classes = classData.result.classes;
-        console.log("classes", classes);
         classListNames = classes.map((classData) => classData.className);
         classListGrades = classes.map((classData) => classData.grade);
         const classNameGradeObj = classListNames.map((name, index) => ({
@@ -132,6 +145,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 dashboard_sidebar.addEventListener("click", () => {
     removeAllUnderlineInSidebarTxt();
     dashboard_txt.classList.add("side_bar_active");
+
+    if(role == "admin"){
+        dashboardClassButton = "Create class"
+    }else{
+        dashboardClassButton = "Join class"
+    }
+
     if (classes.length == 0) {
         mainEl.innerHTML = `
         <div class="dashboard_wrapper">
@@ -155,22 +175,22 @@ dashboard_sidebar.addEventListener("click", () => {
                                 fill="#B4E0F7"
                             />
                         </svg>
-                        <p id="create_class_btn" class="create_class_btn create_btn">Create class</p>
+                        <p id="create_class_btn" class="create_class_btn create_btn">${dashboardClassButton}</p>
                     </div>
     
                     <div class="dashboard_main_wrapper">
                         <div class="classes_wrapper">
                             <div class="dashboard_alert_wrapper">
                                 <p class="dashboard_alert">No classes available to show</p>
-                                <p id="create_new_class_model_opener" class="create_new_class_model_opener">Create new class</p>
+                                <!-- <p id="create_new_class_model_opener" class="create_new_class_model_opener">Create new class</p> -->
                             </div> 
                         </div>
                     </div>
         `;
-        const create_new_class_model_opener = document.getElementById("create_new_class_model_opener");
-        create_new_class_model_opener.addEventListener("click", () => {
-            create_class_dialog_box.showModal();
-        });
+        // const create_new_class_model_opener = document.getElementById("create_new_class_model_opener");
+        // create_new_class_model_opener.addEventListener("click", () => {
+        //     create_class_dialog_box.showModal();
+        // });
     } else if (classes.length > 0) {
         mainEl.innerHTML = `
         <div class="dashboard_wrapper">
@@ -193,7 +213,7 @@ dashboard_sidebar.addEventListener("click", () => {
                                 fill="#B4E0F7"
                             />
                         </svg>
-                        <p id="create_class_btn" class="create_class_btn create_btn">Create class</p>
+                        <p id="create_class_btn" class="create_class_btn create_btn">${dashboardClassButton}</p>
                     </div>
     
                     <div class="dashboard_main_wrapper">
@@ -207,17 +227,40 @@ dashboard_sidebar.addEventListener("click", () => {
         console.log(classes)
         for (const classData of classes) {
             const classHTMLEl = `
-                    <div class="class">
-                        <div class="class-left">
-                            <p class="class-left__classname">${classData.className}</p>
-                            <p class="class-left__grade">&nbsp;(${classData.grade})</p>
-                        </div>
+            <div class="class-left">
+                <p class="class-left__classname">${classData.className}</p>
+                <p class="class-left__grade">&nbsp;(${classData.grade})</p>
+            </div>
+            `
+
+            let classButton;
+            if(role == "admin"){
+                classButton = `
                         <div class="class-right">
                             <p class="view_detail_btn">View details</p>
                         </div>
-                    </div>
-            `
-            classWrapper.innerHTML += classHTMLEl;
+                `
+            }else if(role == "teacher"){
+                classButton = `
+                        <div class="class-right">
+                            <p class="view_detail_btn">View details</p>
+                        </div>
+                `
+            }
+            
+            // const classHTMLEl = `
+            //         <div class="class">
+            //             <div class="class-left">
+            //                 <p class="class-left__classname">${classData.className}</p>
+            //                 <p class="class-left__grade">&nbsp;(${classData.grade})</p>
+            //             </div>
+            //             <div class="class-right">
+            //                 <p class="view_detail_btn">View details</p>
+            //             </div>
+            //         </div>
+            // `
+            classWrapper.innerHTML += `<div class="class"> ${classHTMLEl} ${classButton} </div>`
+            // classWrapper.innerHTML += classHTMLEl;
         }
     }
 
@@ -229,12 +272,21 @@ dashboard_sidebar.addEventListener("click", () => {
     });
 
     create_class_btn.addEventListener("click", () => {
-        create_class_dialog_box.showModal();
+        if(role == "admin"){
+            create_class_dialog_box.showModal();
+        }else{
+            join_class_dialog_box.showModal()
+        }
+        
     });
 
     create_class_dialog_close_btn.addEventListener("click", () => {
         create_class_dialog_box.close();
     });
+
+    join_class_dialog_close_btn.addEventListener("click", () => {
+        join_class_dialog_box.close()
+    })
 });
 
 home_sidebar.addEventListener("click", () => {
@@ -674,6 +726,25 @@ create_class_form.addEventListener("submit", async (e) => {
     addViewDetailsFunctionality();
 });
 
+join_class_form.addEventListener("submit", async(e) => {
+    e.preventDefault();
+    const classCode = e.target.class_code.value;
+    join_class_form.reset();
+    const res = await fetch("http://localhost:3000/api/request/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            classCode
+        }),
+    })
+
+    const data = await res.json();
+    alert(`${data.msg}`)
+})
+
 create_feed_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const heading = e.target.heading.value;
@@ -1026,13 +1097,14 @@ function addViewDetailsFunctionality() {
             view_detail_dialog_schoolnameEl.textContent = classes[i].school.schoolName;
             view_detail_dialog_classnameEl.textContent = classes[i].className;
             view_detail_dialog_classcodeEl.textContent = classes[i].classCode;
+            console.log("teacher of the class " + JSON.stringify(classes[i]))
             if (classes[i].teachers.length === 0) {
                 view_detail_dialog_teacherEl.classList.replace("dialog_name", "dialog_name_unassigned")
                 view_detail_dialog_teacherEl.textContent = "Unassigned";
             } else if (classes[i].teachers.length > 0) {
                 view_detail_dialog_teacherEl.classList.replace("dialog_name_unassigned" ,"dialog_name")
                 view_detail_dialog_teacherEl.textContent = classes[i].teachers[0].userName;
-                console.log("current class" + currentClass)
+                
                 // color: rgb(154, 228, 248)
             }
             if (classes[i].students.length === 0) {
@@ -1170,6 +1242,7 @@ teacher_requests_modal = document.getElementById("teacher_requests_modal");
 teacher_request_btn.addEventListener("click", async() => {
     teacher_requests_modal.innerHTML = "";
     teacher_requests_modal.classList.toggle("display_flex");
+    
     const res = await fetch(`http://127.0.0.1:3000/api/request/readTeacherRequests?classId=${currentClass}`, {
         method: "GET",
         headers: {
@@ -1215,22 +1288,46 @@ function respondFunctionality() {
     requests.forEach((req, i) => {
         let username = req.querySelector(".requested_by").textContent;
         let accept_button =  req.querySelector(".accept_button");
+        let reject_button = req.querySelector(".reject_button");
         accept_button.addEventListener("click", async ()=> {
-            const res = await fetch('http://127.0.0.1:3000/api/request/respondTeacherReq', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ classId: currentClass, requestId: requestIds[i], response: true })
-            })
-
-            const resData = await res.json();
+            const resData = await respondTeacherRequests(
+                'http://127.0.0.1:3000/api/request/respondTeacherReq',
+                currentClass,
+                requestIds[i],
+                true,
+                token
+            );
             alert(resData.msg)
             view_detail_dialog_teacherEl.textContent = username;
             teacher_requests_modal.classList.toggle("display_flex");
             view_detail_dialog_teacherEl.classList.replace("dialog_name_unassigned" ,"dialog_name")
         })
+
+        reject_button.addEventListener("click", async ()=> {
+            const resData = await respondTeacherRequests(
+                'http://127.0.0.1:3000/api/request/respondTeacherReq',
+                currentClass,
+                requestIds[i],
+                false,
+                token
+            );
+            alert(resData.msg)
+        })
+
+        // reject_button.addEventListener("click", async())
     })
 }
 
+async function respondTeacherRequests(url, classId, requestId, response, token){
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ classId, requestId, response})
+    })
+
+    const resData = await res.json();
+    return resData;
+} 
