@@ -43,11 +43,11 @@ dialog {
     color: rgb(252, 114, 114);
 }
 
-.students_list_title {
+.students_list_title, .parents_list_title {
     margin-top: 0.7em;
 }
 
-.students_list {
+.students_list, .parents_list {
     background-color: rgb(58, 58, 58);
     width: 620px;
     max-height: 350px;
@@ -171,7 +171,7 @@ form {
     margin-bottom: 0.35em;
 }
 
-.input_box_wrapper input {
+.input_box_wrapper input, select {
     width: 350px;
     height: 30px;
     outline: none;

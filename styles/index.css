@@ -281,7 +281,7 @@ main {
     margin: 0 auto;
 }
 
-#student_list_title_bg{
+#student_list_title_bg, .parent_list_title_bg{
     max-width: 20em;
     margin-right: 30px; 
 }

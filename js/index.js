@@ -12,6 +12,9 @@ const create_class_dialog_close_btn = document.getElementById("create_class_dial
 const join_class_dialog_box = document.getElementById("join_class_dialog_box");
 const join_class_dialog_close_btn = document.getElementById("join_class_dialog_box")
 
+const parent_join_class_dialog_box = document.getElementById("parent_join_class_dialog_box");
+const parent_join_class_dialog_close_btn = document.getElementById("parent_join_class_dialog_close_btn");
+
 const create_post_dialog_box = document.getElementById('create_post_dialog_box')
 const create_post_dialog_close_btn = document.getElementById('create_post_dialog_close_btn');
 
@@ -41,14 +44,24 @@ const create_class_form = document.getElementById("create_class_form");
 const join_class_form = document.getElementById("join_class_form")
 const create_feed_form = document.getElementById("create_feed_form");
 const create_announcement_form = document.getElementById("create_announcement_form");
+const join_class_code_form = document.getElementById("join_class_code_form")
+const search_student = document.getElementById("studentSearch")
+const parent_join_class_form = document.getElementById("parent_join_class_form");
 
 const view_detail_dialog_schoolnameEl = document.getElementById("view_detail_dialog_schoolname");
 const view_detail_dialog_classnameEl = document.getElementById("view_detail_dialog_classname");
 const view_detail_dialog_classcodeEl = document.getElementById("view_detail_dialog_classcode");
 const view_detail_dialog_teacherEl = document.getElementById("view_detail_dialog_teacher");
 const view_detail_dialog_studentsEl = document.getElementById("view_detail_dialog_students");
+const view_detail_dialog_parentsEl = document.getElementById("view_detail_dialog_parents")
+const view_detail_dialog_pending_parentsEl = document.getElementById("view_detail_dialog_pending_parents");
 
 const teacher_request_btn = document.getElementById("teacher_request_btn");
+
+const student_detail_dialog_box = document.getElementById("student_detail_box");
+const view_detail_dialog_student_nameEl = document.getElementById("view_detail_dialog_student_name");
+const view_detail_dialog_student_dobEl = document.getElementById("view_detail_dialog_student_dob")
+const student_details_dialog_close_btnEl = document.getElementById("student_details_dialog_close_btn")
 
 let posts_wrapper;
 
@@ -61,6 +74,11 @@ let posts = [];
 let feeds = [];
 let announcements = [];
 let token;
+let studentIds = [];
+let studentParents = [];
+let parentPending = [];
+let classCodeChildren = [];
+let classApi;
 let classWrapper;
 let teacher_requests_modal;
 let classListNames = []
@@ -71,8 +89,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(
         "http://127.0.0.1:3000/api/cookie/check"
     );
-    console.log(resData);
-    console.log(resData.userData);
     token = resData.token;
     if (statusCode != 200) {
         alert("Cookie does not exist. Redirecting to sign in page");
@@ -80,46 +96,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     role = resData.userData.roles[0];
 
-    if (role == "guardian") {
-        dashboard_sidebar.style.display = "none";
-        add_student_button.style.display = "none"
-    } else if (role == "teacher") {
-        const classData = await getClasses(
-            "http://127.0.0.1:3000/api/class/readByTeacherAndGuardian",
-            token
-        );
-
-        if(classData.result){
-            classes = classData.result.classes;
+    if(role == "guardian" || role == "teacher"){
+        classApi = "readByTeacherAndGuardian"
+        teacher_request_btn.style.display == "none"
+        if(role == "guardian"){
+            add_student_button.style.display == "none"
         }
-        console.log("bla bla bla classes " + JSON.stringify(classes))
-        
-        // dashboard_sidebar.style.display = "none";
-        // let classcode = prompt("Enter class code");
-        // if (classcode) {
-        //     const res = await fetch('http://127.0.0.1:3000/api/request/create', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             authorization: `Bearer ${token}`
-        //         },
-        //         body: JSON.stringify({ classCode: classcode })
-        //     })
-        //     const resData = await res.json();
-        //     console.log(resData)
-        // } else {
-        //     alert("Class Code is required to continue.");
-        //     // Optionally, reload the page if no classCode is entered
-        //     location.reload();
-        // }
-    } else if (role == "admin") {
-        const classData = await getClasses(
-            "http://127.0.0.1:3000/api/class/readByAdmin",
-            token
-        );
-        add_student_button.style.display = "none"
+    }else{
+        classApi = "readByAdmin"
+        add_student_button.style.display == "none"
+    }
+    
+    const classData = await getClasses(
+        `http://127.0.0.1:3000/api/class/${classApi}`,
+        token
+    );
 
-        console.log(classData.result)
+    if(classData.result){
         classes = classData.result.classes;
         classListNames = classes.map((classData) => classData.className);
         classListGrades = classes.map((classData) => classData.grade);
@@ -128,7 +121,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             gradeName: classListGrades[index]
         }))
             .sort((a, b) => a.gradeName - b.gradeName);
-        console.log(classNameGradeObj)
         const classTypeSelectEl = document.getElementById("class_type")
         for (const classData of classNameGradeObj) {
             const optionEl = document.createElement("option");
@@ -137,7 +129,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             classTypeSelectEl.appendChild(optionEl);
         }
-        console.log(classNameGradeObj)
     }
     const postDatas = await getPosts('http://127.0.0.1:3000/api/posts/getPosts', token);
     const postStatusCode = postDatas.statusCode;
@@ -145,7 +136,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         posts = postDatas.resData.result.items;
         feeds = posts.filter((post) => post.contentType === 'feed');
         announcements = posts.filter((post) => post.contentType === 'announcement');
-        console.log('posts fetched done')
     }
 });
 
@@ -193,11 +183,7 @@ dashboard_sidebar.addEventListener("click", () => {
                             </div> 
                         </div>
                     </div>
-        `;
-        // const create_new_class_model_opener = document.getElementById("create_new_class_model_opener");
-        // create_new_class_model_opener.addEventListener("click", () => {
-        //     create_class_dialog_box.showModal();
-        // });
+        `
     } else if (classes.length > 0) {
         mainEl.innerHTML = `
         <div class="dashboard_wrapper">
@@ -231,7 +217,6 @@ dashboard_sidebar.addEventListener("click", () => {
                     </div>
         `;
         classWrapper = document.getElementById("class_wrapper");
-        console.log(classes)
         for (const classData of classes) {
             const classHTMLEl = `
             <div class="class-left">
@@ -276,13 +261,16 @@ dashboard_sidebar.addEventListener("click", () => {
 
     class_detail_dialog_clost_btn.addEventListener("click", () => {
         classDetailDialogBox.close();
+        view_detail_dialog_studentsEl.innerHTML = ""
     });
 
     create_class_btn.addEventListener("click", () => {
         if(role == "admin"){
             create_class_dialog_box.showModal();
-        }else{
+        }else if(role == "teacher"){
             join_class_dialog_box.showModal()
+        }else {
+            parent_join_class_dialog_box.showModal();
         }
         
     });
@@ -297,6 +285,10 @@ dashboard_sidebar.addEventListener("click", () => {
 
     add_student_close_dialog_box.addEventListener("click", () => {
         add_student_dialog_box.close()
+    })
+
+    parent_join_class_dialog_close_btn.addEventListener("click", () => {
+        parent_join_class_dialog_box.close();
     })
 });
 
@@ -331,10 +323,8 @@ home_sidebar.addEventListener("click", () => {
     `;
     posts_wrapper = document.getElementById("posts_wrapper");
     const create_feed_btn = document.getElementById("create_feed_btn");
-    console.log(feeds, 'laklk')
     if (feeds.length > 0) {
         feeds.forEach((feed) => {
-            console.log(feed, 'ggggg')
             const postHTMLEl = `
             <div class="post_card">
                     <div class="posted_by_wrapper">
@@ -492,7 +482,6 @@ home_sidebar.addEventListener("click", () => {
             btn.style.display = "none";
         }
         btn.addEventListener("click", () => {
-            console.log('worked')
             optionsModalBoxes[index].classList.toggle("display_none");
         });
     });
@@ -530,10 +519,8 @@ announcement_sidebar.addEventListener("click", () => {
     `;
     posts_wrapper = document.getElementById("posts_wrapper");
     const create_announcement_btn = document.getElementById("create_announcement_btn");
-    console.log(announcements, 'laklk')
     if (announcements.length > 0) {
         announcements.forEach((announcement) => {
-            console.log(announcement, 'ggggg')
             const postHTMLEl = `
             <div class="post_card">
                     <div class="posted_by_wrapper">
@@ -691,7 +678,6 @@ announcement_sidebar.addEventListener("click", () => {
             btn.style.display = "none";
         }
         btn.addEventListener("click", () => {
-            console.log('worked')
             optionsModalBoxes[index].classList.toggle("display_none");
         });
     });
@@ -719,7 +705,6 @@ create_class_form.addEventListener("submit", async (e) => {
     if(res.status === 201) {
         alert("Class created successfully")
     }
-    console.log(data.result)
     const classHTMLEl = `
         <div class="class">
             <div class="class-left">
@@ -756,6 +741,67 @@ join_class_form.addEventListener("submit", async(e) => {
     alert(`${data.msg}`)
 })
 
+
+join_class_code_form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const classCode = e.target.class_code.value;
+    console.log("This is class code" + classCode)
+    const res = await fetch(`http://127.0.0.1:3000/api/student/getByClassCode/${classCode}`,{
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+        }
+    })
+    const studentData = await res.json();
+    console.log("This is student data from class code " + JSON.stringify(studentData))
+    let childrenNames = document.getElementById("child_name_input");
+    let childrenDob = document.getElementById('child_dob_input')
+    
+    childrenNames.innerHTML = "";
+    
+
+    let allStudents = studentData.result;
+    if(allStudents){
+        classCodeChildren = allStudents;
+        childrenNames.innerHTML = `<option> Student Names </option>`
+        allStudents.forEach((childData, i) => {
+            childrenNames.innerHTML += `
+            <option value=${i} class="optionData"> ${childData.name}</option>
+             `;
+             classCodeChildren.push(childData)
+        // })
+        })
+
+        childrenNames.addEventListener("change", () => {
+            let i = childrenNames.value
+            child_dob_input.innerHTML = `<option> ${classCodeChildren[i].dateofBirth}</option>`
+        })
+
+        
+    }else{
+        childrenNames.innerHTML = `<option> No Students at the moment </option>`
+    }
+    
+    
+})
+
+
+
+// search_student.addEventListener("click",(e) => {
+//     let classCode = e.target.class_code.value;
+//     // let classCode = document.querySelector('[name="class_code"]');
+//     // const res = await fetch(`http://localhost:3000/api/student/getByClassCode/${classCode}`)
+//     // const studentData = res.json();
+//     // alert("This is student data from class code " + JSON.stringify(studentData))
+//     console.log("This is the class code " + classCode.value)
+// })
+
+parent_join_class_form.addEventListener("submit", (e) => {
+    alert("Testing")
+})
+
 create_feed_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const heading = e.target.heading.value;
@@ -786,7 +832,6 @@ create_feed_form.addEventListener("submit", async (e) => {
     });
     const data = await res.json();
     const post = data.result;
-    console.log(post, 'post')
     create_post_dialog_box.close();
     const postHTMLEl = `
             <div class="post_card">
@@ -926,10 +971,8 @@ create_announcement_form.addEventListener("submit", async (e) => {
     const heading = e.target.heading.value;
     const body = e.target.body.value;
     const contentType = e.target.post_type.value;
-    console.log(e.target.class_type.value)
     const className = e.target.class_type.value.split(" (")[0];
     const gradeName = e.target.class_type.value.split(" (")[1].replace(")", "");
-    console.log(className, gradeName)
     const contentPictures = e.target.images.files;
     const documents = e.target.documents.files;
 
@@ -957,7 +1000,6 @@ create_announcement_form.addEventListener("submit", async (e) => {
     });
     const data = await res.json();
     const announcementsRes = await data.result;
-    console.log(announcementsRes, 'announcements')
     create_announcement_dialog_box.close();
     const postHTMLEl = `
     <div class="post_card">
@@ -1104,11 +1146,11 @@ function addViewDetailsFunctionality() {
     view_detail_btns.forEach((btn, i) => {
         btn.addEventListener("click", async (e) => {  
 
+            
             currentClass = classes[i]._id;
             view_detail_dialog_schoolnameEl.textContent = classes[i].school.schoolName;
             view_detail_dialog_classnameEl.textContent = classes[i].className;
             view_detail_dialog_classcodeEl.textContent = classes[i].classCode;
-            console.log("teacher of the class " + JSON.stringify(classes[i]))
             if (classes[i].teachers.length === 0) {
                 view_detail_dialog_teacherEl.classList.replace("dialog_name", "dialog_name_unassigned")
                 view_detail_dialog_teacherEl.textContent = "Unassigned";
@@ -1117,27 +1159,97 @@ function addViewDetailsFunctionality() {
                 view_detail_dialog_teacherEl.textContent = classes[i].teachers[0].userName;
                 
                 // color: rgb(154, 228, 248)
-            }
+            } 
             if (classes[i].students.length === 0) {
                 view_detail_dialog_studentsEl.innerHTML = `<p  style="padding: 1em">No students assigned yet.`;
             } else if (classes[i].students.length > 0) {
-                for (student of classes[i].students) {
-                    view_detail_dialog_teacherEl.innerHTML = `<p class="student_name">${student}</p>`;
+                for (let student of classes[i].students) {
+                    view_detail_dialog_studentsEl.innerHTML += `<p class="student_name">${student.name}</p>`;
+                    studentIds.push(student._id)
                 }
             }
             classDetailDialogBox.showModal();
-            // const classId = classes[i]._id;
-            // const teacherRequestsData = await fetch(`http://127.0.0.1:3000/api/class/readTeacherRequests?classId=${classId}`, {
-            //     method: 'GET',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         authorization: `Bearer ${token}`
-            //     }
-            // })
-            // const teacherRequests = await teacherRequestsData.json();
-            // console.log(teacherRequests.sender)
+            viewStudentDetailsFunctionality();
+            
         });
     });
+}
+
+function viewStudentDetailsFunctionality(){
+
+    const students = document.querySelectorAll(".student_name");
+            students.forEach((req, i) => {
+                students[i].addEventListener('click', async () => {
+                    student_detail_dialog_box.showModal();
+                    const res = await fetch(`http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            authorization: `Bearer ${token}`,
+                        }
+                    })
+
+                    const data = await res.json();
+                    const studentName = data.result.name;
+                    studentParents = data.result.guardians;
+                    const date = data.result.dateofBirth.split("-")
+                    const year = date[0];
+                    const month = date[1];
+                    const day = date[2].split("T")[0];
+
+                    const formattedDate = `${year}-${month}-${day}`
+                    
+                    view_detail_dialog_student_nameEl.innerHTML = studentName;
+                    view_detail_dialog_student_dobEl.innerHTML = formattedDate;
+
+                    if(studentParents.length === 0){
+                        view_detail_dialog_parentsEl.innerHTML = `<p  style="padding: 1em">No Parents for this student yet</p>`
+                    }else if(studentParents.length > 0){
+                        for(let eachParent of studentParents){
+                            view_detail_dialog_parentsEl.innerHTML = `
+                            <p  style="padding: 1em">
+                            Parent name: ${eachParent.userName} <br>
+                            Parent email: ${eachParent.email} <br>
+                            Parent phone: ${eachParent.phone} <br>
+                            Parent relationship: ${eachParent.relationship[0]} <br>
+                            
+                            </p>
+                            `
+                        }
+                    }
+
+                    const parentPendings = await fetch(`http://127.0.0.1:3000/api/request/readGuardianRequests?classId=${currentClass}&studentId=${studentIds[i]}`, {
+                        method: "GET", 
+                        headers: {
+                            "Content-Type": "application/json",
+                            authorization: `Bearer ${token}`,
+                        },
+                    })
+                    const parentPendingsData = await parentPendings.json();
+                    const pendingParents = parentPendingsData.result;
+                    if(pendingParents.length === 0){
+                        view_detail_dialog_pending_parentsEl.innerHTML = `<p style="padding: 1em"> There are no pending parent requests at the moment </p>`
+                    }else if (pendingParents.length > 0){
+                        for(let eachParent of pendingParents){
+                            view_detail_dialog_parentsEl.innerHTML = `
+                            <p  style="padding: 1em">
+                            Parent name: ${eachParent.sender.userName} <br>
+                            Parent email: ${eachParent.sender.email} <br>
+                            Parent phone: ${eachParent.sender.phone} <br>
+                            Parent relationship: ${eachParent.sender.relationship[0]} <br>
+                            
+                            </p>
+                            `
+                        }
+                    }
+                    
+
+                    student_details_dialog_close_btnEl.addEventListener("click", () => {
+                        student_detail_dialog_box.close();
+                    })
+                })
+            })
+    
 }
 
 async function getClasses(api, token) {
@@ -1170,7 +1282,6 @@ async function getPosts(api, token) {
 
 function generatePostImages(postImageURLs, domEl) {
     // const postImagesWrapper = document.getElementById("post_images_wrapper");
-    // console.log(postImagesWrapper)
     if (postImageURLs.length > 0) {
         for (const postImageUrl of postImageURLs) {
             const postImgHTMLEL =
@@ -1299,16 +1410,24 @@ add_student_button.addEventListener("click", async() => {
 
 add_student_form.addEventListener("submit", async(e)=> {
     e.preventDefault();
-    const student_Name = e.target.student_name.value;
-    const student_DOB = e.target.student_dob.value;
+    const student_name = e.target.student_name.value;
+    const student_dob = e.target.student_dob.value;
 
-    // const res = await fetch(`http://127.0.0.1:3000/api/request/readTeacherRequests?classId=${currentClass}`, {
-    //     method: "GET",
-    //     headers: {
-    //         "Content-Type": "application/json",
-    //         authorization: `Bearer ${token}`,
-    //     }
-    // })
+    const res = await fetch(`http://127.0.0.1:3000/api/student/add/${currentClass}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            "name":  student_name,
+            "dateofBirth": student_dob,
+        })
+    })
+
+    const resData = await res.json();
+    let newStudentData = resData.result;
+    alert(resData.msg)
 })
 
 function respondFunctionality() {
