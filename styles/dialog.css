@@ -26,7 +26,7 @@ dialog {
     font-weight: 700;
     padding: 0.5em 1em;
     background-color: rgb(65, 65, 65);
-    width: 300px;
+    min-width: 300px;
     border-radius: 5px;
 }
 
@@ -43,16 +43,16 @@ dialog {
     color: rgb(252, 114, 114);
 }
 
-.students_list_title {
+.students_list_title, .parents_list_title {
     margin-top: 0.7em;
 }
 
-.students_list {
+.students_list, .parents_list {
     background-color: rgb(58, 58, 58);
     width: 620px;
     max-height: 350px;
     border-radius: 5px;
-    overflow-y: auto ;
+    /* overflow-y: auto ; */
 }
 
 .student_name {
@@ -126,19 +126,19 @@ dialog {
 }
 
 
-.accept_button {
+.accept_button, .accept_guardian {
     cursor: pointer;
 }
 
-.accept_button:hover {
+.accept_button:hover , .accept_guardian:hover{
     color: rgb(167, 242, 182);
 }
 
-.reject_button {
+.reject_button, .reject_guardian{
     cursor: pointer;
 }
 
-.reject_button:hover {
+.reject_button:hover, .reject_guardian:hover {
     color: rgb(255, 165, 165);
 }
 
@@ -171,7 +171,7 @@ form {
     margin-bottom: 0.35em;
 }
 
-.input_box_wrapper input {
+.input_box_wrapper input, select {
     width: 350px;
     height: 30px;
     outline: none;
