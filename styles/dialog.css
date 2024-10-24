@@ -26,7 +26,7 @@ dialog {
     font-weight: 700;
     padding: 0.5em 1em;
     background-color: rgb(65, 65, 65);
-    width: 300px;
+    min-width: 300px;
     border-radius: 5px;
 }
 
@@ -52,7 +52,7 @@ dialog {
     width: 620px;
     max-height: 350px;
     border-radius: 5px;
-    overflow-y: auto ;
+    /* overflow-y: auto ; */
 }
 
 .student_name {
@@ -126,19 +126,19 @@ dialog {
 }
 
 
-.accept_button {
+.accept_button, .accept_guardian {
     cursor: pointer;
 }
 
-.accept_button:hover {
+.accept_button:hover , .accept_guardian:hover{
     color: rgb(167, 242, 182);
 }
 
-.reject_button {
+.reject_button, .reject_guardian{
     cursor: pointer;
 }
 
-.reject_button:hover {
+.reject_button:hover, .reject_guardian:hover {
     color: rgb(255, 165, 165);
 }
 

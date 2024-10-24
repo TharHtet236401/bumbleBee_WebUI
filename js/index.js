@@ -76,7 +76,8 @@ let announcements = [];
 let token;
 let studentIds = [];
 let studentParents = [];
-let parentPending = [];
+let pendingParents = [];
+let currentclassCode;
 let classCodeChildren = [];
 let classApi;
 let classWrapper;
@@ -98,13 +99,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if(role == "guardian" || role == "teacher"){
         classApi = "readByTeacherAndGuardian"
-        teacher_request_btn.style.display == "none"
+        teacher_request_btn.remove()
         if(role == "guardian"){
-            add_student_button.style.display == "none"
+            add_student_button.remove();
+            // add_student_button.style.display == "none"
         }
     }else{
         classApi = "readByAdmin"
-        add_student_button.style.display == "none"
+        add_student_button.remove()
+        // add_student_button.style.display == "none"
     }
     
     const classData = await getClasses(
@@ -226,19 +229,24 @@ dashboard_sidebar.addEventListener("click", () => {
             `
 
             let classButton;
-            if(role == "admin"){
-                classButton = `
+            classButton = `
                         <div class="class-right">
                             <p class="view_detail_btn">View details</p>
                         </div>
                 `
-            }else if(role == "teacher"){
-                classButton = `
-                        <div class="class-right">
-                            <p class="view_detail_btn">View details</p>
-                        </div>
-                `
-            }
+            // if(role == "admin"){
+            //     classButton = `
+            //             <div class="class-right">
+            //                 <p class="view_detail_btn">View details</p>
+            //             </div>
+            //     `
+            // }else if(role == "teacher"){
+            //     classButton = `
+            //             <div class="class-right">
+            //                 <p class="view_detail_btn">View details</p>
+            //             </div>
+            //     `
+            // }
             
             // const classHTMLEl = `
             //         <div class="class">
@@ -746,6 +754,7 @@ join_class_code_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     
     const classCode = e.target.class_code.value;
+    currentclassCode = classCode;
     console.log("This is class code" + classCode)
     const res = await fetch(`http://127.0.0.1:3000/api/student/getByClassCode/${classCode}`,{
         method: "GET",
@@ -757,7 +766,6 @@ join_class_code_form.addEventListener("submit", async (e) => {
     const studentData = await res.json();
     console.log("This is student data from class code " + JSON.stringify(studentData))
     let childrenNames = document.getElementById("child_name_input");
-    let childrenDob = document.getElementById('child_dob_input')
     
     childrenNames.innerHTML = "";
     
@@ -787,6 +795,30 @@ join_class_code_form.addEventListener("submit", async (e) => {
     
 })
 
+parent_join_class_form.addEventListener("submit", async(e)=> {
+    e.preventDefault();
+    let childIndex = e.target.child_name_input.value;
+    let childName = classCodeChildren[childIndex].name;
+    let childDob = classCodeChildren[childIndex].dateofBirth
+    console.log("This is child name: " + JSON.stringify(classCodeChildren[childIndex]))
+    console.log("This is class code " + currentclassCode)
+    const res = await fetch("http://127.0.0.1:3000/api/request/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            "classCode": currentclassCode,
+            "childName": childName,
+            "studentDOB": childDob
+        })
+    })
+
+    const data = await res.json();
+    alert(data.msg)
+})
+
 
 
 // search_student.addEventListener("click",(e) => {
@@ -797,10 +829,6 @@ join_class_code_form.addEventListener("submit", async (e) => {
 //     // alert("This is student data from class code " + JSON.stringify(studentData))
 //     console.log("This is the class code " + classCode.value)
 // })
-
-parent_join_class_form.addEventListener("submit", (e) => {
-    alert("Testing")
-})
 
 create_feed_form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -1180,6 +1208,7 @@ function viewStudentDetailsFunctionality(){
     const students = document.querySelectorAll(".student_name");
             students.forEach((req, i) => {
                 students[i].addEventListener('click', async () => {
+                    view_detail_dialog_parentsEl.innerHTML = ``
                     student_detail_dialog_box.showModal();
                     const res = await fetch(`http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`, {
                         method: "GET",
@@ -1206,7 +1235,7 @@ function viewStudentDetailsFunctionality(){
                         view_detail_dialog_parentsEl.innerHTML = `<p  style="padding: 1em">No Parents for this student yet</p>`
                     }else if(studentParents.length > 0){
                         for(let eachParent of studentParents){
-                            view_detail_dialog_parentsEl.innerHTML = `
+                            view_detail_dialog_parentsEl.innerHTML += `
                             <p  style="padding: 1em">
                             Parent name: ${eachParent.userName} <br>
                             Parent email: ${eachParent.email} <br>
@@ -1217,31 +1246,67 @@ function viewStudentDetailsFunctionality(){
                             `
                         }
                     }
+                    if(role != "guardian"){
+                        const parentPendings = await fetch(`http://127.0.0.1:3000/api/request/readGuardianRequests?classId=${currentClass}&studentId=${studentIds[i]}`, {
+                            method: "GET", 
+                            headers: {
+                                "Content-Type": "application/json",
+                                authorization: `Bearer ${token}`,
+                            },
+                        })
+                        // console.log("current class " + currentClass + " and student id is " + studentIds[i] + " and token: " + token)
+                        const parentPendingsData = await parentPendings.json();
+                        console.log("parentPending data" + JSON.stringify(parentPendingsData))
+                        pendingParents = parentPendingsData.result
+                        if(pendingParents.length === 0){
+                            view_detail_dialog_pending_parentsEl.innerHTML = `<p style="padding: 1em"> There are no pending parent requests at the moment </p>`
+                        }else if (pendingParents.length > 0){
+                            for(let eachParent of pendingParents){
+                                view_detail_dialog_pending_parentsEl.innerHTML += `
+                                <p  style="padding: 1em">
+                                Parent name: ${eachParent.sender.userName} <br>
+                                Parent email: ${eachParent.sender.email} <br>
+                                Parent phone: ${eachParent.sender.phone} <br>
+                                Parent relationship: ${eachParent.sender.relationship[0]} <br>
+                                
+                                </p>
+    
+                                <div style="padding: 1em" class="offer_accept_reject">
+                                    <p class="accept_guardian">Accept</p>
+                                    <p class="reject_guardian">Reject</p>
+                                </div>
+                                `
+                                let accept_guardian =  document.querySelector(".accept_guardian");
+                                let reject_guardian = document.querySelector(".reject_guardian");
+    
+                                let response;
+                                accept_guardian.addEventListener("click", async() => {
+                                    response = await respondGuardianRequests( 
+                                        currentClass, 
+                                        eachParent._id, 
+                                        true, 
+                                        token)
 
-                    const parentPendings = await fetch(`http://127.0.0.1:3000/api/request/readGuardianRequests?classId=${currentClass}&studentId=${studentIds[i]}`, {
-                        method: "GET", 
-                        headers: {
-                            "Content-Type": "application/json",
-                            authorization: `Bearer ${token}`,
-                        },
-                    })
-                    const parentPendingsData = await parentPendings.json();
-                    const pendingParents = parentPendingsData.result;
-                    if(pendingParents.length === 0){
-                        view_detail_dialog_pending_parentsEl.innerHTML = `<p style="padding: 1em"> There are no pending parent requests at the moment </p>`
-                    }else if (pendingParents.length > 0){
-                        for(let eachParent of pendingParents){
-                            view_detail_dialog_parentsEl.innerHTML = `
-                            <p  style="padding: 1em">
-                            Parent name: ${eachParent.sender.userName} <br>
-                            Parent email: ${eachParent.sender.email} <br>
-                            Parent phone: ${eachParent.sender.phone} <br>
-                            Parent relationship: ${eachParent.sender.relationship[0]} <br>
-                            
-                            </p>
-                            `
+                                        alert(response.msg)
+                                })
+    
+                                reject_guardian.addEventListener("click", async() => {
+                                    response = await respondGuardianRequests(
+                                        currentClass, 
+                                        eachParent._id, 
+                                        false, 
+                                        token)
+
+                                        alert(response.msg)
+                                })
+                                
+                            }
                         }
+                    }else{
+                        let parents_list_titleEl = document.getElementsByClassName("parents_list_title")[1]
+                        parents_list_titleEl.remove();
                     }
+
                     
 
                     student_details_dialog_close_btnEl.addEventListener("click", () => {
@@ -1464,6 +1529,24 @@ function respondFunctionality() {
 
         // reject_button.addEventListener("click", async())
     })
+}
+
+async function respondGuardianRequests(classId, requestId, response, token){
+    const res = await fetch(`http://127.0.0.1:3000/api/request/respondGuardianReq`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+        }, 
+        body: JSON.stringify({
+            "classId": classId,
+            "requestId": requestId, 
+            "response": response
+        })
+    })
+
+    const resData = await res.json();
+    return resData
 }
 
 async function respondTeacherRequests(url, classId, requestId, response, token){

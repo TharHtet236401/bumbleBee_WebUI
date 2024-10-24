@@ -284,14 +284,14 @@
                 <form id="parent_join_class_form" action=""></form>
                 <form id="join_class_code_form"></form>
                 <div class="input_box_wrapper"> 
-                    <label for="class_code_inputq" form="join_class_code_form">Class Code</label>
+                    <label for="class_code_input" form="join_class_code_form">Class Code</label>
                     <input id="class_code_input" form="join_class_code_form" type="text" aria-label="class code" name="class_code">
                 </div>
                 <button id="studentSearch" type="submit" form="join_class_code_form"  style="margin-left: 0">Search</button>
                 <div class="input_box_wrapper"> 
                     <label for="child_name_input" form="parent_join_class_form">Child Name</label>
                     <!-- <input id="child_name_input" type="text" aria-label="child name" name="child_name" form="parent_join_class_form"> -->
-                    <select id="child_name_input">
+                    <select id="child_name_input" form="parent_join_class_form">
                         <option>Please Enter the class code first</option>
                     </select>
                 </div>
