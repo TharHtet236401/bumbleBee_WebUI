@@ -5,30 +5,54 @@ const body = document.body;
 const mainEl = document.querySelector("main");
 
 const classDetailDialogBox = document.getElementById("class_detail_dialog_box");
-const class_detail_dialog_clost_btn = document.getElementById("class_detail_dialog_close_btn");
+const class_detail_dialog_clost_btn = document.getElementById(
+    "class_detail_dialog_close_btn"
+);
 
-const create_class_dialog_box = document.getElementById("create_class_dialog_box");
-const create_class_dialog_close_btn = document.getElementById("create_class_dialog_close_btn");
+const create_class_dialog_box = document.getElementById(
+    "create_class_dialog_box"
+);
+const create_class_dialog_close_btn = document.getElementById(
+    "create_class_dialog_close_btn"
+);
 
 const join_class_dialog_box = document.getElementById("join_class_dialog_box");
-const join_class_dialog_close_btn = document.getElementById("join_class_dialog_box")
+const join_class_dialog_close_btn = document.getElementById(
+    "join_class_dialog_box"
+);
 
-const parent_join_class_dialog_box = document.getElementById("parent_join_class_dialog_box");
-const parent_join_class_dialog_close_btn = document.getElementById("parent_join_class_dialog_close_btn");
+const parent_join_class_dialog_box = document.getElementById(
+    "parent_join_class_dialog_box"
+);
+const parent_join_class_dialog_close_btn = document.getElementById(
+    "parent_join_class_dialog_close_btn"
+);
 
-const create_post_dialog_box = document.getElementById('create_post_dialog_box')
-const create_post_dialog_close_btn = document.getElementById('create_post_dialog_close_btn');
+const create_post_dialog_box = document.getElementById(
+    "create_post_dialog_box"
+);
+const create_post_dialog_close_btn = document.getElementById(
+    "create_post_dialog_close_btn"
+);
 
-const create_announcement_dialog_box = document.getElementById('create_announcement_dialog_box');
-const create_announcement_dialog_close_btn = document.getElementById('create_announcement_dialog_close_btn');
+const create_announcement_dialog_box = document.getElementById(
+    "create_announcement_dialog_box"
+);
+const create_announcement_dialog_close_btn = document.getElementById(
+    "create_announcement_dialog_close_btn"
+);
 
-const add_student_button = document.getElementById("add_student_button")
-const add_student_dialog_box = document.getElementById("add_student_dialog_box")
-const add_student_close_dialog_box = document.getElementById('add_student_dialog_close_btn')
+const add_student_button = document.getElementById("add_student_button");
+const add_student_dialog_box = document.getElementById(
+    "add_student_dialog_box"
+);
+const add_student_close_dialog_box = document.getElementById(
+    "add_student_dialog_close_btn"
+);
 const add_student_form = document.getElementById("add_student_form");
 
-const imageInput = document.getElementById('post_image');
-const documentInput = document.getElementById('post_document');
+const imageInput = document.getElementById("post_image");
+const documentInput = document.getElementById("post_document");
 
 const dashboard_sidebar = document.getElementById("dashboard_sidebar");
 const home_sidebar = document.getElementById("home_sidebar");
@@ -44,27 +68,51 @@ const announcement_txt = document.getElementById("announcement_txt");
 const chat_txt = document.getElementById("chat_txt");
 
 const create_class_form = document.getElementById("create_class_form");
-const join_class_form = document.getElementById("join_class_form")
+const join_class_form = document.getElementById("join_class_form");
 const create_feed_form = document.getElementById("create_feed_form");
-const create_announcement_form = document.getElementById("create_announcement_form");
-const join_class_code_form = document.getElementById("join_class_code_form")
-const search_student = document.getElementById("studentSearch")
-const parent_join_class_form = document.getElementById("parent_join_class_form");
+const create_announcement_form = document.getElementById(
+    "create_announcement_form"
+);
+const join_class_code_form = document.getElementById("join_class_code_form");
+const search_student = document.getElementById("studentSearch");
+const parent_join_class_form = document.getElementById(
+    "parent_join_class_form"
+);
 
-const view_detail_dialog_schoolnameEl = document.getElementById("view_detail_dialog_schoolname");
-const view_detail_dialog_classnameEl = document.getElementById("view_detail_dialog_classname");
-const view_detail_dialog_classcodeEl = document.getElementById("view_detail_dialog_classcode");
-const view_detail_dialog_teacherEl = document.getElementById("view_detail_dialog_teacher");
-const view_detail_dialog_studentsEl = document.getElementById("view_detail_dialog_students");
-const view_detail_dialog_parentsEl = document.getElementById("view_detail_dialog_parents")
-const view_detail_dialog_pending_parentsEl = document.getElementById("view_detail_dialog_pending_parents");
+const view_detail_dialog_schoolnameEl = document.getElementById(
+    "view_detail_dialog_schoolname"
+);
+const view_detail_dialog_classnameEl = document.getElementById(
+    "view_detail_dialog_classname"
+);
+const view_detail_dialog_classcodeEl = document.getElementById(
+    "view_detail_dialog_classcode"
+);
+const view_detail_dialog_teacherEl = document.getElementById(
+    "view_detail_dialog_teacher"
+);
+const view_detail_dialog_studentsEl = document.getElementById(
+    "view_detail_dialog_students"
+);
+const view_detail_dialog_parentsEl = document.getElementById(
+    "view_detail_dialog_parents"
+);
+const view_detail_dialog_pending_parentsEl = document.getElementById(
+    "view_detail_dialog_pending_parents"
+);
 
 const teacher_request_btn = document.getElementById("teacher_request_btn");
 
 const student_detail_dialog_box = document.getElementById("student_detail_box");
-const view_detail_dialog_student_nameEl = document.getElementById("view_detail_dialog_student_name");
-const view_detail_dialog_student_dobEl = document.getElementById("view_detail_dialog_student_dob")
-const student_details_dialog_close_btnEl = document.getElementById("student_details_dialog_close_btn")
+const view_detail_dialog_student_nameEl = document.getElementById(
+    "view_detail_dialog_student_name"
+);
+const view_detail_dialog_student_dobEl = document.getElementById(
+    "view_detail_dialog_student_dob"
+);
+const student_details_dialog_close_btnEl = document.getElementById(
+    "student_details_dialog_close_btn"
+);
 
 let posts_wrapper;
 
@@ -86,21 +134,20 @@ let classCodeChildren = [];
 let classApi;
 let classWrapper;
 let teacher_requests_modal;
-let classListNames = []
-let classListGrades = []
+let classListNames = [];
+let classListGrades = [];
 
 const teacherRequests = [];
 document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(
         "http://127.0.0.1:3000/api/cookie/check"
     );
-
     if (statusCode != 200) {
         alert("Cookie does not exist. Redirecting to sign in page");
         window.location.href = "http://127.0.0.1:5501/pages/signIn.html";
-    }
-    token = resData.token;
-    role = resData.userData.roles[0];
+    } else if (statusCode == 200) {
+        token = resData.token;
+        role = resData.userData.roles[0];
 
     if(role == "guardian" || role == "teacher"){
         classApi = "readByTeacherAndGuardian"
@@ -121,30 +168,37 @@ document.addEventListener("DOMContentLoaded", async () => {
         token
     );
 
-    if(classData.result){
-        classes = classData.result.classes;
-        classListNames = classes.map((classData) => classData.className);
-        classListGrades = classes.map((classData) => classData.grade);
-        const classNameGradeObj = classListNames.map((name, index) => ({
-            className: name,
-            gradeName: classListGrades[index]
-        }))
-            .sort((a, b) => a.gradeName - b.gradeName);
-        const classTypeSelectEl = document.getElementById("class_type")
-        for (const classData of classNameGradeObj) {
-            const optionEl = document.createElement("option");
-            optionEl.value = `${classData.className} (${classData.gradeName})`;
-            optionEl.innerText = `${classData.className} (${classData.gradeName})`;
-            
-            classTypeSelectEl.appendChild(optionEl);
+        if (classData.result) {
+            classes = classData.result.classes;
+            classListNames = classes.map((classData) => classData.className);
+            classListGrades = classes.map((classData) => classData.grade);
+            const classNameGradeObj = classListNames
+                .map((name, index) => ({
+                    className: name,
+                    gradeName: classListGrades[index],
+                }))
+                .sort((a, b) => a.gradeName - b.gradeName);
+            const classTypeSelectEl = document.getElementById("class_type");
+            for (const classData of classNameGradeObj) {
+                const optionEl = document.createElement("option");
+                optionEl.value = `${classData.className} (${classData.gradeName})`;
+                optionEl.innerText = `${classData.className} (${classData.gradeName})`;
+
+                classTypeSelectEl.appendChild(optionEl);
+            }
         }
-    }
-    const postDatas = await getPosts('http://127.0.0.1:3000/api/posts/getPosts', token);
-    const postStatusCode = postDatas.statusCode;
-    if (postStatusCode === 200) {
-        posts = postDatas.resData.result.items;
-        feeds = posts.filter((post) => post.contentType === 'feed');
-        announcements = posts.filter((post) => post.contentType === 'announcement');
+        const postDatas = await getPosts(
+            "http://127.0.0.1:3000/api/posts/getPosts",
+            token
+        );
+        const postStatusCode = postDatas.statusCode;
+        if (postStatusCode === 200) {
+            posts = postDatas.resData.result.items;
+            feeds = posts.filter((post) => post.contentType === "feed");
+            announcements = posts.filter(
+                (post) => post.contentType === "announcement"
+            );
+        }
     }
 
     const leaveRequestData = await getLeaveRequests(endpoints.readAllLeaveRequestsApi, token)
@@ -156,10 +210,10 @@ dashboard_sidebar.addEventListener("click", () => {
     removeAllUnderlineInSidebarTxt();
     dashboard_txt.classList.add("side_bar_active");
 
-    if(role == "admin"){
-        dashboardClassButton = "Create class"
-    }else{
-        dashboardClassButton = "Join class"
+    if (role == "admin") {
+        dashboardClassButton = "Create class";
+    } else {
+        dashboardClassButton = "Join class";
     }
 
     if (classes.length == 0) {
@@ -196,7 +250,7 @@ dashboard_sidebar.addEventListener("click", () => {
                             </div> 
                         </div>
                     </div>
-        `
+        `;
     } else if (classes.length > 0) {
         mainEl.innerHTML = `
         <div class="dashboard_wrapper">
@@ -236,14 +290,14 @@ dashboard_sidebar.addEventListener("click", () => {
                 <p class="class-left__classname">${classData.className}</p>
                 <p class="class-left__grade">&nbsp;(${classData.grade})</p>
             </div>
-            `
+            `;
 
             let classButton;
             classButton = `
                         <div class="class-right">
                             <p class="view_detail_btn">View details</p>
                         </div>
-                `
+                `;
             // if(role == "admin"){
             //     classButton = `
             //             <div class="class-right">
@@ -257,7 +311,7 @@ dashboard_sidebar.addEventListener("click", () => {
             //             </div>
             //     `
             // }
-            
+
             // const classHTMLEl = `
             //         <div class="class">
             //             <div class="class-left">
@@ -269,7 +323,7 @@ dashboard_sidebar.addEventListener("click", () => {
             //             </div>
             //         </div>
             // `
-            classWrapper.innerHTML += `<div class="class"> ${classHTMLEl} ${classButton} </div>`
+            classWrapper.innerHTML += `<div class="class"> ${classHTMLEl} ${classButton} </div>`;
             // classWrapper.innerHTML += classHTMLEl;
         }
     }
@@ -279,18 +333,17 @@ dashboard_sidebar.addEventListener("click", () => {
 
     class_detail_dialog_clost_btn.addEventListener("click", () => {
         classDetailDialogBox.close();
-        view_detail_dialog_studentsEl.innerHTML = ""
+        view_detail_dialog_studentsEl.innerHTML = "";
     });
 
     create_class_btn.addEventListener("click", () => {
-        if(role == "admin"){
+        if (role == "admin") {
             create_class_dialog_box.showModal();
-        }else if(role == "teacher"){
-            join_class_dialog_box.showModal()
-        }else {
+        } else if (role == "teacher") {
+            join_class_dialog_box.showModal();
+        } else {
             parent_join_class_dialog_box.showModal();
         }
-        
     });
 
     create_class_dialog_close_btn.addEventListener("click", () => {
@@ -298,16 +351,16 @@ dashboard_sidebar.addEventListener("click", () => {
     });
 
     join_class_dialog_close_btn.addEventListener("click", () => {
-        join_class_dialog_box.close()
-    })
+        join_class_dialog_box.close();
+    });
 
     add_student_close_dialog_box.addEventListener("click", () => {
-        add_student_dialog_box.close()
-    })
+        add_student_dialog_box.close();
+    });
 
     parent_join_class_dialog_close_btn.addEventListener("click", () => {
         parent_join_class_dialog_box.close();
-    })
+    });
 });
 
 home_sidebar.addEventListener("click", () => {
@@ -468,16 +521,19 @@ home_sidebar.addEventListener("click", () => {
                         </div>
                     </div>
                 </div>
-        `
+        `;
             posts_wrapper.insertAdjacentHTML("afterbegin", postHTMLEl);
 
-            generatePostImages(feed.contentPictures, document.getElementById('post_images_wrapper'))
-                
-            generatePostFiles(feed.documents)
-            
+            generatePostImages(
+                feed.contentPictures,
+                document.getElementById("post_images_wrapper")
+            );
+
+            generatePostFiles(feed.documents);
         });
     } else if (feeds.length === 0) {
-        posts_wrapper.innerHTML = '<p style="color: white;">No feeds available</p>';
+        posts_wrapper.innerHTML =
+            '<p style="color: white;">No feeds available</p>';
     }
 
     if (role == "guardian") {
@@ -536,7 +592,9 @@ announcement_sidebar.addEventListener("click", () => {
             </div>
     `;
     posts_wrapper = document.getElementById("posts_wrapper");
-    const create_announcement_btn = document.getElementById("create_announcement_btn");
+    const create_announcement_btn = document.getElementById(
+        "create_announcement_btn"
+    );
     if (announcements.length > 0) {
         announcements.forEach((announcement) => {
             const postHTMLEl = `
@@ -664,16 +722,19 @@ announcement_sidebar.addEventListener("click", () => {
                         </div>
                     </div>
                 </div>
-        `
+        `;
             posts_wrapper.insertAdjacentHTML("afterbegin", postHTMLEl);
 
-            generatePostImages(announcement.contentPictures, document.getElementById('post_images_wrapper'))
-                
-            generatePostFiles(announcement.documents)
-            
+            generatePostImages(
+                announcement.contentPictures,
+                document.getElementById("post_images_wrapper")
+            );
+
+            generatePostFiles(announcement.documents);
         });
     } else if (announcements.length === 0) {
-        posts_wrapper.innerHTML = '<p style="color: white;">No announcements available</p>';
+        posts_wrapper.innerHTML =
+            '<p style="color: white;">No announcements available</p>';
     }
 
     if (role == "guardian") {
@@ -792,14 +853,14 @@ create_class_form.addEventListener("submit", async (e) => {
         },
         body: JSON.stringify({
             grade,
-            className: classname
+            className: classname,
         }),
-    })
+    });
 
     const data = await res.json();
 
-    if(res.status === 201) {
-        alert("Class created successfully")
+    if (res.status === 201) {
+        alert("Class created successfully");
     }
     const classHTMLEl = `
         <div class="class">
@@ -811,14 +872,14 @@ create_class_form.addEventListener("submit", async (e) => {
                 <p class="view_detail_btn">View details</p>
             </div>
         </div>
-    `
+    `;
 
     classWrapper.insertAdjacentHTML("afterbegin", classHTMLEl);
     create_class_dialog_box.close();
     addViewDetailsFunctionality();
 });
 
-join_class_form.addEventListener("submit", async(e) => {
+join_class_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const classCode = e.target.class_code.value;
     join_class_form.reset();
@@ -829,67 +890,68 @@ join_class_form.addEventListener("submit", async(e) => {
             authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            classCode
+            classCode,
         }),
-    })
+    });
 
     const data = await res.json();
-    alert(`${data.msg}`)
-})
-
+    alert(`${data.msg}`);
+});
 
 join_class_code_form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    
+
     const classCode = e.target.class_code.value;
     currentclassCode = classCode;
-    console.log("This is class code" + classCode)
-    const res = await fetch(`http://127.0.0.1:3000/api/student/getByClassCode/${classCode}`,{
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
+    console.log("This is class code" + classCode);
+    const res = await fetch(
+        `http://127.0.0.1:3000/api/student/getByClassCode/${classCode}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`,
+            },
         }
-    })
+    );
     const studentData = await res.json();
-    console.log("This is student data from class code " + JSON.stringify(studentData))
+    console.log(
+        "This is student data from class code " + JSON.stringify(studentData)
+    );
     let childrenNames = document.getElementById("child_name_input");
-    
+
     childrenNames.innerHTML = "";
-    
 
     let allStudents = studentData.result;
-    if(allStudents){
+    if (allStudents) {
         classCodeChildren = allStudents;
-        childrenNames.innerHTML = `<option> Student Names </option>`
+        childrenNames.innerHTML = `<option> Student Names </option>`;
         allStudents.forEach((childData, i) => {
             childrenNames.innerHTML += `
             <option value=${i} class="optionData"> ${childData.name}</option>
              `;
-             classCodeChildren.push(childData)
-        // })
-        })
+            classCodeChildren.push(childData);
+            // })
+        });
 
         childrenNames.addEventListener("change", () => {
-            let i = childrenNames.value
-            child_dob_input.innerHTML = `<option> ${classCodeChildren[i].dateofBirth}</option>`
-        })
-
-        
-    }else{
-        childrenNames.innerHTML = `<option> No Students at the moment </option>`
+            let i = childrenNames.value;
+            child_dob_input.innerHTML = `<option> ${classCodeChildren[i].dateofBirth}</option>`;
+        });
+    } else {
+        childrenNames.innerHTML = `<option> No Students at the moment </option>`;
     }
-    
-    
-})
+});
 
-parent_join_class_form.addEventListener("submit", async(e)=> {
+parent_join_class_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let childIndex = e.target.child_name_input.value;
     let childName = classCodeChildren[childIndex].name;
-    let childDob = classCodeChildren[childIndex].dateofBirth
-    console.log("This is child name: " + JSON.stringify(classCodeChildren[childIndex]))
-    console.log("This is class code " + currentclassCode)
+    let childDob = classCodeChildren[childIndex].dateofBirth;
+    console.log(
+        "This is child name: " + JSON.stringify(classCodeChildren[childIndex])
+    );
+    console.log("This is class code " + currentclassCode);
     const res = await fetch("http://127.0.0.1:3000/api/request/create", {
         method: "POST",
         headers: {
@@ -897,17 +959,15 @@ parent_join_class_form.addEventListener("submit", async(e)=> {
             authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            "classCode": currentclassCode,
-            "childName": childName,
-            "studentDOB": childDob
-        })
-    })
+            classCode: currentclassCode,
+            childName: childName,
+            studentDOB: childDob,
+        }),
+    });
 
     const data = await res.json();
-    alert(data.msg)
-})
-
-
+    alert(data.msg);
+});
 
 // search_student.addEventListener("click",(e) => {
 //     let classCode = e.target.class_code.value;
@@ -944,7 +1004,7 @@ create_feed_form.addEventListener("submit", async (e) => {
         headers: {
             authorization: `Bearer ${token}`,
         },
-        body: formData
+        body: formData,
     });
     const data = await res.json();
     const post = data.result;
@@ -1074,12 +1134,15 @@ create_feed_form.addEventListener("submit", async (e) => {
                         </div>
                     </div>
                 </div>
-        `
-            posts_wrapper.insertAdjacentHTML("afterbegin", postHTMLEl);
+        `;
+    posts_wrapper.insertAdjacentHTML("afterbegin", postHTMLEl);
 
-            generatePostImages(post.contentPictures, document.getElementById('post_images_wrapper'))
-                
-            generatePostFiles(post.documents)
+    generatePostImages(
+        post.contentPictures,
+        document.getElementById("post_images_wrapper")
+    );
+
+    generatePostFiles(post.documents);
 });
 
 create_announcement_form.addEventListener("submit", async (e) => {
@@ -1112,7 +1175,7 @@ create_announcement_form.addEventListener("submit", async (e) => {
         headers: {
             authorization: `Bearer ${token}`,
         },
-        body: formData
+        body: formData,
     });
     const data = await res.json();
     const announcementsRes = await data.result;
@@ -1242,12 +1305,15 @@ create_announcement_form.addEventListener("submit", async (e) => {
                 </div>
             </div>
         </div>
-`
+`;
     posts_wrapper.insertAdjacentHTML("afterbegin", postHTMLEl);
 
-    generatePostImages(announcementsRes.contentPictures, document.getElementById('post_images_wrapper'))
-        
-    generatePostFiles(announcementsRes.documents)
+    generatePostImages(
+        announcementsRes.contentPictures,
+        document.getElementById("post_images_wrapper")
+    );
+
+    generatePostFiles(announcementsRes.documents);
 });
 
 function removeAllUnderlineInSidebarTxt() {
@@ -1258,72 +1324,85 @@ function removeAllUnderlineInSidebarTxt() {
 
 function addViewDetailsFunctionality() {
     const view_detail_btns = document.querySelectorAll(".view_detail_btn");
-    
-    view_detail_btns.forEach((btn, i) => {
-        btn.addEventListener("click", async (e) => {  
 
-            
+    view_detail_btns.forEach((btn, i) => {
+        btn.addEventListener("click", async (e) => {
             currentClass = classes[i]._id;
-            view_detail_dialog_schoolnameEl.textContent = classes[i].school.schoolName;
+            view_detail_dialog_schoolnameEl.textContent =
+                classes[i].school.schoolName;
             view_detail_dialog_classnameEl.textContent = classes[i].className;
             view_detail_dialog_classcodeEl.textContent = classes[i].classCode;
             if (classes[i].teachers.length === 0) {
-                view_detail_dialog_teacherEl.classList.replace("dialog_name", "dialog_name_unassigned")
+                view_detail_dialog_teacherEl.classList.replace(
+                    "dialog_name",
+                    "dialog_name_unassigned"
+                );
                 view_detail_dialog_teacherEl.textContent = "Unassigned";
             } else if (classes[i].teachers.length > 0) {
-                view_detail_dialog_teacherEl.classList.replace("dialog_name_unassigned" ,"dialog_name")
-                view_detail_dialog_teacherEl.textContent = classes[i].teachers[0].userName;
-                
+                view_detail_dialog_teacherEl.classList.replace(
+                    "dialog_name_unassigned",
+                    "dialog_name"
+                );
+                console.log(classes[i].teachers[0].userName);
+                view_detail_dialog_teacherEl.textContent =
+                    classes[i].teachers[0].userName;
+
                 // color: rgb(154, 228, 248)
-            } 
+            }
             if (classes[i].students.length === 0) {
                 view_detail_dialog_studentsEl.innerHTML = `<p  style="padding: 1em">No students assigned yet.`;
             } else if (classes[i].students.length > 0) {
+                console.log(classes[i]);
+                console.log(classes[i].students);
                 for (let student of classes[i].students) {
+                    console.log(student);
                     view_detail_dialog_studentsEl.innerHTML += `<p class="student_name">${student.name}</p>`;
-                    studentIds.push(student._id)
+                    studentIds.push(student);
+                    console.log(studentIds);
                 }
             }
             classDetailDialogBox.showModal();
             viewStudentDetailsFunctionality();
-            
         });
     });
 }
 
-function viewStudentDetailsFunctionality(){
-
+function viewStudentDetailsFunctionality() {
     const students = document.querySelectorAll(".student_name");
-            students.forEach((req, i) => {
-                students[i].addEventListener('click', async () => {
-                    view_detail_dialog_parentsEl.innerHTML = ``
-                    student_detail_dialog_box.showModal();
-                    const res = await fetch(`http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            authorization: `Bearer ${token}`,
-                        }
-                    })
+    students.forEach((req, i) => {
+        students[i].addEventListener("click", async () => {
+            view_detail_dialog_parentsEl.innerHTML = ``;
+            student_detail_dialog_box.showModal();
+            const res = await fetch(
+                `http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
-                    const data = await res.json();
-                    const studentName = data.result.name;
-                    studentParents = data.result.guardians;
-                    const date = data.result.dateofBirth.split("-")
-                    const year = date[0];
-                    const month = date[1];
-                    const day = date[2].split("T")[0];
+            const data = await res.json();
+            console.log(data.result);
+            const studentName = data.result.name;
+            studentParents = data.result.guardians;
+            const date = data.result.dateofBirth.split("-");
+            const year = date[0];
+            const month = date[1];
+            const day = date[2].split("T")[0];
 
-                    const formattedDate = `${year}-${month}-${day}`
-                    
-                    view_detail_dialog_student_nameEl.innerHTML = studentName;
-                    view_detail_dialog_student_dobEl.innerHTML = formattedDate;
+            const formattedDate = `${year}-${month}-${day}`;
 
-                    if(studentParents.length === 0){
-                        view_detail_dialog_parentsEl.innerHTML = `<p  style="padding: 1em">No Parents for this student yet</p>`
-                    }else if(studentParents.length > 0){
-                        for(let eachParent of studentParents){
-                            view_detail_dialog_parentsEl.innerHTML += `
+            view_detail_dialog_student_nameEl.innerHTML = studentName;
+            view_detail_dialog_student_dobEl.innerHTML = formattedDate;
+
+            if (studentParents.length === 0) {
+                view_detail_dialog_parentsEl.innerHTML = `<p  style="padding: 1em">No Parents for this student yet</p>`;
+            } else if (studentParents.length > 0) {
+                for (let eachParent of studentParents) {
+                    view_detail_dialog_parentsEl.innerHTML += `
                             <p  style="padding: 1em">
                             Parent name: ${eachParent.userName} <br>
                             Parent email: ${eachParent.email} <br>
@@ -1331,26 +1410,31 @@ function viewStudentDetailsFunctionality(){
                             Parent relationship: ${eachParent.relationship[0]} <br>
                             
                             </p>
-                            `
-                        }
+                            `;
+                }
+            }
+            if (role != "guardian") {
+                const parentPendings = await fetch(
+                    `http://127.0.0.1:3000/api/request/readGuardianRequests?classId=${currentClass}&studentId=${studentIds[i]}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            authorization: `Bearer ${token}`,
+                        },
                     }
-                    if(role != "guardian"){
-                        const parentPendings = await fetch(`http://127.0.0.1:3000/api/request/readGuardianRequests?classId=${currentClass}&studentId=${studentIds[i]}`, {
-                            method: "GET", 
-                            headers: {
-                                "Content-Type": "application/json",
-                                authorization: `Bearer ${token}`,
-                            },
-                        })
-                        // console.log("current class " + currentClass + " and student id is " + studentIds[i] + " and token: " + token)
-                        const parentPendingsData = await parentPendings.json();
-                        console.log("parentPending data" + JSON.stringify(parentPendingsData))
-                        pendingParents = parentPendingsData.result
-                        if(pendingParents.length === 0){
-                            view_detail_dialog_pending_parentsEl.innerHTML = `<p style="padding: 1em"> There are no pending parent requests at the moment </p>`
-                        }else if (pendingParents.length > 0){
-                            for(let eachParent of pendingParents){
-                                view_detail_dialog_pending_parentsEl.innerHTML += `
+                );
+                // console.log("current class " + currentClass + " and student id is " + studentIds[i] + " and token: " + token)
+                const parentPendingsData = await parentPendings.json();
+                console.log(
+                    "parentPending data" + JSON.stringify(parentPendingsData)
+                );
+                pendingParents = parentPendingsData.result;
+                if (pendingParents.length === 0) {
+                    view_detail_dialog_pending_parentsEl.innerHTML = `<p style="padding: 1em"> There are no pending parent requests at the moment </p>`;
+                } else if (pendingParents.length > 0) {
+                    for (let eachParent of pendingParents) {
+                        view_detail_dialog_pending_parentsEl.innerHTML += `
                                 <p  style="padding: 1em">
                                 Parent name: ${eachParent.sender.userName} <br>
                                 Parent email: ${eachParent.sender.email} <br>
@@ -1363,46 +1447,47 @@ function viewStudentDetailsFunctionality(){
                                     <p class="accept_guardian">Accept</p>
                                     <p class="reject_guardian">Reject</p>
                                 </div>
-                                `
-                                let accept_guardian =  document.querySelector(".accept_guardian");
-                                let reject_guardian = document.querySelector(".reject_guardian");
-    
-                                let response;
-                                accept_guardian.addEventListener("click", async() => {
-                                    response = await respondGuardianRequests( 
-                                        currentClass, 
-                                        eachParent._id, 
-                                        true, 
-                                        token)
+                                `;
+                        let accept_guardian =
+                            document.querySelector(".accept_guardian");
+                        let reject_guardian =
+                            document.querySelector(".reject_guardian");
 
-                                        alert(response.msg)
-                                })
-    
-                                reject_guardian.addEventListener("click", async() => {
-                                    response = await respondGuardianRequests(
-                                        currentClass, 
-                                        eachParent._id, 
-                                        false, 
-                                        token)
+                        let response;
+                        accept_guardian.addEventListener("click", async () => {
+                            response = await respondGuardianRequests(
+                                currentClass,
+                                eachParent._id,
+                                true,
+                                token
+                            );
 
-                                        alert(response.msg)
-                                })
-                                
-                            }
-                        }
-                    }else{
-                        let parents_list_titleEl = document.getElementsByClassName("parents_list_title")[1]
-                        parents_list_titleEl.remove();
+                            alert(response.msg);
+                        });
+
+                        reject_guardian.addEventListener("click", async () => {
+                            response = await respondGuardianRequests(
+                                currentClass,
+                                eachParent._id,
+                                false,
+                                token
+                            );
+
+                            alert(response.msg);
+                        });
                     }
+                }
+            } else {
+                let parents_list_titleEl =
+                    document.getElementsByClassName("parents_list_title")[1];
+                parents_list_titleEl.remove();
+            }
 
-                    
-
-                    student_details_dialog_close_btnEl.addEventListener("click", () => {
-                        student_detail_dialog_box.close();
-                    })
-                })
-            })
-    
+            student_details_dialog_close_btnEl.addEventListener("click", () => {
+                student_detail_dialog_box.close();
+            });
+        });
+    });
 }
 
 async function getClasses(api, token) {
@@ -1422,7 +1507,7 @@ async function getPosts(api, token) {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "authorization": `Bearer ${token}`,
+            authorization: `Bearer ${token}`,
         },
     });
     const resData = await res.json();
@@ -1437,27 +1522,24 @@ function generatePostImages(postImageURLs, domEl) {
     // const postImagesWrapper = document.getElementById("post_images_wrapper");
     if (postImageURLs.length > 0) {
         for (const postImageUrl of postImageURLs) {
-            const postImgHTMLEL =
-                            `
+            const postImgHTMLEL = `
                                 <img
                                     class="post_image"
                                     src="${postImageUrl}"
                                     alt="some png"
                                 />
-                            `
+                            `;
             domEl.insertAdjacentHTML("afterbegin", postImgHTMLEL);
         }
-    } 
+    }
 }
 
 function generatePostFiles(postFilesArr) {
     const postFilesWrapper = document.getElementById("file_wrapper");
     if (postFilesArr.length > 0) {
-        
         for (const [index, postFile] of postFilesArr.entries()) {
-            const fileName = getFileNameFromURL(postFile)
-            const postFileHTMLEl =
-                `
+            const fileName = getFileNameFromURL(postFile);
+            const postFileHTMLEl = `
                     <div class="file">
                         <span>${index})</span>
                         <p>${fileName}</p>
@@ -1481,21 +1563,21 @@ function generatePostFiles(postFilesArr) {
                             </a>
                         </div>
                     </div>
-                `
+                `;
             postFilesWrapper.innerHTML += postFileHTMLEl;
         }
     }
 }
 
 // Add event listener for image input
-imageInput.addEventListener('change', function () {
+imageInput.addEventListener("change", function () {
     if (this.files.length > 0) {
         alert(`${this.files.length} image(s) selected.`);
     }
 });
 
 // Add event listener for document input
-documentInput.addEventListener('change', function () {
+documentInput.addEventListener("change", function () {
     if (this.files.length > 0) {
         alert(`${this.files.length} file(s) selected.`);
     }
@@ -1503,41 +1585,43 @@ documentInput.addEventListener('change', function () {
 
 function getFileNameFromURL(url) {
     // Split the URL by the '/' character and get the last part
-    const parts = url.split('/');
+    const parts = url.split("/");
     const fileName = parts[parts.length - 1];
 
     // Split the file name by '.' to remove the file extension
-    const nameWithoutExtension = fileName.split('.')[0];
+    const nameWithoutExtension = fileName.split(".")[0];
 
     return nameWithoutExtension;
 }
 
-
 teacher_requests_modal = document.getElementById("teacher_requests_modal");
-teacher_request_btn.addEventListener("click", async() => {
+teacher_request_btn.addEventListener("click", async () => {
     teacher_requests_modal.innerHTML = "";
     teacher_requests_modal.classList.toggle("display_flex");
-    
-    const res = await fetch(`http://127.0.0.1:3000/api/request/readTeacherRequests?classId=${currentClass}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
+
+    const res = await fetch(
+        `http://127.0.0.1:3000/api/request/readTeacherRequests?classId=${currentClass}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`,
+            },
         }
-    })
+    );
 
     const resData = await res.json();
 
     let allRequests = resData.result;
     requestIds = [];
-    if(!allRequests){
+    if (!allRequests) {
         teacher_requests_modal.innerHTML = `
         <div class="request">
             <p style="margin: auto"> No Requests at the moment</p>
         </div>
-        `
-    }else{
-        for(let oneRequest of allRequests){
+        `;
+    } else {
+        for (let oneRequest of allRequests) {
             requestIds.push(oneRequest._id);
             const request = `
             <div class="request">
@@ -1547,109 +1631,120 @@ teacher_request_btn.addEventListener("click", async() => {
                     <p class="reject_button">Reject</p>
                 </div>
             </div>
-        `
+        `;
             teacher_requests_modal.innerHTML += request;
         }
-        respondFunctionality()
+        respondFunctionality();
     }
-
-
-    
 });
 
-add_student_button.addEventListener("click", async() => {
-    add_student_dialog_box.showModal()
-})
+add_student_button.addEventListener("click", async () => {
+    add_student_dialog_box.showModal();
+});
 
-add_student_form.addEventListener("submit", async(e)=> {
+add_student_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const student_name = e.target.student_name.value;
     const student_dob = e.target.student_dob.value;
 
-    const res = await fetch(`http://127.0.0.1:3000/api/student/add/${currentClass}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            "name":  student_name,
-            "dateofBirth": student_dob,
-        })
-    })
+    const res = await fetch(
+        `http://127.0.0.1:3000/api/student/add/${currentClass}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                name: student_name,
+                dateofBirth: student_dob,
+            }),
+        }
+    );
 
     const resData = await res.json();
     let newStudentData = resData.result;
-    alert(resData.msg)
-})
+    alert(resData.msg);
+});
 
 function respondFunctionality() {
-
     const requests = document.querySelectorAll(".request");
     requests.forEach((req, i) => {
         let username = req.querySelector(".requested_by").textContent;
-        let accept_button =  req.querySelector(".accept_button");
+        let accept_button = req.querySelector(".accept_button");
         let reject_button = req.querySelector(".reject_button");
-        accept_button.addEventListener("click", async ()=> {
+        accept_button.addEventListener("click", async () => {
             const resData = await respondTeacherRequests(
-                'http://127.0.0.1:3000/api/request/respondTeacherReq',
+                "http://127.0.0.1:3000/api/request/respondTeacherReq",
                 currentClass,
                 requestIds[i],
                 true,
                 token
             );
-            alert(resData.msg)
+            alert(resData.msg);
             view_detail_dialog_teacherEl.textContent = username;
             teacher_requests_modal.classList.toggle("display_flex");
-            view_detail_dialog_teacherEl.classList.replace("dialog_name_unassigned" ,"dialog_name")
-        })
+            view_detail_dialog_teacherEl.classList.replace(
+                "dialog_name_unassigned",
+                "dialog_name"
+            );
+        });
 
-        reject_button.addEventListener("click", async ()=> {
+        reject_button.addEventListener("click", async () => {
             const resData = await respondTeacherRequests(
-                'http://127.0.0.1:3000/api/request/respondTeacherReq',
+                "http://127.0.0.1:3000/api/request/respondTeacherReq",
                 currentClass,
                 requestIds[i],
                 false,
                 token
             );
-            alert(resData.msg)
-        })
+            alert(resData.msg);
+        });
 
         // reject_button.addEventListener("click", async())
-    })
+    });
 }
 
-async function respondGuardianRequests(classId, requestId, response, token){
-    const res = await fetch(`http://127.0.0.1:3000/api/request/respondGuardianReq`, {
+async function respondGuardianRequests(classId, requestId, response, token) {
+    const res = await fetch(
+        `http://127.0.0.1:3000/api/request/respondGuardianReq`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                classId: classId,
+                requestId: requestId,
+                response: response,
+            }),
+        }
+    );
+
+    const resData = await res.json();
+    return resData;
+}
+
+async function respondTeacherRequests(
+    url,
+    classId,
+    requestId,
+    response,
+    token
+) {
+    const res = await fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             authorization: `Bearer ${token}`,
-        }, 
-        body: JSON.stringify({
-            "classId": classId,
-            "requestId": requestId, 
-            "response": response
-        })
-    })
-
-    const resData = await res.json();
-    return resData
-}
-
-async function respondTeacherRequests(url, classId, requestId, response, token){
-    const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ classId, requestId, response})
-    })
+        body: JSON.stringify({ classId, requestId, response }),
+    });
 
     const resData = await res.json();
     return resData;
-} 
+}
 
 
 //LOGOUT
