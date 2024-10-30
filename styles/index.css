@@ -76,7 +76,7 @@ main {
     color: #aff99e;
 }
 
-.posts_wrapper {
+.posts_wrapper, .leaveReqWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;

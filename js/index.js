@@ -1,4 +1,5 @@
 import { checkCookie } from "../utils/cookies.js";
+import * as endpoints from "./endpoints.js";
 
 const body = document.body;
 const mainEl = document.querySelector("main");
@@ -57,6 +58,8 @@ const dashboard_sidebar = document.getElementById("dashboard_sidebar");
 const home_sidebar = document.getElementById("home_sidebar");
 const announcement_sidebar = document.getElementById("announcement_sidebar");
 const chat_sidebar = document.getElementById("chat_sidebar");
+const leave_reqSideBar = document.getElementById("leave_reqSideBar")
+const logout_sidebar = document.getElementById("logout_sidebar")
 
 const sidebar_txts = document.querySelectorAll(".sidebar_txt");
 const dashboard_txt = document.getElementById("dashboard_txt");
@@ -121,6 +124,7 @@ let dashboardClassButton;
 let posts = [];
 let feeds = [];
 let announcements = [];
+let leaveRequests;
 let token;
 let studentIds = [];
 let studentParents = [];
@@ -142,25 +146,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Cookie does not exist. Redirecting to sign in page");
         window.location.href = "http://127.0.0.1:5501/pages/signIn.html";
     } else if (statusCode == 200) {
+        token = resData.token;
         role = resData.userData.roles[0];
 
-        if (role == "guardian" || role == "teacher") {
-            classApi = "readByTeacherAndGuardian";
-            teacher_request_btn.remove();
-            if (role == "guardian") {
-                add_student_button.remove();
-                // add_student_button.style.display == "none"
-            }
-        } else {
-            classApi = "readByAdmin";
+    if(role == "guardian" || role == "teacher"){
+        classApi = "readByTeacherAndGuardian"
+        teacher_request_btn.remove()
+        if(role == "guardian"){
             add_student_button.remove();
             // add_student_button.style.display == "none"
         }
-
-        const classData = await getClasses(
-            `http://127.0.0.1:3000/api/class/${classApi}`,
-            token
-        );
+    }else{
+        classApi = "readByAdmin"
+        add_student_button.remove()
+        leave_reqSideBar.remove()
+        // add_student_button.style.display == "none"
+    }
+    
+    const classData = await getClasses(
+        `http://127.0.0.1:3000/api/class/${classApi}`,
+        token
+    );
 
         if (classData.result) {
             classes = classData.result.classes;
@@ -194,6 +200,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
         }
     }
+
+    const leaveRequestData = await getLeaveRequests(endpoints.readAllLeaveRequestsApi, token)
+    console.log("This is leave request " + JSON.stringify(leaveRequestData.result))
+    leaveRequests = leaveRequestData.result;
 });
 
 dashboard_sidebar.addEventListener("click", () => {
@@ -751,6 +761,84 @@ announcement_sidebar.addEventListener("click", () => {
         });
     });
 });
+
+leave_reqSideBar.addEventListener("click", () => {
+    removeAllUnderlineInSidebarTxt();
+    announcement_txt.classList.add("side_bar_active");
+    mainEl.innerHTML = `
+        <div class="leavereq_wrapper">
+                    <div class="leavereq_header_wrapper header_wrapper">
+                        <div class="school_info">
+                            <div class="school_logo_wrapper"></div>
+                            <p class="school_name">GUSTO</p>
+                            <p class="class_name">(Apple)</p>
+                        </div>
+    
+                        <svg
+                            class="notification_icon"
+                            width="26"
+                            height="31"
+                            viewBox="0 0 35 42"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M10.9764 37.1197C11.3965 38.5301 12.2581 39.7667 13.4334 40.6459C14.6086 41.5251 16.0348 42 17.5 42C18.9652 42 20.3914 41.5251 21.5666 40.6459C22.7419 39.7667 23.6035 38.5301 24.0236 37.1197H10.9764ZM0 35.166H35V29.305L31.1111 23.444V13.6757C31.1111 11.8798 30.7591 10.1014 30.075 8.44222C29.391 6.78301 28.3884 5.27542 27.1245 4.00551C25.8606 2.73561 24.3601 1.72827 22.7087 1.041C21.0574 0.353732 19.2874 0 17.5 0C15.7126 0 13.9426 0.353732 12.2913 1.041C10.6399 1.72827 9.1394 2.73561 7.87549 4.00551C6.61158 5.27542 5.60899 6.78301 4.92497 8.44222C4.24095 10.1014 3.88889 11.8798 3.88889 13.6757V23.444L0 29.305V35.166Z"
+                                fill="#B4E0F7"
+                            />
+                        </svg>
+                        <p id="create_leaveReq_btn" class="create_leaveReq_btn create_btn">Take Leave</p>
+                    </div>
+    
+                <div id="leaveReqWrapper" class="leaveReqWrapper"></div>       
+        `
+    
+    
+    const leaveReqWrapper = document.getElementById("leaveReqWrapper")
+    if(leaveRequests.length > 0){
+        // leaveReqMsg = `
+        //     <div> <h1> Testing </h1> </div>
+        // `;
+        console.log("The length of the leave request would be " + leaveRequests.length)
+        leaveRequests.forEach((request) => {
+            let leaveReqMsg = `
+            <div class="post_card">
+                    <div class="posted_by_wrapper">
+                        <div class="posted_by_info">
+                            <div class="posted_by_name_role">
+                                <p class="name">Child Name </p>
+                                <span class="delimiter">|</span>
+                                <p class="role">Mg Mg</p>
+                            </div>
+                            <!-- <p class="post_type">idk shit </p> --> 
+                        </div>
+                    </div>
+                        
+                    <div class="post_details">
+                        <p class="title">Leave Date: 30.3.2024 -> 5.5.2025</p>
+                        <p class="body">
+                            Request Type: Sick
+                        </p>
+                    </div>
+            </div>
+        `
+        leaveReqWrapper.insertAdjacentHTML("afterbegin", leaveReqMsg);
+        })
+            
+    }else{
+        leaveReqMsg = `<div class="dashboard_main_wrapper">
+                        <div class="classes_wrapper">
+                            <div class="dashboard_alert_wrapper">
+                                <p class="dashboard_alert">There are no leave requests</p>
+                            </div> 
+                        </div>
+                    </div>`
+        
+    }
+
+   
+    
+})
 
 create_class_form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -1656,4 +1744,40 @@ async function respondTeacherRequests(
 
     const resData = await res.json();
     return resData;
+}
+
+
+//LOGOUT
+
+logout_sidebar.addEventListener('click', async()=>{
+    const returnMsg = await logOut(endpoints.logOutApi, token);
+    console.log("return msg " + returnMsg)
+    alert(JSON.stringify(returnMsg))
+    location.reload()
+})
+
+async function logOut(api, token){
+    const res = await fetch(api, {
+        method: "POST", 
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${token}`
+        }
+    })
+    const response = await res.json();
+    return response.msg;
+}
+
+async function getLeaveRequests(api, token){
+    const res = await fetch(api, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    const response = await res.json();
+    return response;
 }
