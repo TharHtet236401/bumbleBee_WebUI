@@ -9,8 +9,8 @@
             type="image/x-icon"
             href="../assets/images/fav-logo.png"
         />
-        <link rel="stylesheet" href="../styles/reset.css" />
-        <link rel="stylesheet" href="../styles/signIn.css" />
+        <link rel="stylesheet" href="./styles/reset.css" />
+        <link rel="stylesheet" href="./styles/signIn.css" />
     </head>
     <body>
         <main>
@@ -120,6 +120,9 @@
                     </clipPath>
                     </defs>
                     </svg>
+                    <div class="form_input_wrapper">
+                        <label id="go_to_signUp"  style="cursor: pointer; text-decoration: underline">Go to sign up page</label>
+                    </div>
                 <div class="form_input_wrapper username_wrapper">
                     <label for="email">Email</label>
                     <input type="text" id="email" name="email">
@@ -128,11 +131,12 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password">
                 </div>
+
                 <button type="submit">Login</button>
             </form>
         </main>
     </body>
-    <script src="../utils/cookies.js" type="module"></script>
-    <script src="../js/signIn.js" type="module"></script>
+    <script src="./utils/cookies.js" type="module"></script>
+    <script src="./js/signIn.js" type="module"></script>
     <!-- <script src="../js/auth/signIn.js" type="module"></script> -->
 </html>

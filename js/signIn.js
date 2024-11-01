@@ -13,6 +13,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+const go_to_signUp = document.getElementById("go_to_signUp")
+go_to_signUp.addEventListener("click", () => {
+    window.location.href = "http://127.0.0.1:5501/signUp.html";
+})
+
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();

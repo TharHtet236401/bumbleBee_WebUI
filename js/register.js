@@ -152,3 +152,8 @@ form.addEventListener("submit", async (e) => {
 function isPasswordSame(password, c_password) {
     return password === c_password;
 }
+
+const go_to_signIn = document.getElementById("go_to_signIn");
+go_to_signIn.addEventListener("click", ()=> {
+    window.location.href = "http://127.0.0.1:5501/signIn.html"
+})
