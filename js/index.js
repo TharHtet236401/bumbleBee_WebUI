@@ -1,5 +1,6 @@
 import { checkCookie } from "../utils/cookies.js";
 import * as endpoints from "./endpoints.js";
+import {formatDate } from "../utils/utils.js"
 
 const body = document.body;
 const mainEl = document.querySelector("main");
@@ -15,6 +16,7 @@ const create_class_dialog_box = document.getElementById(
 const create_class_dialog_close_btn = document.getElementById(
     "create_class_dialog_close_btn"
 );
+const leave_requests_btn = document.getElementById("leave_requests_btn")
 
 const join_class_dialog_box = document.getElementById("join_class_dialog_box");
 const join_class_dialog_close_btn = document.getElementById(
@@ -65,6 +67,7 @@ const sidebar_txts = document.querySelectorAll(".sidebar_txt");
 const dashboard_txt = document.getElementById("dashboard_txt");
 const home_txt = document.getElementById("home_txt");
 const announcement_txt = document.getElementById("announcement_txt");
+const leave_req_txt = document.getElementById("leave_req_txt")
 const chat_txt = document.getElementById("chat_txt");
 
 const create_class_form = document.getElementById("create_class_form");
@@ -119,12 +122,14 @@ let posts_wrapper;
 let role;
 let classes = [];
 let requestIds = [];
+let leaveRequestIds = [];
 let currentClass;
 let dashboardClassButton;
 let posts = [];
 let feeds = [];
 let announcements = [];
-let leaveRequests;
+let myChildren = []
+let leaveRequests = [];
 let token;
 let studentIds = [];
 let studentParents = [];
@@ -134,13 +139,15 @@ let classCodeChildren = [];
 let classApi;
 let classWrapper;
 let teacher_requests_modal;
+let leave_requests_modal;
 let classListNames = [];
 let classListGrades = [];
 
 const teacherRequests = [];
 document.addEventListener("DOMContentLoaded", async () => {
+    let leaveRequestData 
     const { statusCode, resData } = await checkCookie(
-        "http://127.0.0.1:3000/api/cookie/check"
+        endpoints.cookieCheckApi
     );
     if (statusCode != 200) {
         alert("Cookie does not exist. Redirecting to sign in page");
@@ -150,21 +157,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         role = resData.userData.roles[0];
 
     if(role == "guardian" || role == "teacher"){
-        classApi = "readByTeacherAndGuardian"
+        classApi = endpoints.readByTrAndGuardianApi
         teacher_request_btn.remove()
         if(role == "guardian"){
+            myChildren = resData.userData.childern
             add_student_button.remove();
+            leaveRequestData = await getLeaveRequests(endpoints.readAllLeaveRequestsApi, token)
             // add_student_button.style.display == "none"
+        }else{
+            leaveRequestData = await getLeaveRequests(endpoints.readAllClassLeaveReqApi, token)
         }
     }else{
-        classApi = "readByAdmin"
+        classApi = endpoints.readByAdminApi
         add_student_button.remove()
         leave_reqSideBar.remove()
         // add_student_button.style.display == "none"
     }
     
     const classData = await getClasses(
-        `http://127.0.0.1:3000/api/class/${classApi}`,
+        classApi,
         token
     );
 
@@ -188,7 +199,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         const postDatas = await getPosts(
-            "http://127.0.0.1:3000/api/posts/getPosts",
+            endpoints.getPostsApi,
             token
         );
         const postStatusCode = postDatas.statusCode;
@@ -201,9 +212,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    const leaveRequestData = await getLeaveRequests(endpoints.readAllLeaveRequestsApi, token)
-    console.log("This is leave request " + JSON.stringify(leaveRequestData.result))
-    leaveRequests = leaveRequestData.result;
+    
+    if(leaveRequestData){
+        leaveRequests = leaveRequestData.result;
+    }
+    
 });
 
 dashboard_sidebar.addEventListener("click", () => {
@@ -764,9 +777,8 @@ announcement_sidebar.addEventListener("click", () => {
 
 leave_reqSideBar.addEventListener("click", () => {
     removeAllUnderlineInSidebarTxt();
-    announcement_txt.classList.add("side_bar_active");
+    leave_req_txt.classList.add("side_bar_active");
     mainEl.innerHTML = `
-        <div class="leavereq_wrapper">
                     <div class="leavereq_header_wrapper header_wrapper">
                         <div class="school_info">
                             <div class="school_logo_wrapper"></div>
@@ -791,6 +803,51 @@ leave_reqSideBar.addEventListener("click", () => {
                     </div>
     
                 <div id="leaveReqWrapper" class="leaveReqWrapper"></div>       
+
+        <dialog id="take_leave_dialog_box">
+            <div class="dialog_wrapper">
+                <form id="enter_student_form" action=""></form>
+                <form id="take_leave_form"></form>
+                    <div class="input_box_wrapper"> 
+                        <label for="student_input" form="enter_student_form">Student </label>
+                        <select id="student_input" form="enter_student_form">
+                            <option>Your children</option>
+                        </select>
+                    </div>
+                    <button id="add_student_button" form="enter_student_form" type="submit">Search</button>
+
+                    <div class="input_box_wrapper"> 
+                        <label for="class_input" form="take_leave_form">Class </label>
+                        <select id="class_input" form="take_leave_form">
+                            <option>Select your children first</option>
+                        </select>
+                    </div>
+                    <div class="input_box_wrapper"> 
+                        <label for="start_date_input" form="take_leave_form">Start Date: </label>
+                        <input id="start_date_input" type="date" form="take_leave_form" name="start_date_input">
+                    </div>
+                    <div class="input_box_wrapper"> 
+                        <label for="end_date_input" form="take_leave_form">End Date: </label>
+                        <input id="end_date_input" type="date" form="take_leave_form" name="end_date_input">
+                    </div>
+                    <div class="input_box_wrapper"> 
+                        <label for="reason_input" form="take_leave_form">Reason </label>
+                        <select id="reason_input" form="take_leave_form">
+                            <option>Select your children first</option>
+                        </select>
+                    </div>
+                    <div class="input_box_wrapper"> 
+                        <label for="description_input" form="take_leave_form">Description</label>
+                        <input id="description_input" type="text" aria-label="class code" name="description_name_input" form="take_leave_form">
+                    </div>
+                    <button type="submit" style="margin-left: 0" form="take_leave_form">Submit</button>
+                <div class="dialog_btns">
+                    <svg id="take_leave_dialog_close_btn" class="cross_btn dialog_btn" width="32" height="32" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.8968 0.938489C23.1723 0.647174 23.5035 0.414054 23.8707 0.252909C24.2378 0.0917648 24.6336 0.00586591 25.0345 0.000290072C25.4355 -0.00528577 25.8335 0.0695746 26.205 0.220446C26.5765 0.371318 26.914 0.595139 27.1976 0.87868C27.4811 1.16222 27.7049 1.49973 27.8558 1.87125C28.0067 2.24277 28.0815 2.64077 28.076 3.04172C28.0704 3.44266 27.9845 3.83843 27.8234 4.20561C27.6622 4.57279 27.4291 4.90394 27.1378 5.17949L18.3478 13.9695C18.3361 13.9811 18.3269 13.9949 18.3206 14.0101C18.3143 14.0253 18.311 14.0415 18.311 14.058C18.311 14.0744 18.3143 14.0907 18.3206 14.1059C18.3269 14.1211 18.3361 14.1349 18.3478 14.1465L27.1378 22.9365C27.4201 23.2142 27.6447 23.5451 27.7985 23.91C27.9523 24.2749 28.0324 24.6667 28.034 25.0627C28.0357 25.4587 27.9589 25.8511 27.8082 26.2173C27.6574 26.5835 27.4356 26.9163 27.1556 27.1963C26.8756 27.4764 26.5429 27.6982 26.1768 27.8491C25.8106 27.9999 25.4182 28.0768 25.0222 28.0752C24.6262 28.0737 24.2344 27.9937 23.8694 27.84C23.5045 27.6862 23.1735 27.4618 22.8958 27.1795L14.1058 18.3895C14.0942 18.3778 14.0804 18.3686 14.0652 18.3623C14.05 18.356 14.0337 18.3528 14.0173 18.3528C14.0008 18.3528 13.9845 18.356 13.9694 18.3623C13.9542 18.3686 13.9404 18.3778 13.9288 18.3895L5.13877 27.1795C4.86106 27.4618 4.53021 27.6864 4.16528 27.8402C3.80036 27.994 3.40859 28.0741 3.01257 28.0757C2.61655 28.0774 2.22412 28.0006 1.85792 27.8499C1.49172 27.6991 1.15899 27.4773 0.87893 27.1973C0.598867 26.9173 0.377013 26.5847 0.226165 26.2185C0.0753158 25.8523 -0.00154226 25.4599 2.34485e-05 25.0639C0.00158915 24.6679 0.0815478 24.2761 0.235287 23.9111C0.389027 23.5462 0.613504 23.2153 0.895771 22.9375L9.68577 14.1475C9.69741 14.1359 9.70665 14.1221 9.71295 14.1069C9.71925 14.0917 9.7225 14.0754 9.7225 14.059C9.7225 14.0425 9.71925 14.0263 9.71295 14.0111C9.70665 13.9959 9.69741 13.9821 9.68577 13.9705L0.895771 5.18049C0.340663 4.6164 0.0309415 3.85581 0.0340705 3.0644C0.0371994 2.27299 0.352926 1.51487 0.912477 0.955191C1.47203 0.395508 2.23007 0.0796027 3.02148 0.0762872C3.81289 0.0729717 4.57355 0.382514 5.13777 0.937489L13.9278 9.72749C13.9394 9.73913 13.9532 9.74837 13.9684 9.75467C13.9836 9.76097 13.9998 9.76421 14.0163 9.76421C14.0327 9.76421 14.049 9.76097 14.0642 9.75467C14.0794 9.74837 14.0932 9.73913 14.1048 9.72749L22.8968 0.938489Z" fill="#E2E2E2"/>
+                    </svg>
+                </div>
+            </div>
+        </dialog>
         `
     
     
@@ -799,53 +856,201 @@ leave_reqSideBar.addEventListener("click", () => {
         // leaveReqMsg = `
         //     <div> <h1> Testing </h1> </div>
         // `;
-        console.log("The length of the leave request would be " + leaveRequests.length)
+        // console.log("The length of the leave request would be " + leaveRequests.length)
         leaveRequests.forEach((request) => {
-            let leaveReqMsg = `
+            let readButtonEl;
+
+            if(!request.description){
+                request.description = "none"
+            }
+            if(role == "teacher"){
+                readButtonEl = `
+                <div style="display: flex; width: 100%">
+                    <div style="float: left; width: 70%"> </div>
+                    <div style="float: right; width: 30%">
+                        <p id="read_button" class="read_button create_btn">Read</p>
+                    </div>
+                </div>
+                `
+            }else{
+                readButtonEl = ``;
+            }
+            const leaveReqMsg = `
             <div class="post_card">
                     <div class="posted_by_wrapper">
                         <div class="posted_by_info">
                             <div class="posted_by_name_role">
-                                <p class="name">Child Name </p>
+                                <p class="name">${request.classId.className} (${request.classId.grade})</p>
                                 <span class="delimiter">|</span>
-                                <p class="role">Mg Mg</p>
+                                <p class="role">${request.studentId.name}</p>
                             </div>
-                            <!-- <p class="post_type">idk shit </p> --> 
+                            <p class="post_type">${request.status} </p> 
                         </div>
                     </div>
                         
                     <div class="post_details">
-                        <p class="title">Leave Date: 30.3.2024 -> 5.5.2025</p>
+                        <p class="title">Leave Date: ${formatDate(request.startDate)} -> ${formatDate(request.endDate)}</p>
                         <p class="body">
-                            Request Type: Sick
+                            Request Type: ${request.reason} <br>
+                            Description: ${request.description}
                         </p>
                     </div>
+                    ${readButtonEl}
             </div>
         `
-        leaveReqWrapper.insertAdjacentHTML("afterbegin", leaveReqMsg);
+            leaveReqWrapper.innerHTML += leaveReqMsg
+            // leaveReqWrapper.insertAdjacentHTML("afterbegin", leaveReqMsg);
+    
         })
             
     }else{
-        leaveReqMsg = `<div class="dashboard_main_wrapper">
+        const leaveReqMsg = `<div class="dashboard_main_wrapper">
                         <div class="classes_wrapper">
                             <div class="dashboard_alert_wrapper">
                                 <p class="dashboard_alert">There are no leave requests</p>
                             </div> 
                         </div>
                     </div>`
-        
+        leaveReqWrapper.insertAdjacentHTML("afterbegin", leaveReqMsg)
     }
-
-   
     
+    leaveRequestForm()
+    let read_button = document.querySelectorAll(".read_button")
+    
+    read_button.forEach((eachButton, i) => {
+         
+        eachButton.addEventListener("click", async()=> {
+            let status;
+            console.log("Status blangl" + leaveRequests[i].status)
+            if(leaveRequests[i].status === "read"){
+                status = "unread"
+            }else{
+                status = "read"
+            }
+            console.log("the status is" + status)
+            console.log("This is endpoit " + endpoints.respondLeaveRequestApi)
+            console.log("leave request id " + leaveRequests[i]._id)
+            console.log("Thhis is token " + token)
+            const respondLeaveReqMsg = await respondLeaveRequest(endpoints.respondLeaveRequestApi, token, leaveRequests[i]._id, status)
+            console.log(respondLeaveReqMsg.result)
+            alert(respondLeaveReqMsg.msg)
+        })
+    })
+
 })
+
+async function respondLeaveRequest(api, token, leaveReqId, response){
+            const res = await fetch(api, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    leaveReqId, response
+                })
+            })
+    
+            return( await res.json())
+            
+        }
+
+
+function leaveRequestForm(){
+    
+    let selectedChild; 
+    const create_leaveReq_btn = document.getElementById("create_leaveReq_btn")
+    const take_leave_dialog_close_btn = document.getElementById("take_leave_dialog_close_btn")
+    const take_leave_student_input = document.getElementById("student_input")
+    const class_input = document.getElementById("class_input")
+    const reason_input = document.getElementById("reason_input")
+    const take_leave_form = document.getElementById("take_leave_form")
+
+    if(role === "teacher"){
+        create_leaveReq_btn.remove()
+    }
+    
+    create_leaveReq_btn.addEventListener("click", ()=> {
+        take_leave_dialog_box.showModal()
+        console.log("My children when clicked " + JSON.stringify(myChildren))
+        take_leave_student_input.innerHTML = ""
+        myChildren.forEach((childData, i) => {
+            take_leave_student_input.innerHTML += `<option value=${i}> ${childData.name}</option>`
+        })
+    })
+
+    const enter_student_form = document.getElementById("enter_student_form")
+    enter_student_form.addEventListener("submit", (e)=> {
+        e.preventDefault();
+        class_input.innerHTML = "";
+        reason_input.innerHTML = "";
+        let childIndex = e.target.student_input.value
+        selectedChild = myChildren[childIndex];
+        alert("testing is " + selectedChild._id)
+        
+        selectedChild.classes.forEach((eachClass, i) => {
+            class_input.innerHTML += `<option value=${i}>${eachClass.className}</option>`
+        })
+        
+        reason_input.innerHTML += `
+            <option value="Health">Health</option>
+            <option value="Personal">Personal</option>
+            <option value="Others">Others</options>
+        `
+    })
+
+    take_leave_form.addEventListener("submit", async(e)=> {
+        e.preventDefault();
+        let classIndex = e.target.class_input.value;
+        let selectedClassId = selectedChild.classes[classIndex]._id
+        let startDate = e.target.start_date_input.value;
+        let endDate = e.target.end_date_input.value;
+        let reason = e.target.reason_input.value;
+        let description = e.target.description_input.value;
+
+        const response = await createLeaveRequest(
+            endpoints.createLeaveRequestApi,
+            token,
+            selectedChild._id,
+            selectedClassId,
+            startDate,
+            endDate,
+            reason,
+            description
+        )
+
+        alert(response.msg)
+        location.reload()
+    })
+
+    take_leave_dialog_close_btn.addEventListener("click", ()=> {
+        take_leave_dialog_box.close()
+    })
+}
+
+async function createLeaveRequest(api, token, studentId, classId, startDate, endDate, reason){
+    const res = await fetch(api, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            studentId, classId, startDate, endDate, reason
+        })
+    })
+
+    const response = await res.json();
+    return response;
+}
+
 
 create_class_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const grade = e.target.grade.value;
     const classname = e.target.classname.value;
     create_class_form.reset();
-    const res = await fetch("http://localhost:3000/api/class/create", {
+    const res = await fetch(endpoints.createClassApi, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -883,7 +1088,7 @@ join_class_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const classCode = e.target.class_code.value;
     join_class_form.reset();
-    const res = await fetch("http://localhost:3000/api/request/create", {
+    const res = await fetch(endpoints.joinClassApi, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -903,9 +1108,9 @@ join_class_code_form.addEventListener("submit", async (e) => {
 
     const classCode = e.target.class_code.value;
     currentclassCode = classCode;
-    console.log("This is class code" + classCode);
+    // console.log("This is class code" + classCode);
     const res = await fetch(
-        `http://127.0.0.1:3000/api/student/getByClassCode/${classCode}`,
+        endpoints.getStudentsByClassCodeApi(classCode),
         {
             method: "GET",
             headers: {
@@ -915,9 +1120,6 @@ join_class_code_form.addEventListener("submit", async (e) => {
         }
     );
     const studentData = await res.json();
-    console.log(
-        "This is student data from class code " + JSON.stringify(studentData)
-    );
     let childrenNames = document.getElementById("child_name_input");
 
     childrenNames.innerHTML = "";
@@ -948,11 +1150,9 @@ parent_join_class_form.addEventListener("submit", async (e) => {
     let childIndex = e.target.child_name_input.value;
     let childName = classCodeChildren[childIndex].name;
     let childDob = classCodeChildren[childIndex].dateofBirth;
-    console.log(
-        "This is child name: " + JSON.stringify(classCodeChildren[childIndex])
-    );
-    console.log("This is class code " + currentclassCode);
-    const res = await fetch("http://127.0.0.1:3000/api/request/create", {
+
+
+    const res = await fetch(endpoints.joinClassApi, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -969,14 +1169,6 @@ parent_join_class_form.addEventListener("submit", async (e) => {
     alert(data.msg);
 });
 
-// search_student.addEventListener("click",(e) => {
-//     let classCode = e.target.class_code.value;
-//     // let classCode = document.querySelector('[name="class_code"]');
-//     // const res = await fetch(`http://localhost:3000/api/student/getByClassCode/${classCode}`)
-//     // const studentData = res.json();
-//     // alert("This is student data from class code " + JSON.stringify(studentData))
-//     console.log("This is the class code " + classCode.value)
-// })
 
 create_feed_form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -999,7 +1191,7 @@ create_feed_form.addEventListener("submit", async (e) => {
         }
     }
     create_feed_form.reset();
-    const res = await fetch("http://localhost:3000/api/posts/create", {
+    const res = await fetch(endpoints.createPostApi, {
         method: "POST",
         headers: {
             authorization: `Bearer ${token}`,
@@ -1170,7 +1362,7 @@ create_announcement_form.addEventListener("submit", async (e) => {
     }
 
     create_announcement_form.reset();
-    const res = await fetch("http://localhost:3000/api/posts/create", {
+    const res = await fetch(endpoints.createPostApi, {
         method: "POST",
         headers: {
             authorization: `Bearer ${token}`,
@@ -1343,7 +1535,7 @@ function addViewDetailsFunctionality() {
                     "dialog_name_unassigned",
                     "dialog_name"
                 );
-                console.log(classes[i].teachers[0].userName);
+                // console.log(classes[i].teachers[0].userName);
                 view_detail_dialog_teacherEl.textContent =
                     classes[i].teachers[0].userName;
 
@@ -1352,13 +1544,10 @@ function addViewDetailsFunctionality() {
             if (classes[i].students.length === 0) {
                 view_detail_dialog_studentsEl.innerHTML = `<p  style="padding: 1em">No students assigned yet.`;
             } else if (classes[i].students.length > 0) {
-                console.log(classes[i]);
-                console.log(classes[i].students);
+                // console.log("This is the students of classes " + JSON.stringify(classes[i].students))
                 for (let student of classes[i].students) {
-                    console.log(student);
                     view_detail_dialog_studentsEl.innerHTML += `<p class="student_name">${student.name}</p>`;
-                    studentIds.push(student);
-                    console.log(studentIds);
+                    studentIds.push(student._id);
                 }
             }
             classDetailDialogBox.showModal();
@@ -1374,7 +1563,8 @@ function viewStudentDetailsFunctionality() {
             view_detail_dialog_parentsEl.innerHTML = ``;
             student_detail_dialog_box.showModal();
             const res = await fetch(
-                `http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`,
+                // `http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`,
+                endpoints.getStudentInfoApi(studentIds[i]),
                 {
                     method: "GET",
                     headers: {
@@ -1385,18 +1575,12 @@ function viewStudentDetailsFunctionality() {
             );
 
             const data = await res.json();
-            console.log(data.result);
+            // console.log(data.result);
             const studentName = data.result.name;
             studentParents = data.result.guardians;
-            const date = data.result.dateofBirth.split("-");
-            const year = date[0];
-            const month = date[1];
-            const day = date[2].split("T")[0];
-
-            const formattedDate = `${year}-${month}-${day}`;
 
             view_detail_dialog_student_nameEl.innerHTML = studentName;
-            view_detail_dialog_student_dobEl.innerHTML = formattedDate;
+            view_detail_dialog_student_dobEl.innerHTML = formatDate(data.result.dateofBirth);
 
             if (studentParents.length === 0) {
                 view_detail_dialog_parentsEl.innerHTML = `<p  style="padding: 1em">No Parents for this student yet</p>`;
@@ -1415,7 +1599,7 @@ function viewStudentDetailsFunctionality() {
             }
             if (role != "guardian") {
                 const parentPendings = await fetch(
-                    `http://127.0.0.1:3000/api/request/readGuardianRequests?classId=${currentClass}&studentId=${studentIds[i]}`,
+                    endpoints.readGuardianRequestsApi(currentClass,studentIds[i]),
                     {
                         method: "GET",
                         headers: {
@@ -1426,9 +1610,9 @@ function viewStudentDetailsFunctionality() {
                 );
                 // console.log("current class " + currentClass + " and student id is " + studentIds[i] + " and token: " + token)
                 const parentPendingsData = await parentPendings.json();
-                console.log(
-                    "parentPending data" + JSON.stringify(parentPendingsData)
-                );
+                // console.log(
+                //     "parentPending data" + JSON.stringify(parentPendingsData)
+                // );
                 pendingParents = parentPendingsData.result;
                 if (pendingParents.length === 0) {
                     view_detail_dialog_pending_parentsEl.innerHTML = `<p style="padding: 1em"> There are no pending parent requests at the moment </p>`;
@@ -1478,10 +1662,50 @@ function viewStudentDetailsFunctionality() {
                     }
                 }
             } else {
-                let parents_list_titleEl =
-                    document.getElementsByClassName("parents_list_title")[1];
+                let parents_list_titleEl = document.getElementsByClassName("parents_list_title")[1];
                 parents_list_titleEl.remove();
             }
+             leave_requests_modal = document.getElementById("leave_requests_modal")
+             
+            // leave_requests_btn.addEventListener("click", async ()=> {
+            //     leave_requests_modal.innerHTML = ""
+            //     leave_requests_modal.classList.toggle("display_flex");
+            //     let leaveRequests = [];
+            //     const response = await getLeaveRequestsByClass(endpoints.readLeaveRequestByClassApi(currentClass), token)
+            //     leaveRequests = response.result;
+            //     if (leaveRequests.length > 0){
+            //         // leave_requests_modal.innerHTML = `
+            //         // <div class="request">
+            //         // <p style="margin: auto"> No Requests at the moment</p>
+            //         // </div>
+            //         // `
+            //         for (let oneRequest of leaveRequests) {
+            //             leaveRequestIds.push(oneRequest._id);
+            //             const request = `
+            //             <div class="request">
+            //                 <p class="requested_by">${oneRequest.studentId.name}</p>
+            //                 <p class="requested_by">${oneRequest.reason}</p>
+            //                 <p class="requested_by">${oneRequest.description}</p>
+            //                 <p class="requested_by">${formatDate(oneRequest.startDate)}</p>
+            //                 <p class="requested_by">${formatDate(oneRequest.endDate)}</p>
+            //                 <div class="offer_accept_reject">
+            //                     <p class="accept_button">Read</p>
+            //                 </div>
+            //             </div>
+            //         `;
+            //             leave_requests_modal.innerHTML += request;
+            //         }
+            //     }else{
+            //         console.log("This function works")
+            //         leave_requests_modal.innerHTML = `
+            //         <div class="request">
+            //         <p style="margin: auto"> No Requests at the moment</p>
+            //         </div>
+            //         `
+                    
+            //     }
+            //     console.log("This is the response "+ JSON.stringify(leaveRequests))
+            // })
 
             student_details_dialog_close_btnEl.addEventListener("click", () => {
                 student_detail_dialog_box.close();
@@ -1600,7 +1824,7 @@ teacher_request_btn.addEventListener("click", async () => {
     teacher_requests_modal.classList.toggle("display_flex");
 
     const res = await fetch(
-        `http://127.0.0.1:3000/api/request/readTeacherRequests?classId=${currentClass}`,
+        endpoints.readTeacherRequestsApi(currentClass),
         {
             method: "GET",
             headers: {
@@ -1648,7 +1872,7 @@ add_student_form.addEventListener("submit", async (e) => {
     const student_dob = e.target.student_dob.value;
 
     const res = await fetch(
-        `http://127.0.0.1:3000/api/student/add/${currentClass}`,
+        endpoints.addNewStudentToClassApi(currentClass),
         {
             method: "POST",
             headers: {
@@ -1675,7 +1899,7 @@ function respondFunctionality() {
         let reject_button = req.querySelector(".reject_button");
         accept_button.addEventListener("click", async () => {
             const resData = await respondTeacherRequests(
-                "http://127.0.0.1:3000/api/request/respondTeacherReq",
+                endpoints.respondTeacherReqApi,
                 currentClass,
                 requestIds[i],
                 true,
@@ -1692,7 +1916,7 @@ function respondFunctionality() {
 
         reject_button.addEventListener("click", async () => {
             const resData = await respondTeacherRequests(
-                "http://127.0.0.1:3000/api/request/respondTeacherReq",
+                endpoints.respondTeacherReqApi,
                 currentClass,
                 requestIds[i],
                 false,
@@ -1707,7 +1931,7 @@ function respondFunctionality() {
 
 async function respondGuardianRequests(classId, requestId, response, token) {
     const res = await fetch(
-        `http://127.0.0.1:3000/api/request/respondGuardianReq`,
+        endpoints.respondGuardianReqApi,
         {
             method: "POST",
             headers: {
@@ -1751,7 +1975,7 @@ async function respondTeacherRequests(
 
 logout_sidebar.addEventListener('click', async()=>{
     const returnMsg = await logOut(endpoints.logOutApi, token);
-    console.log("return msg " + returnMsg)
+    // console.log("return msg " + returnMsg)
     alert(JSON.stringify(returnMsg))
     location.reload()
 })
@@ -1780,4 +2004,16 @@ async function getLeaveRequests(api, token){
 
     const response = await res.json();
     return response;
+}
+
+async function getLeaveRequestsByClass(api, token){
+    const res = await fetch(api, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${token}`
+        }
+    })
+    const response = await res.json();
+    return response
 }

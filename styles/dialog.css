@@ -94,11 +94,11 @@ dialog {
     cursor: pointer;
 }
 
-.teacher_requests_modal {
+.teacher_requests_modal, .leave_requests_modal {
     position: absolute;
     right: 0;
     background-color: rgb(58, 58, 58);
-    width: 300px;
+    min-width: 300px;
     max-height: 350px;
     overflow-y: auto;
     scrollbar-width: thin;
