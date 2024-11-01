@@ -147,7 +147,7 @@ const teacherRequests = [];
 document.addEventListener("DOMContentLoaded", async () => {
     let leaveRequestData 
     const { statusCode, resData } = await checkCookie(
-        "http://127.0.0.1:3000/api/cookie/check"
+        endpoints.cookieCheckApi
     );
     if (statusCode != 200) {
         alert("Cookie does not exist. Redirecting to sign in page");
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         role = resData.userData.roles[0];
 
     if(role == "guardian" || role == "teacher"){
-        classApi = "readByTeacherAndGuardian"
+        classApi = endpoints.readByTrAndGuardianApi
         teacher_request_btn.remove()
         if(role == "guardian"){
             myChildren = resData.userData.childern
@@ -168,14 +168,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             leaveRequestData = await getLeaveRequests(endpoints.readAllClassLeaveReqApi, token)
         }
     }else{
-        classApi = "readByAdmin"
+        classApi = endpoints.readByAdminApi
         add_student_button.remove()
         leave_reqSideBar.remove()
         // add_student_button.style.display == "none"
     }
     
     const classData = await getClasses(
-        `http://127.0.0.1:3000/api/class/${classApi}`,
+        classApi,
         token
     );
 
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         const postDatas = await getPosts(
-            "http://127.0.0.1:3000/api/posts/getPosts",
+            endpoints.getPostsApi,
             token
         );
         const postStatusCode = postDatas.statusCode;
@@ -1050,7 +1050,7 @@ create_class_form.addEventListener("submit", async (e) => {
     const grade = e.target.grade.value;
     const classname = e.target.classname.value;
     create_class_form.reset();
-    const res = await fetch("http://localhost:3000/api/class/create", {
+    const res = await fetch(endpoints.createClassApi, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -1088,7 +1088,7 @@ join_class_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const classCode = e.target.class_code.value;
     join_class_form.reset();
-    const res = await fetch("http://localhost:3000/api/request/create", {
+    const res = await fetch(endpoints.joinClassApi, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -1110,7 +1110,7 @@ join_class_code_form.addEventListener("submit", async (e) => {
     currentclassCode = classCode;
     // console.log("This is class code" + classCode);
     const res = await fetch(
-        `http://127.0.0.1:3000/api/student/getByClassCode/${classCode}`,
+        endpoints.getStudentsByClassCodeApi(classCode),
         {
             method: "GET",
             headers: {
@@ -1152,7 +1152,7 @@ parent_join_class_form.addEventListener("submit", async (e) => {
     let childDob = classCodeChildren[childIndex].dateofBirth;
 
 
-    const res = await fetch("http://127.0.0.1:3000/api/request/create", {
+    const res = await fetch(endpoints.joinClassApi, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -1169,14 +1169,6 @@ parent_join_class_form.addEventListener("submit", async (e) => {
     alert(data.msg);
 });
 
-// search_student.addEventListener("click",(e) => {
-//     let classCode = e.target.class_code.value;
-//     // let classCode = document.querySelector('[name="class_code"]');
-//     // const res = await fetch(`http://localhost:3000/api/student/getByClassCode/${classCode}`)
-//     // const studentData = res.json();
-//     // alert("This is student data from class code " + JSON.stringify(studentData))
-//     console.log("This is the class code " + classCode.value)
-// })
 
 create_feed_form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -1199,7 +1191,7 @@ create_feed_form.addEventListener("submit", async (e) => {
         }
     }
     create_feed_form.reset();
-    const res = await fetch("http://localhost:3000/api/posts/create", {
+    const res = await fetch(endpoints.createPostApi, {
         method: "POST",
         headers: {
             authorization: `Bearer ${token}`,
@@ -1370,7 +1362,7 @@ create_announcement_form.addEventListener("submit", async (e) => {
     }
 
     create_announcement_form.reset();
-    const res = await fetch("http://localhost:3000/api/posts/create", {
+    const res = await fetch(endpoints.createPostApi, {
         method: "POST",
         headers: {
             authorization: `Bearer ${token}`,
@@ -1571,7 +1563,8 @@ function viewStudentDetailsFunctionality() {
             view_detail_dialog_parentsEl.innerHTML = ``;
             student_detail_dialog_box.showModal();
             const res = await fetch(
-                `http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`,
+                // `http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`,
+                endpoints.getStudentInfoApi(studentIds[i]),
                 {
                     method: "GET",
                     headers: {
@@ -1606,7 +1599,7 @@ function viewStudentDetailsFunctionality() {
             }
             if (role != "guardian") {
                 const parentPendings = await fetch(
-                    `http://127.0.0.1:3000/api/request/readGuardianRequests?classId=${currentClass}&studentId=${studentIds[i]}`,
+                    endpoints.readGuardianRequestsApi(currentClass,studentIds[i]),
                     {
                         method: "GET",
                         headers: {
@@ -1669,8 +1662,7 @@ function viewStudentDetailsFunctionality() {
                     }
                 }
             } else {
-                let parents_list_titleEl =
-                    document.getElementsByClassName("parents_list_title")[1];
+                let parents_list_titleEl = document.getElementsByClassName("parents_list_title")[1];
                 parents_list_titleEl.remove();
             }
              leave_requests_modal = document.getElementById("leave_requests_modal")
@@ -1832,7 +1824,7 @@ teacher_request_btn.addEventListener("click", async () => {
     teacher_requests_modal.classList.toggle("display_flex");
 
     const res = await fetch(
-        `http://127.0.0.1:3000/api/request/readTeacherRequests?classId=${currentClass}`,
+        endpoints.readTeacherRequestsApi(currentClass),
         {
             method: "GET",
             headers: {
@@ -1880,7 +1872,7 @@ add_student_form.addEventListener("submit", async (e) => {
     const student_dob = e.target.student_dob.value;
 
     const res = await fetch(
-        `http://127.0.0.1:3000/api/student/add/${currentClass}`,
+        endpoints.addNewStudentToClassApi(currentClass),
         {
             method: "POST",
             headers: {
@@ -1907,7 +1899,7 @@ function respondFunctionality() {
         let reject_button = req.querySelector(".reject_button");
         accept_button.addEventListener("click", async () => {
             const resData = await respondTeacherRequests(
-                "http://127.0.0.1:3000/api/request/respondTeacherReq",
+                endpoints.respondTeacherReqApi,
                 currentClass,
                 requestIds[i],
                 true,
@@ -1924,7 +1916,7 @@ function respondFunctionality() {
 
         reject_button.addEventListener("click", async () => {
             const resData = await respondTeacherRequests(
-                "http://127.0.0.1:3000/api/request/respondTeacherReq",
+                endpoints.respondTeacherReqApi,
                 currentClass,
                 requestIds[i],
                 false,
@@ -1939,7 +1931,7 @@ function respondFunctionality() {
 
 async function respondGuardianRequests(classId, requestId, response, token) {
     const res = await fetch(
-        `http://127.0.0.1:3000/api/request/respondGuardianReq`,
+        endpoints.respondGuardianReqApi,
         {
             method: "POST",
             headers: {
