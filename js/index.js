@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     if (statusCode != 200) {
         alert("Cookie does not exist. Redirecting to sign in page");
-        window.location.href = "http://127.0.0.1:5501/signIn.html";
+        window.location.href = `${endpoints.mainApi}/signIn.html`;
     } else if (statusCode == 200) {
         token = resData.token;
         role = resData.userData.roles[0];
@@ -1563,7 +1563,6 @@ function viewStudentDetailsFunctionality() {
             view_detail_dialog_parentsEl.innerHTML = ``;
             student_detail_dialog_box.showModal();
             const res = await fetch(
-                // `http://127.0.0.1:3000/api/student/getStudentInfo/${studentIds[i]}`,
                 endpoints.getStudentInfoApi(studentIds[i]),
                 {
                     method: "GET",
