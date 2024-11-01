@@ -50,6 +50,7 @@ export const editLeaveRequestApi = `${leaveRequestRoute}/edit`;
 export const deleteLeaveRequestApi = `${leaveRequestRoute}/delete`;
 export const respondLeaveRequestApi = `${leaveRequestRoute}/respond`;
 export const getLeaveReasonsApi = `${leaveRequestRoute}/reasons`;
+export const readAllClassLeaveReqApi = `${leaveRequestRoute}/readAllClassLeaveReq`
 
 // Post Api
 export const createPostApi = `${postRoute}/create`;

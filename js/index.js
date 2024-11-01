@@ -16,6 +16,7 @@ const create_class_dialog_box = document.getElementById(
 const create_class_dialog_close_btn = document.getElementById(
     "create_class_dialog_close_btn"
 );
+const leave_requests_btn = document.getElementById("leave_requests_btn")
 
 const join_class_dialog_box = document.getElementById("join_class_dialog_box");
 const join_class_dialog_close_btn = document.getElementById(
@@ -121,6 +122,7 @@ let posts_wrapper;
 let role;
 let classes = [];
 let requestIds = [];
+let leaveRequestIds = [];
 let currentClass;
 let dashboardClassButton;
 let posts = [];
@@ -137,11 +139,13 @@ let classCodeChildren = [];
 let classApi;
 let classWrapper;
 let teacher_requests_modal;
+let leave_requests_modal;
 let classListNames = [];
 let classListGrades = [];
 
 const teacherRequests = [];
 document.addEventListener("DOMContentLoaded", async () => {
+    let leaveRequestData 
     const { statusCode, resData } = await checkCookie(
         "http://127.0.0.1:3000/api/cookie/check"
     );
@@ -158,7 +162,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(role == "guardian"){
             myChildren = resData.userData.childern
             add_student_button.remove();
+            leaveRequestData = await getLeaveRequests(endpoints.readAllLeaveRequestsApi, token)
             // add_student_button.style.display == "none"
+        }else{
+            leaveRequestData = await getLeaveRequests(endpoints.readAllClassLeaveReqApi, token)
         }
     }else{
         classApi = "readByAdmin"
@@ -205,7 +212,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    const leaveRequestData = await getLeaveRequests(endpoints.readAllLeaveRequestsApi, token)
+    
     if(leaveRequestData){
         leaveRequests = leaveRequestData.result;
     }
@@ -851,6 +858,23 @@ leave_reqSideBar.addEventListener("click", () => {
         // `;
         // console.log("The length of the leave request would be " + leaveRequests.length)
         leaveRequests.forEach((request) => {
+            let readButtonEl;
+
+            if(!request.description){
+                request.description = "none"
+            }
+            if(role == "teacher"){
+                readButtonEl = `
+                <div style="display: flex; width: 100%">
+                    <div style="float: left; width: 70%"> </div>
+                    <div style="float: right; width: 30%">
+                        <p id="read_button" class="read_button create_btn">Read</p>
+                    </div>
+                </div>
+                `
+            }else{
+                readButtonEl = ``;
+            }
             const leaveReqMsg = `
             <div class="post_card">
                     <div class="posted_by_wrapper">
@@ -871,9 +895,12 @@ leave_reqSideBar.addEventListener("click", () => {
                             Description: ${request.description}
                         </p>
                     </div>
+                    ${readButtonEl}
             </div>
         `
-        leaveReqWrapper.insertAdjacentHTML("afterbegin", leaveReqMsg);
+            leaveReqWrapper.innerHTML += leaveReqMsg
+            // leaveReqWrapper.insertAdjacentHTML("afterbegin", leaveReqMsg);
+    
         })
             
     }else{
@@ -888,8 +915,46 @@ leave_reqSideBar.addEventListener("click", () => {
     }
     
     leaveRequestForm()
+    let read_button = document.querySelectorAll(".read_button")
+    
+    read_button.forEach((eachButton, i) => {
+         
+        eachButton.addEventListener("click", async()=> {
+            let status;
+            console.log("Status blangl" + leaveRequests[i].status)
+            if(leaveRequests[i].status === "read"){
+                status = "unread"
+            }else{
+                status = "read"
+            }
+            console.log("the status is" + status)
+            console.log("This is endpoit " + endpoints.respondLeaveRequestApi)
+            console.log("leave request id " + leaveRequests[i]._id)
+            console.log("Thhis is token " + token)
+            const respondLeaveReqMsg = await respondLeaveRequest(endpoints.respondLeaveRequestApi, token, leaveRequests[i]._id, status)
+            console.log(respondLeaveReqMsg.result)
+            alert(respondLeaveReqMsg.msg)
+        })
+    })
 
 })
+
+async function respondLeaveRequest(api, token, leaveReqId, response){
+            const res = await fetch(api, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    leaveReqId, response
+                })
+            })
+    
+            return( await res.json())
+            
+        }
+
 
 function leaveRequestForm(){
     
@@ -900,6 +965,10 @@ function leaveRequestForm(){
     const class_input = document.getElementById("class_input")
     const reason_input = document.getElementById("reason_input")
     const take_leave_form = document.getElementById("take_leave_form")
+
+    if(role === "teacher"){
+        create_leaveReq_btn.remove()
+    }
     
     create_leaveReq_btn.addEventListener("click", ()=> {
         take_leave_dialog_box.showModal()
@@ -1516,13 +1585,6 @@ function viewStudentDetailsFunctionality() {
             // console.log(data.result);
             const studentName = data.result.name;
             studentParents = data.result.guardians;
-            // formatDate(data.result.dateofBirth)
-            // const date = data.result.dateofBirth.split("-");
-            // const year = date[0];
-            // const month = date[1];
-            // const day = date[2].split("T")[0];
-
-            // const formattedDate = `${year}-${month}-${day}`;
 
             view_detail_dialog_student_nameEl.innerHTML = studentName;
             view_detail_dialog_student_dobEl.innerHTML = formatDate(data.result.dateofBirth);
@@ -1611,6 +1673,47 @@ function viewStudentDetailsFunctionality() {
                     document.getElementsByClassName("parents_list_title")[1];
                 parents_list_titleEl.remove();
             }
+             leave_requests_modal = document.getElementById("leave_requests_modal")
+             
+            // leave_requests_btn.addEventListener("click", async ()=> {
+            //     leave_requests_modal.innerHTML = ""
+            //     leave_requests_modal.classList.toggle("display_flex");
+            //     let leaveRequests = [];
+            //     const response = await getLeaveRequestsByClass(endpoints.readLeaveRequestByClassApi(currentClass), token)
+            //     leaveRequests = response.result;
+            //     if (leaveRequests.length > 0){
+            //         // leave_requests_modal.innerHTML = `
+            //         // <div class="request">
+            //         // <p style="margin: auto"> No Requests at the moment</p>
+            //         // </div>
+            //         // `
+            //         for (let oneRequest of leaveRequests) {
+            //             leaveRequestIds.push(oneRequest._id);
+            //             const request = `
+            //             <div class="request">
+            //                 <p class="requested_by">${oneRequest.studentId.name}</p>
+            //                 <p class="requested_by">${oneRequest.reason}</p>
+            //                 <p class="requested_by">${oneRequest.description}</p>
+            //                 <p class="requested_by">${formatDate(oneRequest.startDate)}</p>
+            //                 <p class="requested_by">${formatDate(oneRequest.endDate)}</p>
+            //                 <div class="offer_accept_reject">
+            //                     <p class="accept_button">Read</p>
+            //                 </div>
+            //             </div>
+            //         `;
+            //             leave_requests_modal.innerHTML += request;
+            //         }
+            //     }else{
+            //         console.log("This function works")
+            //         leave_requests_modal.innerHTML = `
+            //         <div class="request">
+            //         <p style="margin: auto"> No Requests at the moment</p>
+            //         </div>
+            //         `
+                    
+            //     }
+            //     console.log("This is the response "+ JSON.stringify(leaveRequests))
+            // })
 
             student_details_dialog_close_btnEl.addEventListener("click", () => {
                 student_detail_dialog_box.close();
@@ -1909,4 +2012,16 @@ async function getLeaveRequests(api, token){
 
     const response = await res.json();
     return response;
+}
+
+async function getLeaveRequestsByClass(api, token){
+    const res = await fetch(api, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${token}`
+        }
+    })
+    const response = await res.json();
+    return response
 }
