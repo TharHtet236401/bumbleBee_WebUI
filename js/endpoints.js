@@ -50,6 +50,7 @@ export const editLeaveRequestApi = `${leaveRequestRoute}/edit`;
 export const deleteLeaveRequestApi = `${leaveRequestRoute}/delete`;
 export const respondLeaveRequestApi = `${leaveRequestRoute}/respond`;
 export const getLeaveReasonsApi = `${leaveRequestRoute}/reasons`;
+export const readAllClassLeaveReqApi = `${leaveRequestRoute}/readAllClassLeaveReq`
 
 // Post Api
 export const createPostApi = `${postRoute}/create`;
@@ -63,8 +64,8 @@ export const filterFeedsApi = `${postRoute}/filterFeeds`;
 
 // Request Api
 export const joinClassApi = `${requestRoute}/create`;
-export const readTeacherRequestsApi = `${requestRoute}/readTeacherRequests`;
-export const readGuardianRequestsApi = `${requestRoute}/readGuardianRequests`;
+export const readTeacherRequestsApi = (currentClassId) => `${requestRoute}/readTeacherRequests?classId=${currentClassId}`;
+export const readGuardianRequestsApi = (currentClassId, studentId) => `${requestRoute}/readGuardianRequests?classId=${currentClassId}&studentId=${studentId}`;
 export const respondTeacherReqApi = `${requestRoute}/respondTeacherReq`;
 export const respondGuardianReqApi = `${requestRoute}/respondGuardianReq`;
 

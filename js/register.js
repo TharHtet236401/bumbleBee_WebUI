@@ -1,7 +1,9 @@
+import { registerApi, createSchoolApi}  from "./endpoints.js";
 const form = document.querySelector("form");
 const rolesEl = document.getElementById("roles");
 const relationship_wrapper = document.getElementById("relationship_wrapper")
 const school_register_form = document.getElementById("school_register_form");
+
 
 document.addEventListener("DOMContentLoaded", () => {
     form.reset();
@@ -87,7 +89,7 @@ form.addEventListener("submit", async (e) => {
 
     if (roles === "admin") {
 
-        const registerRes = await fetch('http://127.0.0.1:3000/api/auth/web/register', {
+        const registerRes = await fetch(registerApi, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,7 +104,7 @@ form.addEventListener("submit", async (e) => {
             const token = registerData.result.token;
             console.log(token);
             const schoolRes = await fetch(
-                'http://127.0.0.1:3000/api/school/create',
+                createSchoolApi,
                 {
                     method: 'POST',
                     headers: {
@@ -125,7 +127,7 @@ form.addEventListener("submit", async (e) => {
     }
 
     const res = await fetch(
-        "http://127.0.0.1:3000/api/auth/web/register",
+        registerApi,
         {
             method: "POST",
             headers: {

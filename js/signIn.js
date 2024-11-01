@@ -1,10 +1,11 @@
 import { checkCookie } from "../utils/cookies.js";
+import {cookieCheckApi, loginApi} from "./endpoints.js";
 
 const form = document.querySelector("form");
 
 document.addEventListener("DOMContentLoaded", async () => {
     form.reset();
-    const { statusCode } = await checkCookie("http://127.0.0.1:3000/api/cookie/check")
+    const { statusCode } = await checkCookie(cookieCheckApi)
     
     if (statusCode === 200) {
         alert("Cookie exists");
@@ -24,7 +25,7 @@ form.addEventListener("submit", async (e) => {
     };
 
     console.log(data);
-    const {statusCode, resData} = await signIn('http://127.0.0.1:3000/api/auth/login', data);
+    const {statusCode, resData} = await signIn(loginApi, data);
 
     if (statusCode === 200) {
         alert("Sign in successful");
