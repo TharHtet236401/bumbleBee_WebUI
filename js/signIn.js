@@ -36,7 +36,7 @@ form.addEventListener("submit", async (e) => {
         alert("Sign in successful");
         window.location.href = "http://127.0.0.1:5501/index.html";
     } else {
-        alert("Sign in failed. Check console for more information");
+        alert(resData.msg);
         console.log(resData)
     }
 });
