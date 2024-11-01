@@ -1,4 +1,4 @@
-const mainApi = "https://tharhtetaung.xyz"
+export const mainApi = "https://tharhtetaung.xyz"
 
 const authRoute = `${mainApi}/api/auth`;
 const schoolRoute = `${mainApi}/api/school`;
