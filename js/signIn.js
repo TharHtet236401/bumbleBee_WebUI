@@ -1,5 +1,5 @@
 import { checkCookie } from "../utils/cookies.js";
-import {mainApi, cookieCheckApi, loginApi} from "./endpoints.js";
+import {mainWebsite, cookieCheckApi, loginApi} from "./endpoints.js";
 
 const form = document.querySelector("form");
 
@@ -9,13 +9,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     if (statusCode === 200) {
         alert("Cookie exists");
-        window.location.href = `${mainApi}/index.html`;
+        window.location.href = `${mainWebsite}/index.html`;
     }
 });
 
 const go_to_signUp = document.getElementById("go_to_signUp")
 go_to_signUp.addEventListener("click", () => {
-    window.location.href = `${mainApi}/signUp.html`;
+    window.location.href = `${mainWebsite}/signUp.html`;
 })
 
 
@@ -34,7 +34,7 @@ form.addEventListener("submit", async (e) => {
 
     if (statusCode === 200) {
         alert("Sign in successful");
-        window.location.href = `${mainApi}/index.html`;
+        window.location.href = `${mainWebsite}/index.html`;
     } else {
         alert(resData.msg);
         console.log(resData)
