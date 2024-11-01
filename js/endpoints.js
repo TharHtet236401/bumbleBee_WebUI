@@ -1,4 +1,5 @@
-export const mainApi = "https://tharhtetaung.xyz"
+const mainApi = "https://tharhtetaung.xyz"
+export const mainWebsite = "http://159.223.127.127"
 
 const authRoute = `${mainApi}/api/auth`;
 const schoolRoute = `${mainApi}/api/school`;

@@ -1,4 +1,4 @@
-import { mainApi, registerApi, createSchoolApi}  from "./endpoints.js";
+import { mainWebsite, registerApi, createSchoolApi}  from "./endpoints.js";
 const form = document.querySelector("form");
 const rolesEl = document.getElementById("roles");
 const relationship_wrapper = document.getElementById("relationship_wrapper")
@@ -117,7 +117,7 @@ form.addEventListener("submit", async (e) => {
             console.log(schoolRes)
             if (schoolRes.status === 200) {
                 alert("Register successful");
-                window.location.href = `${mainApi}/signIn.html`
+                window.location.href = `${mainWebsite}/signIn.html`
                 return;
             }
         } else {
@@ -142,7 +142,7 @@ form.addEventListener("submit", async (e) => {
     
     if (res.status === 200) {
         alert("Register successful");
-        window.location.href = `${mainApi}/signIn.html`;
+        window.location.href = `${mainWebsite}/signIn.html`;
     } else if (res.status === 401) {
         alert(resData.msg);
         console.log(resData);
@@ -155,5 +155,5 @@ function isPasswordSame(password, c_password) {
 
 const go_to_signIn = document.getElementById("go_to_signIn");
 go_to_signIn.addEventListener("click", ()=> {
-    window.location.href = `${mainApi}/signIn.html`
+    window.location.href = `${mainWebsite}/signIn.html`
 })
