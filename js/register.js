@@ -1,7 +1,9 @@
+import { registerApi, createSchoolApi}  from "./endpoints.js";
 const form = document.querySelector("form");
 const rolesEl = document.getElementById("roles");
 const relationship_wrapper = document.getElementById("relationship_wrapper")
 const school_register_form = document.getElementById("school_register_form");
+
 
 document.addEventListener("DOMContentLoaded", () => {
     form.reset();
@@ -87,7 +89,7 @@ form.addEventListener("submit", async (e) => {
 
     if (roles === "admin") {
 
-        const registerRes = await fetch('http://127.0.0.1:3000/api/auth/web/register', {
+        const registerRes = await fetch(registerApi, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,7 +104,7 @@ form.addEventListener("submit", async (e) => {
             const token = registerData.result.token;
             console.log(token);
             const schoolRes = await fetch(
-                'http://127.0.0.1:3000/api/school/create',
+                createSchoolApi,
                 {
                     method: 'POST',
                     headers: {
@@ -115,7 +117,7 @@ form.addEventListener("submit", async (e) => {
             console.log(schoolRes)
             if (schoolRes.status === 200) {
                 alert("Register successful");
-                window.location.href = "http://127.0.0.1:5501/pages/signIn.html"
+                window.location.href = "http://127.0.0.1:5501/signIn.html"
                 return;
             }
         } else {
@@ -125,7 +127,7 @@ form.addEventListener("submit", async (e) => {
     }
 
     const res = await fetch(
-        "http://127.0.0.1:3000/api/auth/web/register",
+        registerApi,
         {
             method: "POST",
             headers: {
@@ -140,7 +142,7 @@ form.addEventListener("submit", async (e) => {
     
     if (res.status === 200) {
         alert("Register successful");
-        window.location.href = "http://127.0.0.1:5501/pages/signIn.html";
+        window.location.href = "http://127.0.0.1:5501/signIn.html";
     } else if (res.status === 401) {
         alert("Register failed! Check console for more information");
         console.log(resData);
@@ -150,3 +152,8 @@ form.addEventListener("submit", async (e) => {
 function isPasswordSame(password, c_password) {
     return password === c_password;
 }
+
+const go_to_signIn = document.getElementById("go_to_signIn");
+go_to_signIn.addEventListener("click", ()=> {
+    window.location.href = "http://127.0.0.1:5501/signIn.html"
+})

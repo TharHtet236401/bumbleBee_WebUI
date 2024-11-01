@@ -3,14 +3,14 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Sign In | Bumblebee</title>
+        <title>Sign Up | Bumblebee</title>
         <link
             rel="icon"
             type="image/x-icon"
             href="../assets/images/fav-logo.png"
         />
         <link rel="stylesheet" href="../styles/reset.css" />
-        <link rel="stylesheet" href="../styles/signIn.css" />
+        <link rel="stylesheet" href="../styles/signUp.css" />
     </head>
     <body>
         <main>
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <form>
-                <h1>Sign In</h1>
+                <h1>Sign Up</h1>
                 <svg class="logo" width="290" height="57" viewBox="0 0 115 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_87_624)">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.549 6.65252C13.6128 6.02697 12.5121 5.69307 11.3861 5.69307V0C13.6381 0 15.8395 0.667786 17.7119 1.91891C19.5844 3.17003 21.0437 4.94831 21.9056 7.02883C22.7673 9.10937 22.9928 11.3988 22.5535 13.6075C22.1142 15.8161 21.0297 17.845 19.4373 19.4373C17.845 21.0297 15.8161 22.1142 13.6075 22.5535C11.3988 22.9928 9.10937 22.7673 7.02883 21.9056C4.9483 21.0437 3.17003 19.5844 1.91891 17.7119C0.667786 15.8395 0 13.6381 0 11.3861H5.69307C5.69307 12.5121 6.02697 13.6128 6.65252 14.549C7.27808 15.4853 8.16722 16.2149 9.20751 16.6459C10.2478 17.0768 11.3925 17.1895 12.4968 16.9698C13.6011 16.7501 14.6155 16.2079 15.4118 15.4118C16.2079 14.6155 16.7501 13.6011 16.9698 12.4968C17.1895 11.3925 17.0768 10.2478 16.6459 9.20752C16.2149 8.16722 15.4853 7.27808 14.549 6.65252Z" fill="#DFDDFF"/>
@@ -120,19 +120,64 @@
                     </clipPath>
                     </defs>
                     </svg>
+                    <div class="form_input_wrapper">
+                        <label id="go_to_signIn"  style="cursor: pointer; text-decoration: underline">Go to sign in page</label>
+                    </div>
                 <div class="form_input_wrapper username_wrapper">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username">
+                </div>
+                <div class="form_input_wrapper email_wrapper">
                     <label for="email">Email</label>
-                    <input type="text" id="email" name="email">
+                    <input type="email" id="email" name="email">
                 </div>
                 <div class="form_input_wrapper password_wrapper">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password">
                 </div>
-                <button type="submit">Login</button>
+                <div class="form_input_wrapper c_password_wrapper">
+                    <label for="c_password">Confirm password</label>
+                    <input type="password" id="c_password" name="c_password">
+                </div>
+                <div class="form_input_wrapper phone_wrapper">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form_input_wrapper roles_wrapper">
+                    <label for="roles">Roles</label>
+                    <select name="roles" id="roles">
+                        <option value="none" selected disabled>Who are you?</option>
+                        <option value="admin">Admin</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="guardian">Guardian</option>
+                    </select>
+                </div>
+                <div class="form_input_wrapper relationship_wrapper" id="relationship_wrapper">
+                    <label for="rs">Relationship</label>
+                    <input type="text" id="rs" name="relationship">
+                </div>
+                <div id="school_register_form" class="school_register_form">
+                    <h3>Register School</h3>
+                    <div class="form_input_wrapper school_name_wrapper" id="school_name_wrapper">
+                        <label for="school_name">School name</label>
+                        <input type="text" id="school_name" name="schoolName">
+                    </div>
+                    <div class="form_input_wrapper school_address_wrapper" id="school_address_wrapper">
+                        <label for="school_address">School address</label>
+                        <input type="text" id="school_address" name="schoolAddress">
+                    </div>
+                    <div class="form_input_wrapper school_ph_wrapper" id="school_ph_wrapper">
+                        <label for="school_ph">School phone</label>
+                        <input type="tel" id="school_ph" name="schoolPhone">
+                    </div>
+                    <div class="form_input_wrapper school_email_wrapper" id="school_email_wrapper">
+                        <label for="school_email">School email</label>
+                        <input type="email" id="school_email" name="schoolEmail">
+                    </div>
+                </div>
+                <button type="submit">Register</button>
             </form>
         </main>
     </body>
-    <script src="../utils/cookies.js" type="module"></script>
-    <!-- <script src="../js/signIn.js" type="module"></script> -->
-    <script src="../js/auth/signIn.js" type="module"></script>
+    <script src="../js/register.js" type="module"></script>
 </html>

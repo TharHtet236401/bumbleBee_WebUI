@@ -1,16 +1,22 @@
 import { checkCookie } from "../utils/cookies.js";
+import {cookieCheckApi, loginApi} from "./endpoints.js";
 
 const form = document.querySelector("form");
 
 document.addEventListener("DOMContentLoaded", async () => {
     form.reset();
-    const { statusCode } = await checkCookie("http://127.0.0.1:3000/api/cookie/check")
+    const { statusCode } = await checkCookie(cookieCheckApi)
     
     if (statusCode === 200) {
         alert("Cookie exists");
-        window.location.href = "http://127.0.0.1:5501/pages/index.html";
+        window.location.href = "http://127.0.0.1:5501/index.html";
     }
 });
+
+const go_to_signUp = document.getElementById("go_to_signUp")
+go_to_signUp.addEventListener("click", () => {
+    window.location.href = "http://127.0.0.1:5501/signUp.html";
+})
 
 
 form.addEventListener("submit", async (e) => {
@@ -24,11 +30,11 @@ form.addEventListener("submit", async (e) => {
     };
 
     console.log(data);
-    const {statusCode, resData} = await signIn('http://127.0.0.1:3000/api/auth/login', data);
+    const {statusCode, resData} = await signIn(loginApi, data);
 
     if (statusCode === 200) {
         alert("Sign in successful");
-        window.location.href = "http://127.0.0.1:5501/pages/index.html";
+        window.location.href = "http://127.0.0.1:5501/index.html";
     } else {
         alert("Sign in failed. Check console for more information");
         console.log(resData)
