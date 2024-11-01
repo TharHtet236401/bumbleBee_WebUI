@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     if (statusCode != 200) {
         alert("Cookie does not exist. Redirecting to sign in page");
-        window.location.href = "http://127.0.0.1:5501/pages/signIn.html";
+        window.location.href = "http://127.0.0.1:5501/signIn.html";
     } else if (statusCode == 200) {
         token = resData.token;
         role = resData.userData.roles[0];

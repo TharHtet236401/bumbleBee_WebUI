@@ -1,4 +1,4 @@
-const mainApi = "http://127.0.0.1:3000"
+const mainApi = "https://tharhtetaung.xyz"
 
 const authRoute = `${mainApi}/api/auth`;
 const schoolRoute = `${mainApi}/api/school`;

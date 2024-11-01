@@ -117,7 +117,7 @@ form.addEventListener("submit", async (e) => {
             console.log(schoolRes)
             if (schoolRes.status === 200) {
                 alert("Register successful");
-                window.location.href = "http://127.0.0.1:5501/pages/signIn.html"
+                window.location.href = "http://127.0.0.1:5501/signIn.html"
                 return;
             }
         } else {
@@ -142,7 +142,7 @@ form.addEventListener("submit", async (e) => {
     
     if (res.status === 200) {
         alert("Register successful");
-        window.location.href = "http://127.0.0.1:5501/pages/signIn.html";
+        window.location.href = "http://127.0.0.1:5501/signIn.html";
     } else if (res.status === 401) {
         alert("Register failed! Check console for more information");
         console.log(resData);

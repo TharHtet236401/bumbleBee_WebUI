@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     if (statusCode === 200) {
         alert("Cookie exists");
-        window.location.href = "http://127.0.0.1:5501/pages/index.html";
+        window.location.href = "http://127.0.0.1:5501/index.html";
     }
 });
 
@@ -29,7 +29,7 @@ form.addEventListener("submit", async (e) => {
 
     if (statusCode === 200) {
         alert("Sign in successful");
-        window.location.href = "http://127.0.0.1:5501/pages/index.html";
+        window.location.href = "http://127.0.0.1:5501/index.html";
     } else {
         alert("Sign in failed. Check console for more information");
         console.log(resData)
