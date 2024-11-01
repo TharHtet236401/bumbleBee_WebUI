@@ -144,7 +144,7 @@ form.addEventListener("submit", async (e) => {
         alert("Register successful");
         window.location.href = "http://127.0.0.1:5501/signIn.html";
     } else if (res.status === 401) {
-        alert("Register failed! Check console for more information");
+        alert(resData.msg);
         console.log(resData);
     }
 });
