@@ -1844,6 +1844,7 @@ teacher_request_btn.addEventListener("click", async () => {
         </div>
         `;
     } else {
+        teacher_requests_modal.innerHTML = ""
         for (let oneRequest of allRequests) {
             requestIds.push(oneRequest._id);
             const request = `
