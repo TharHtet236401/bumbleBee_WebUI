@@ -1,5 +1,5 @@
 const mainApi = "https://tharhtetaung.xyz"
-export const mainWebsite = "http://159.223.127.127"
+export const mainWebsite = "https://159.223.127.127"
 // export const mainWebsite = "http://127.0.0.1:5501"
 
 const authRoute = `${mainApi}/api/auth`;
