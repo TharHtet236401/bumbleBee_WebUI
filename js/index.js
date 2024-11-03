@@ -1977,7 +1977,7 @@ logout_sidebar.addEventListener('click', async()=>{
     const returnMsg = await logOut(endpoints.logOutApi, token);
     // console.log("return msg " + returnMsg)
     alert(JSON.stringify(returnMsg))
-    location.reload()
+    window.location.href = `${endpoints.mainWebsite}/signIn.html`;
 })
 
 async function logOut(api, token){
