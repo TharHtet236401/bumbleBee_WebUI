@@ -1,12 +1,5 @@
-body {
-    display: flex;
-    width: 100vw;
-}
-
-main {
-    flex-grow: 1;
-    height: 100vh;
-    background-color: #242425;
+body{
+    background-color: (circle, #373849 0%, #2E313A 100%)
 }
 
 .display_flex {
