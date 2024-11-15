@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let email = profileData.result.email
         let role = profileData.result.roles[0];
         let phone = profileData.result.phone
-        let school= profileData.result.schools[0].schoolName
+        let school= profileData.result.schools[0]
         let childern = profileData.result.childern;
         let relationship = profileData.result.relationship
         let classesRaw = profileData.result.classes;
@@ -36,6 +36,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             classesRaw.forEach((eachClass)=>{
                 classes.push(`Grade - ${eachClass.grade}(Class - ${eachClass.className})`)
             })
+        }
+
+        if(!school){
+            school = "None"
+            classes = "None"
+        }else{
+            school = school.schoolName
+            if(classes.length === 0){
+                classes = "None"
+            }else{
+                classes = classes.join("<br>")
+            }
         }
 
         if(relationship.length === 0){
@@ -47,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         
-        classes = classes.join("<br>")
+        
 
         let userDataAll = {
             Name: userName,
