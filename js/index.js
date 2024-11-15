@@ -51,6 +51,7 @@ const add_student_dialog_box = document.getElementById(
 const add_student_close_dialog_box = document.getElementById(
     "add_student_dialog_close_btn"
 );
+
 const add_student_form = document.getElementById("add_student_form");
 
 const imageInput = document.getElementById("post_image");
@@ -61,6 +62,7 @@ const home_sidebar = document.getElementById("home_sidebar");
 const announcement_sidebar = document.getElementById("announcement_sidebar");
 const chat_sidebar = document.getElementById("chat_sidebar");
 const leave_reqSideBar = document.getElementById("leave_reqSideBar")
+const profile_sideBar = document.getElementById("profile_sideBar")
 const logout_sidebar = document.getElementById("logout_sidebar")
 
 const sidebar_txts = document.querySelectorAll(".sidebar_txt");
@@ -150,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         endpoints.cookieCheckApi
     );
     if (statusCode != 200) {
-        alert("Cookie does not exist. Redirecting to sign in page");
+        // alert("Cookie does not exist. Redirecting to sign in page");
         window.location.href = `${endpoints.mainWebsite}/signIn.html`;
     } else if (statusCode == 200) {
         token = resData.token;
@@ -937,6 +939,10 @@ leave_reqSideBar.addEventListener("click", () => {
         })
     })
 
+})
+
+profile_sideBar.addEventListener('click', ()=> {
+    window.location.href = `${endpoints.mainWebsite}/profile.html`;
 })
 
 async function respondLeaveRequest(api, token, leaveReqId, response){
