@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat | Bumblebee</title>
+    <link
+        rel="icon"
+        type="image/x-icon"
+        href="../assets/images/fav-logo.png"
+    />
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/chat.css" />
+
+</head>
+<body>
+    <main>
+        <div class="chat_left">
+            <div class="search_section">
+                <div class="search_bar">
+                    <input class="search_input" type="text" placeholder="Search" />
+                </div>
+                <div class="search_results_wrapper">
+                    <!-- <div class="search_result">
+                        <div class="search_result_img">
+                            <img src="../assets/images/user.jpg" alt="user" />
+                        </div>
+                        <div class="search_result_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                            <span class="user_role">Teacher</span>
+                        </div>
+                    </div>
+                    <div class="search_result">
+                        <div class="search_result_img">
+                            <img src="../assets/images/user-one.jpg" alt="user" />
+                        </div>
+                        <div class="search_result_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="search_result">
+                        <div class="search_result_img">
+                            <img src="../assets/images/user-two.jpg" alt="user" />
+                        </div>
+                        <div class="search_result_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="search_result">
+                        <div class="search_result_img">
+                            <img src="../assets/images/user.jpg" alt="user" />
+                        </div>
+                        <div class="search_result_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="search_result">
+                        <div class="search_result_img">
+                            <img src="../assets/images/user-two.jpg" alt="user" />
+                        </div>
+                        <div class="search_result_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div> -->
+                    <!-- <p class="search_error_message">No results found !</p> -->
+                </div>
+            </div>
+            <div class="chat_history">
+                <h1 class="chat_history_title">Chat history</h1>
+                <div class="chat_history_list_wrapper">
+                    <p class="chat_history_error_message">No history yet !</p>
+                    <!-- <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user-two.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user-one.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user-two.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user-one.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user-two.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user-one.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div>
+                    <div class="chat_history_list">
+                        <div class="chat_history_list_img">
+                            <img src="../assets/images/user-two.jpg" alt="user" />
+                        </div>
+                        <div class="chat_history_list_info">
+                            <h3 class="search_result_name">John Doe</h3>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="chat_right">
+            <div class="chat_right_top">
+                <div class="chat_right_top_profile">
+                    <div class="chat_right_top_profile_img">
+                        <img src="../assets/images/user.jpg" alt="user" />
+                    </div>
+                    <div class="chat_right_top_profile_info">
+                        <h3 class="chat_right_top_profile_name">John Doe</h3>
+                    </div>
+                    <div class="active_status">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="chat_right_middle">
+                <div class="chat_box"> 
+                    <p class="chat_date">12/9/2028</p>
+                    <div class="chat_messages_wrapper">
+                        <div class="chat_message">
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user.jpg" alt="">
+                            </div>
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                        </div>
+                        <div class="chat_message me">
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user-one.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="chat_message">
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user.jpg" alt="">
+                            </div>
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                        </div>
+                        <div class="chat_message">
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user.jpg" alt="">
+                            </div>
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                        </div>    
+                        <div class="chat_message me">
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user-one.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="chat_message me">
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user-one.jpg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat_box">
+                    <p class="chat_date">Today</p>
+                    <div class="chat_messages_wrapper">
+                        <div class="chat_message">
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user.jpg" alt="">
+                            </div>
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                        </div>
+                        <div class="chat_message me">
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user-one.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="chat_message">
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user.jpg" alt="">
+                            </div>
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                        </div>
+                        <div class="chat_message">
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user.jpg" alt="">
+                            </div>
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                        </div>      
+                        <div class="chat_message me">
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user-one.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="chat_message me sent">
+                            <p class="chat_message_content">Hello ! This is message testing</p>
+                            <div class="chat_message_profile">
+                                <img src="./assets/images/user-one.jpg" alt="">
+                            </div>
+                        </div>              
+                    </div>
+                </div>
+            </div>
+            <div class="chat_right_bottom">
+                <form action="">
+                    <input class="message_input" type="text" placeholder="Enter message here...">
+                    <button class="submit_button" type="submit">Message</button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+</body>
+<script src="./utils/cookies.js" type="module"></script>
+<script src="./js/chat.js" type="module"></script>
+</html>
