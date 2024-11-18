@@ -91,3 +91,12 @@
 .display_none {
     display: none !important;
 }
+
+#goToIndex{
+    cursor: pointer;
+}
+
+#goToIndex:hover{
+    background-color: #717173;
+    border-radius: 60px;
+}

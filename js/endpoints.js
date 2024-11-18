@@ -3,6 +3,7 @@ const mainApi = "http://127.0.0.1:3000";
 // export const mainWebsite = "https://159.223.127.127"
 export const mainWebsite = "http://127.0.0.1:5501";
 
+
 const authRoute = `${mainApi}/api/auth`;
 const schoolRoute = `${mainApi}/api/school`;
 const classRoute = `${mainApi}/api/class`;
@@ -95,4 +96,4 @@ export const updateUserInfoApi = `${userRoute}/update`;
 export const deleteUserApi = (userId) => `${userRoute}/delete/${userId}`;
 export const getAllUsersApi = `${userRoute}/all`;
 export const getUserByIdApi = (userId) => `${userRoute}/${userId}`;
-
+export const getUserProfileApi = `${userRoute}/profile`;
