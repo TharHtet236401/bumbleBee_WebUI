@@ -777,6 +777,27 @@ announcement_sidebar.addEventListener("click", () => {
     });
 });
 
+console.log(chat_sidebar)
+let chat_tab;
+chat_sidebar.addEventListener("click", () => {
+    console.log("chat clicked");
+    removeAllUnderlineInSidebarTxt();
+    chat_txt.classList.add("side_bar_active");
+    if (!chat_tab || chat_tab.closed) {
+        chat_tab = window.open('chat.html', '_blank');
+        mainEl.innerHTML = `<h1 style="color: white; text-align: center; padding: 1em">
+                                See the new tab for chatting
+                            </h1>
+                            `;
+    } else {
+        chat_tab.focus();
+        mainEl.innerHTML = `<h1 style="color: white; text-align: center; padding: 1em">
+                                Chat tab is already opened
+                            </h1>`
+    }
+
+});
+
 leave_reqSideBar.addEventListener("click", () => {
     removeAllUnderlineInSidebarTxt();
     leave_req_txt.classList.add("side_bar_active");
