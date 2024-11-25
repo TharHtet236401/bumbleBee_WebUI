@@ -12,7 +12,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     token = resData.token;
     console.log(token);
-    await getConversatinList(token);
+    
+    const conversations = await getConversatinList(token);
+    if (conversations.length > 0) {
+        openChat(conversations[0].participants[0]);
+    }
 })
 
 async function getConversatinList(token) {
@@ -37,13 +41,16 @@ async function getConversatinList(token) {
         
         if (data.con) {
             displayConversations(data.result);
+            return data.result;
         } else {
             console.error('Failed to fetch conversations');
             errorMessage.style.display = 'block';
+            return [];
         }
     } catch (error) {
         console.error('Error fetching conversations:', error);
         errorMessage.style.display = 'block';
+        return [];
     } finally {
         // Hide loading spinner when done
         loadingSpinner.classList.remove('active');
