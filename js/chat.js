@@ -176,8 +176,8 @@ function displayMessages(messages, participantId) {
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
-        console.log("check1", message.senderId);
-        console.log("check2", currentUser);
+        // console.log("check1", message.senderId);
+        // console.log("check2", currentUser);
         messageElement.className = `chat_message ${message.senderId === currentUser ? '' : 'me'}`;
 
         messageElement.innerHTML = `
