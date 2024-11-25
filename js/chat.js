@@ -16,7 +16,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 })
 
 async function getConversatinList(token) {
+    const loadingSpinner = document.querySelector('.loading-spinner');
+    const errorMessage = document.querySelector('.chat_history_error_message');
+    
     try {
+        // Show loading spinner, hide error message
+        loadingSpinner.classList.add('active');
+        errorMessage.style.display = 'none';
+
         const api = `${mainApi}/api/conversation/all`;
         const res = await fetch(api, {
             method: "GET",
@@ -27,15 +34,19 @@ async function getConversatinList(token) {
         });
         const data = await res.json();
         console.log(data);
+        
         if (data.con) {
             displayConversations(data.result);
         } else {
             console.error('Failed to fetch conversations');
-            document.querySelector('.chat_history_error_message').style.display = 'block';
+            errorMessage.style.display = 'block';
         }
     } catch (error) {
         console.error('Error fetching conversations:', error);
-        document.querySelector('.chat_history_error_message').style.display = 'block';
+        errorMessage.style.display = 'block';
+    } finally {
+        // Hide loading spinner when done
+        loadingSpinner.classList.remove('active');
     }
 }
 
@@ -53,7 +64,6 @@ function displayConversations(conversations) {
 
     conversations.forEach(conversation => {
         const participant = conversation.participants[0];
-        const date = new Date(conversation.updatedAt);
         
         const conversationElement = document.createElement('div');
         conversationElement.className = 'chat_history_list';
@@ -64,11 +74,9 @@ function displayConversations(conversations) {
             <div class="chat_history_list_info">
                 <h3 class="search_result_name">${participant.userName}</h3>
                 <span class="user_role">${participant.roles.join(', ')}</span>
-                <span class="conversation_time">${formatDate(date)}</span>
             </div>
         `;
 
-        // Add click event to open chat with this user
         conversationElement.addEventListener('click', () => {
             openChat(participant);
         });

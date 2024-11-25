@@ -80,6 +80,7 @@ main {
     aspect-ratio: 1/1;
     border-radius: 50%;
     overflow: hidden;
+    margin-right: 10px;
 }
 
 .search_result_img img,
@@ -93,8 +94,8 @@ main {
 .search_result_info,
 .chat_history_list_info {
     display: flex;
-    align-items: center;
-    gap: 0.5em;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .search_error_message {
@@ -377,10 +378,32 @@ form {
     background: #666;
 }
 
-.conversation_time {
-    font-size: 0.8rem;
-    color: #848484;
-    display: block;
-    margin-top: 4px;
+/* Add these styles for the loading animation */
+.loading-spinner {
+    display: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2em;
+}
+
+.loading-spinner.active {
+    display: flex;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #2c2c2c;
+    border-top: 3px solid #85BCED;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
