@@ -105,13 +105,10 @@ main {
 }
 
 .user_role {
-    font-size: 0.75em;
-    font-weight: 600;
+    font-size: 0.9rem;
     color: #9CD798;
-    background-color: #2c2c2c;
-    border-radius: 5px;
-    padding: 0.35em 0.75em;
-    letter-spacing: 0.5px;
+    display: block;
+    margin-top: 2px;
 }
 
 .chat_history {
@@ -129,14 +126,15 @@ main {
 
 .chat_history_list {
     display: flex;
-    padding: 0.75em 1.5em;
-    gap: 1em;
+    align-items: center;
+    padding: 12px;
     cursor: pointer;
+    border-radius: 8px;
     transition: background-color 0.2s;
 }
 
 .chat_history_list:hover {
-    background-color: #363636;
+    background-color: #343434;
 }
 
 .chat_history_list_wrapper {
@@ -377,5 +375,12 @@ form {
 .chat_history_list_wrapper::-webkit-scrollbar-thumb:hover,
 .chat_right_middle::-webkit-scrollbar-thumb:hover {
     background: #666;
+}
+
+.conversation_time {
+    font-size: 0.8rem;
+    color: #848484;
+    display: block;
+    margin-top: 4px;
 }
 

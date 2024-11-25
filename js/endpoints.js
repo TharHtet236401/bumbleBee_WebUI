@@ -1,4 +1,4 @@
-const mainApi = "https://tharhtetaung.xyz"
+export const mainApi = "https://tharhtetaung.xyz"
 // const mainApi = "http://127.0.0.1:3000";
 // export const mainWebsite = "https://159.223.127.127"
 export const mainWebsite = "http://127.0.0.1:5501";
