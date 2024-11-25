@@ -88,12 +88,20 @@ main {
 
 .post_card {
     background-color: #424242;
-    padding: 2em;
-    width: 60%;
-    border-radius: 5px;
+    padding: 1.5em;
+    width: 900px;
+    max-width: 95%;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 0.8em;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+    text-align: left;
+}
+
+.post_card:hover {
+    transform: scale(1.02);
 }
 
 .posted_by_wrapper {
@@ -211,13 +219,30 @@ main {
 }
 
 .post_images_wrapper {
-    margin-block: 1em;
+    margin: 0.8em auto;
+    display: grid;
+    gap: 2px;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.post_images_wrapper:has(> :only-child) {
+    margin: 0.8em auto;
+}
+
+.post_images_wrapper:has(> :only-child) .post_image {
+    border-radius: 8px;
+    max-height: 500px;
+    margin: 0 auto;
 }
 
 .post_image {
-    width: 300px;
+    width: 100%;
+    height: 280px;
     object-fit: cover;
-    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
 }
 
 .reactions_wrapper {
@@ -294,4 +319,175 @@ main {
 #add_student_button{
     margin: auto auto 0;
 
+}
+
+.dialog_wrapper {
+    background: #1a1b1c;
+    padding: 2em;
+    border-radius: 16px;
+    min-width: 550px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    position: relative;
+    border: 1px solid rgba(169, 241, 255, 0.15);
+}
+
+#create_post_dialog_box, #create_announcement_dialog_box {
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    background: transparent;
+}
+
+#create_post_dialog_box::backdrop, #create_announcement_dialog_box::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+}
+
+.input_box_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+    margin-bottom: 1em;
+}
+
+.input_box_wrapper label {
+    color: #A9F1FF;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 0.2em;
+    margin-bottom: -0.2em;
+}
+
+.input_box_wrapper input, 
+.input_box_wrapper select,
+.custom-file-label {
+    background: #2d2e2f;
+    border: 1px solid rgba(169, 241, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.8em 1em;
+    color: #E4E6EB;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.input_box_wrapper input:hover,
+.input_box_wrapper select:hover,
+.custom-file-label:hover {
+    background: #343536;
+    border-color: rgba(169, 241, 255, 0.3);
+}
+
+.input_box_wrapper input:focus,
+.input_box_wrapper select:focus {
+    background: #343536;
+    border-color: rgba(169, 241, 255, 0.5);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(169, 241, 255, 0.1);
+}
+
+.custom-file-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8em;
+    background: #2d2e2f;
+    color: #E4E6EB;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 0.8em 1.2em;
+    border: 1px solid rgba(169, 241, 255, 0.2);
+}
+
+.custom-file-label::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23A9F1FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M12 4v16m8-8H4'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+    vertical-align: middle;
+    opacity: 0.9;
+}
+
+.custom-file-label:hover {
+    background: #343536;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: rgba(169, 241, 255, 0.3);
+}
+
+.custom-file-label:active {
+    transform: translateY(0);
+}
+
+.custom-file-input {
+    display: none;
+}
+
+form button[type="submit"] {
+    background: linear-gradient(135deg, #3a95e4, #1f78c4);
+    color: white;
+    padding: 0.8em;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1.2em;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+form button[type="submit"]:hover {
+    background: linear-gradient(135deg, #4aa1e8, #2684d4);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+form button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+.dialog_btns {
+    position: absolute;
+    top: 1.2em;
+    right: 1.2em;
+}
+
+.dialog_btn {
+    cursor: pointer;
+    padding: 0.6em;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dialog_btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.post_type_dropdown {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23A9F1FF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1em center;
+    background-size: 1em;
+    padding-right: 2.5em;
+}
+
+.post_type_dropdown option {
+    background-color: #1a1b1c;
+    color: #E4E6EB;
+    padding: 0.8em;
 }
