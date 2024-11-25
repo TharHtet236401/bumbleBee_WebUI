@@ -214,10 +214,12 @@ main {
     gap: 0.5em;
     margin-bottom: 1em;
     max-width: 75%;
+    margin-right: auto;
 }
 
 .chat_message.me {
     margin-left: auto;
+    margin-right: 0;
     flex-direction: row-reverse;
     gap: 0.5em;
 }

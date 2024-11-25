@@ -6,7 +6,7 @@ var currentUser;
 document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(cookieCheckApi);
     console.log(resData);
-    
+    currentUser = resData.userData._id;
     if (statusCode !== 200) {
         alert("Please sign in first");
         window.location.href = `${mainWebsite}/signIn.html`;
@@ -185,7 +185,9 @@ function displayMessages(messages, participantId) {
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
-        messageElement.className = `chat_message ${message.senderId === currentUser ? 'me' : ''}`;
+        console.log("check1", message.senderId);
+        console.log("check2", currentUser);
+        messageElement.className = `chat_message ${message.senderId === currentUser ? '' : 'me'}`;
 
         messageElement.innerHTML = `
             <div class="chat_message_profile">
