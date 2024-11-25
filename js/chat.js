@@ -1,13 +1,14 @@
 import { checkCookie } from "../utils/cookies.js";
+import {mainWebsite, getUserProfileApi, cookieCheckApi} from "./endpoints.js"
 
 let token;
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const { statusCode, resData } = await checkCookie("http://127.0.0.1:3000/api/cookie/check");
+    const { statusCode, resData } = await checkCookie(cookieCheckApi);
     console.log(statusCode)
     if (statusCode !== 200) {
         alert("Please sign in first");
-        window.location.href = "http://127.0.0.1:5501/signIn.html";
+        window.location.href = `${mainWebsite}/signIn.html`;
     }
     token = resData.token;
     console.log(token);
@@ -15,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 })
 
 async function getConversatinList(token) {
-    const api = `http://127.0.0.1:3000/api/conversation/all`;
+    const api = `${mainApi}/api/conversation/all`;
     const res = await fetch(api, {
         method: "GET",
         headers: {
