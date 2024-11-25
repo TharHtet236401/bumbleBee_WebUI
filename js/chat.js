@@ -110,6 +110,50 @@ function openChat(participant) {
     profileImg.alt = participant.userName;
     profileName.textContent = participant.userName;
 
-    // You can add logic here to fetch and display chat messages
-    // fetchChatMessages(participant._id);
+    // Fetch and display chat messages
+    fetchChatMessages(participant._id);
+    console.log(participant._id);
+}
+
+// New function to fetch chat messages
+async function fetchChatMessages(participantId) {
+    const api = `https://tharhtetaung.xyz/api/message/get/${participantId}`;
+    const messagesContainer = document.querySelector('.chat_messages_container'); // Ensure this container exists in your HTML
+    try {
+        const res = await fetch(api, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        const data = await res.json();
+        console.log(data);
+
+        if (data.con) {
+            displayMessages(data.result);
+        } else {
+            console.error('Failed to fetch messages');
+            messagesContainer.innerHTML = '<p>Error fetching messages.</p>';
+        }
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        messagesContainer.innerHTML = '<p>Error fetching messages.</p>';
+    }
+}
+
+// New function to display messages
+function displayMessages(messages) {
+    const messagesContainer = document.querySelector('.chat_messages_container'); // Ensure this container exists in your HTML
+    messagesContainer.innerHTML = ''; // Clear previous messages
+
+    messages.forEach(message => {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'chat_message';
+        messageElement.innerHTML = `
+            <p><strong>${message.senderId}:</strong> ${message.message}</p>
+            <span>${new Date(message.createdAt).toLocaleString()}</span>
+        `;
+        messagesContainer.appendChild(messageElement);
+    });
 }
