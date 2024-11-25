@@ -1,72 +1,341 @@
-.header_wrapper{
+/* Body background gradient */
+body {
+    background: linear-gradient(135deg, #242425 0%, #2c2c2d 100%);
+}
+
+/* Header improvements */
+.header_wrapper {
     display: flex;
-    background-color: #343434;
+    background: linear-gradient(90deg, #343434 0%, #3a3a3a 100%);
     align-items: center;
-    padding: 0.65em;
+    padding: 1.2em 2.5em;
     height: 10%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 10;
 }
 
 .profile_info {
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .profile_info p {
     color: #B4E0F7;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
-.your_profile {
-    margin-left: 0.5em;
+.profile_info p::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #A9F1FF;
+    transition: width 0.3s ease;
 }
 
-#aboutMyself{
-    background-color: #484848;
-    padding: 1em 2em;
-    margin: 2em auto;
-    border-radius: 30px;
-    box-shadow: 0 0 10px rgba(30, 30, 30, 0.5);
-    /* min-width: 40%; */
-    max-width: 55%;
-    min-height: 700px;
-}
-#profilePicture{
+.profile_info:hover p::after {
     width: 100%;
-
 }
 
-#profilePicture img{
-    margin: auto;
-    width: 30%;
-    border-radius: 100px;
+#goToIndex {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: 50%;
+    background: rgba(169, 241, 255, 0.1);
 }
 
-.profileField{
-    width: 80%;
-    min-height: 3em;
+#goToIndex:hover {
+    transform: scale(1.1);
+    background: rgba(169, 241, 255, 0.2);
+    box-shadow: 0 0 15px rgba(169, 241, 255, 0.3);
+}
+
+/* Main profile card improvements */
+#aboutMyself {
+    background: linear-gradient(145deg, #484848 0%, #424242 100%);
+    padding: 3em;
+    margin: 3em auto;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(169, 241, 255, 0.1);
+    max-width: 800px;
+    min-height: 700px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+#aboutMyself::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #A9F1FF, #9CD798);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#aboutMyself:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(169, 241, 255, 0.2);
+}
+
+#aboutMyself:hover::before {
+    opacity: 1;
+}
+
+/* Profile picture improvements */
+#profilePicture {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3em;
+    position: relative;
+}
+
+#profilePicture::after {
+    content: '';
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(169, 241, 255, 0.2) 0%, transparent 70%);
+    z-index: 1;
+}
+
+#profilePicture img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid #A9F1FF;
+    box-shadow: 0 0 30px rgba(169, 241, 255, 0.3),
+                inset 0 0 20px rgba(169, 241, 255, 0.2);
+    transition: all 0.4s ease;
+    z-index: 2;
+    position: relative;
+    object-fit: cover;
+}
+
+#profilePicture img:hover {
+    transform: scale(1.05);
+    border-color: #9CD798;
+    box-shadow: 0 0 40px rgba(156, 215, 152, 0.4);
+}
+
+/* Profile fields improvements */
+.profileField {
+    width: 90%;
+    min-height: 3.5em;
     max-height: 9em;
     display: flex;
-    box-sizing: border-box;
-    text-align: center;
-    margin: auto;
-    font-weight: bold;
-    font-size: 20px;
+    align-items: center;
+    margin: 1.2em auto;
+    padding: 1.2em;
+    background: linear-gradient(145deg, #363636 0%, #2f2f2f 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.profileKey{
+.profileField::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: #A9F1FF;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profileField:hover {
+    transform: translateX(10px);
+    background: linear-gradient(145deg, #3a3a3a 0%, #333333 100%);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.profileField:hover::before {
+    opacity: 1;
+}
+
+.profileKey {
     width: 30%;
-    margin: auto;
     text-align: right;
-    color: white;
-    box-sizing: border-box;
+    padding-right: 2em;
+    color: #B4E0F7;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
 }
 
-.profileValue{
+.profileValue {
     width: 70%;
-    max-height: 500px;
-    margin: auto 3em;
-    text-align: left;
-    color: rgb(154, 228, 248);
+    padding-left: 2em;
+    border-left: 2px solid rgba(169, 241, 255, 0.3);
+    color: #9CD798;
+    font-size: 1.1rem;
+    word-break: break-word;
+    transition: all 0.3s ease;
+}
+
+.profileField:hover .profileValue {
+    color: #aff1b3;
+}
+
+/* Enhanced scrollbar */
+#aboutMyself::-webkit-scrollbar {
+    width: 8px;
+}
+
+#aboutMyself::-webkit-scrollbar-track {
+    background: #343434;
+    border-radius: 4px;
+}
+
+#aboutMyself::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #A9F1FF 0%, #9CD798 100%);
+    border-radius: 4px;
+    border: 2px solid #343434;
+}
+
+#aboutMyself::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #B4E0F7 0%, #aff1b3 100%);
+}
+
+/* Animation for profile fields loading */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profileField {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.profileField:nth-child(1) { animation-delay: 0.1s; }
+.profileField:nth-child(2) { animation-delay: 0.2s; }
+.profileField:nth-child(3) { animation-delay: 0.3s; }
+.profileField:nth-child(4) { animation-delay: 0.4s; }
+.profileField:nth-child(5) { animation-delay: 0.5s; }
+
+/* Empty value styling */
+.empty-value {
+    color: #ff6b6b !important; /* Red color for empty values */
+    font-style: italic;
+}
+
+/* Profile picture container improvements */
+#profilePicture {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3em;
+    position: relative;
+}
+
+#profilePicture img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid #A9F1FF;
+    box-shadow: 0 0 30px rgba(169, 241, 255, 0.3);
+    transition: all 0.4s ease;
+    object-fit: cover;
+    background-color: #2a2a2a; /* Dark background for transparent images */
+}
+
+/* Loading state */
+.profile-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Error state */
+.profile-error {
+    color: #ff6b6b;
+    text-align: center;
+    padding: 2em;
+    font-size: 1.1rem;
+}
+
+/* Add these new styles for profile picture */
+.profile-picture-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid #A9F1FF;
+    box-shadow: 0 0 30px rgba(169, 241, 255, 0.3);
+    transition: all 0.4s ease;
+    object-fit: cover;
+    background-color: #2a2a2a;
+}
+
+.profile-picture-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-picture-container:hover .profile-picture-overlay {
+    opacity: 1;
+}
+
+.profile-picture-container:hover .profile-image {
+    border-color: #9CD798;
+    transform: scale(1.02);
+}
+
+/* Error state for profile picture */
+.profile-image-error {
+    border-color: #ff6b6b;
+}
+
+/* Loading state for profile picture */
+.profile-picture-loading {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
 }
