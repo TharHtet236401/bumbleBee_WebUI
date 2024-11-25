@@ -129,14 +129,19 @@ function openChat(participant) {
 // New function to fetch chat messages
 async function fetchChatMessages(participantId) {
     const api = `https://tharhtetaung.xyz/api/message/get/${participantId}`;
-    const messagesContainer = document.querySelector('.chat_messages_container'); // Ensure this container exists in your HTML
-    const loadingSpinner = document.querySelector('.loading-spinner');
-
-    // Clear previous messages
-    messagesContainer.innerHTML = ''; // Clear the messages container
-    loadingSpinner.style.display = 'flex'; // Show the loading spinner
+    const messagesContainer = document.querySelector('.chat_messages_container');
+    const loadingSpinner = messagesContainer.querySelector('.loading-spinner');
 
     try {
+        // Show loading spinner
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'flex';
+        }
+
+        // Clear previous messages but keep the loading spinner
+        const messages = messagesContainer.querySelectorAll('.chat_message');
+        messages.forEach(msg => msg.remove());
+
         const res = await fetch(api, {
             method: "GET",
             headers: {
@@ -147,60 +152,54 @@ async function fetchChatMessages(participantId) {
         const data = await res.json();
         console.log(data);
 
-        // Hide the loading spinner
-        loadingSpinner.style.display = 'none';
+        // Hide loading spinner
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'none';
+        }
 
         if (data.con) {
-            displayMessages(data.result, participantId); // Display the new messages
+            displayMessages(data.result, participantId);
         } else {
             console.error('Failed to fetch messages');
-            messagesContainer.innerHTML = '<p>Error fetching messages.</p>';
+            messagesContainer.innerHTML = '<p class="chat_error">Error fetching messages.</p>';
         }
     } catch (error) {
         console.error('Error fetching messages:', error);
-        loadingSpinner.style.display = 'none'; // Hide the spinner on error
-        messagesContainer.innerHTML = '<p>Error fetching messages.</p>';
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'none';
+        }
+        messagesContainer.innerHTML = '<p class="chat_error">Error fetching messages.</p>';
     }
 }
 
 // New function to display messages
 function displayMessages(messages, participantId) {
-    const messagesContainer = document.querySelector('.chat_messages_container'); // Ensure this container exists in your HTML
-    messagesContainer.innerHTML = ''; // Clear previous messages
+    const messagesContainer = document.querySelector('.chat_messages_container');
+    
+    // Keep the loading spinner but clear other content
+    const loadingSpinner = messagesContainer.querySelector('.loading-spinner');
+    messagesContainer.innerHTML = '';
+    if (loadingSpinner) {
+        messagesContainer.appendChild(loadingSpinner);
+    }
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
-        messageElement.className = 'chat_message';
-
-        // Determine if the message is from the current user or the receiver
-        const isCurrentUser = message.senderId === currentUser; // Check if the senderId matches the current user's ID
-        const isReceiver = message.receiverId === participantId; // Check if the receiverId matches the participant ID
-
-        // Debugging logs
-        console.log(`Message ID: ${message._id}`);
-        console.log(`Sender ID: ${message.senderId}`);
-        console.log(`Receiver ID: ${message.receiverId}`);
-        console.log(`Current User Token: ${token}`);
-        console.log(`Is Current User: ${isCurrentUser}`);
-        console.log(`Is Receiver: ${isReceiver}`);
+        messageElement.className = `chat_message ${message.senderId === currentUser ? 'me' : ''}`;
 
         messageElement.innerHTML = `
-            <div class="chat_message_profile ${isCurrentUser ? 'me' : ''}">
-                <img src="../assets/images/user.jpg" alt="User" /> <!-- Replace with actual user image -->
+            <div class="chat_message_profile">
+                <img src="../assets/images/user.jpg" alt="User" />
             </div>
-            <div class="chat_message_content ${isCurrentUser ? 'me' : ''}">
+            <div class="chat_message_content">
                 <p>${message.message}</p>
                 <span class="chat_message_time">${new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
         `;
 
-        // Adjust alignment based on sender and receiver
-        if (isCurrentUser) {
-            messageElement.classList.add('current-user'); // Add class for current user
-        } else if (isReceiver) {
-            messageElement.classList.add('receiver'); // Add class for receiver
-        }
-
         messagesContainer.appendChild(messageElement);
     });
+
+    // Scroll to bottom of messages
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
