@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 })
 
 async function getConversatinList(token) {
-    const loadingSpinner = document.querySelector('.loading-spinner');
+    const loadingSpinner = document.querySelector('.chat_history_list_wrapper .loading-spinner');
     const errorMessage = document.querySelector('.chat_history_error_message');
     
     try {
@@ -134,9 +134,7 @@ async function fetchChatMessages(participantId) {
 
     try {
         // Show loading spinner
-        if (loadingSpinner) {
-            loadingSpinner.style.display = 'flex';
-        }
+        loadingSpinner.classList.add('active');
 
         // Clear previous messages but keep the loading spinner
         const messages = messagesContainer.querySelectorAll('.chat_message');
@@ -152,11 +150,6 @@ async function fetchChatMessages(participantId) {
         const data = await res.json();
         console.log(data);
 
-        // Hide loading spinner
-        if (loadingSpinner) {
-            loadingSpinner.style.display = 'none';
-        }
-
         if (data.con) {
             displayMessages(data.result, participantId);
         } else {
@@ -165,23 +158,21 @@ async function fetchChatMessages(participantId) {
         }
     } catch (error) {
         console.error('Error fetching messages:', error);
-        if (loadingSpinner) {
-            loadingSpinner.style.display = 'none';
-        }
         messagesContainer.innerHTML = '<p class="chat_error">Error fetching messages.</p>';
+    } finally {
+        // Hide loading spinner
+        loadingSpinner.classList.remove('active');
     }
 }
 
 // New function to display messages
 function displayMessages(messages, participantId) {
     const messagesContainer = document.querySelector('.chat_messages_container');
-    
-    // Keep the loading spinner but clear other content
     const loadingSpinner = messagesContainer.querySelector('.loading-spinner');
+    
+    // Clear messages but preserve the loading spinner
     messagesContainer.innerHTML = '';
-    if (loadingSpinner) {
-        messagesContainer.appendChild(loadingSpinner);
-    }
+    messagesContainer.appendChild(loadingSpinner);
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
