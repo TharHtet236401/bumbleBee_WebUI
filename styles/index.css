@@ -264,41 +264,89 @@ main {
 .files_wrapper {
     display: flex;
     flex-direction: column;
-    gap: 1em;
-    margin-top: 1em;
-    width: 100%;
+    gap: 0.2em;
+    margin-top: 0.3em;
 }
 
 .file {
-    width: 100%;
     display: flex;
+    align-items: center;
     gap: 0.5em;
-    align-items: center;
-    padding: 1em;
-    background-color: #242424;
-    border-radius: 5px;
-    color: white;
-    box-shadow: 0 0 10px rgba(30, 30, 30, 0.5);
+    padding: 0.3em 0.5em;
+    background: rgba(58, 59, 60, 0.4);
+    border: 1px solid rgba(169, 241, 255, 0.1);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
-.download_wrapper {
-    margin-left: auto;
+.file:hover {
+    background: rgba(58, 59, 60, 0.6);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.download_wrapper a{
+.file::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23A9F1FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+}
+
+.file_name {
+    color: #E4E6EB;
+    font-size: 0.85rem;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+}
+
+.download_button {
+    background: rgba(169, 241, 255, 0.1);
+    border: none;
+    border-radius: 3px;
+    padding: 0.25em;
+    margin: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 0.75em;
-    color: white;
-    text-decoration: none;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
 }
 
-.download_wrapper a p:hover{
-    color: #A0DEDE; 
+.download_button svg {
+    width: 20px;
+    height: 20px;
+    fill: #A9F1FF;
+    opacity: 0.8;
+    transition: all 0.2s ease;
 }
 
-.download_wrapper a svg:hover path{
-    fill: #cafcfc; 
+.download_button:hover {
+    background: rgba(169, 241, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.download_button:hover svg {
+    opacity: 1;
+}
+
+.download_button:active {
+    transform: translateY(0);
+}
+
+/* Hide the index and download text */
+.file_index, .download_text {
+    display: none;
 }
 
 #student_list_bg{

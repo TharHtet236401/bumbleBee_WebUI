@@ -1642,7 +1642,7 @@ function viewStudentDetailsFunctionality() {
                 pendingParents = parentPendingsData.result;
                 if (pendingParents.length === 0) {
                     view_detail_dialog_pending_parentsEl.innerHTML = `<p style="padding: 1em"> There are no pending parent requests at the moment </p>`;
-                } else if (pendingParents.length > 0) {
+                } else if (pendingParents.length >0) {
                     for (let eachParent of pendingParents) {
                         view_detail_dialog_pending_parentsEl.innerHTML += `
                                 <p  style="padding: 1em">
@@ -1784,34 +1784,34 @@ function generatePostImages(postImageURLs, domEl) {
     }
 }
 
+function getFileNameFromURL(url) {
+    // Split the URL by the '/' character and get the last part
+    const parts = url.split("/");
+    const fileName = parts[parts.length - 1];
+
+    // Split by underscore and get the part after it
+    const nameAfterUnderscore = fileName.split("_").slice(1).join("_");
+    
+    // Remove the extension
+    const nameWithoutExtension = nameAfterUnderscore.split(".")[0];
+
+    return nameWithoutExtension;
+}
+
 function generatePostFiles(postFilesArr) {
     const postFilesWrapper = document.getElementById("file_wrapper");
     if (postFilesArr.length > 0) {
-        for (const [index, postFile] of postFilesArr.entries()) {
+        for (const postFile of postFilesArr) {
             const fileName = getFileNameFromURL(postFile);
             const postFileHTMLEl = `
                     <div class="file">
-                        <span>${index})</span>
-                        <p>${fileName}</p>
-                        <div class="download_wrapper">
-                            <a href="${postFile}" download="">
-                                <p>Download</p>
-                                <svg
-                                    width="29"
-                                    height="29"
-                                    viewBox="0 0 29 29"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        clip-rule="evenodd"
-                                        d="M0 14.5C0 7.6647 0 4.24705 2.1228 2.1228C4.2485 0 7.6647 0 14.5 0C21.3353 0 24.753 0 26.8758 2.1228C29 4.2485 29 7.6647 29 14.5C29 21.3353 29 24.753 26.8758 26.8758C24.7544 29 21.3353 29 14.5 29C7.6647 29 4.24705 29 2.1228 26.8758C0 24.7544 0 21.3353 0 14.5ZM14.5 6.1625C14.7884 6.1625 15.065 6.27708 15.269 6.48102C15.4729 6.68497 15.5875 6.96158 15.5875 7.25V14.7755L18.0815 12.2815C18.1811 12.1747 18.3011 12.089 18.4345 12.0295C18.5679 11.9701 18.7119 11.9381 18.8579 11.9355C19.004 11.933 19.149 11.9598 19.2844 12.0145C19.4198 12.0692 19.5428 12.1506 19.6461 12.2539C19.7494 12.3572 19.8308 12.4802 19.8855 12.6156C19.9402 12.751 19.967 12.896 19.9645 13.0421C19.9619 13.1881 19.9299 13.3321 19.8705 13.4655C19.811 13.5989 19.7253 13.7189 19.6185 13.8185L15.2685 18.1685C15.0646 18.3722 14.7882 18.4865 14.5 18.4865C14.2118 18.4865 13.9354 18.3722 13.7315 18.1685L9.3815 13.8185C9.27465 13.7189 9.18896 13.5989 9.12952 13.4655C9.07008 13.3321 9.03812 13.1881 9.03554 13.0421C9.03297 12.896 9.05983 12.751 9.11452 12.6156C9.16922 12.4802 9.25063 12.3572 9.3539 12.2539C9.45716 12.1506 9.58017 12.0692 9.71558 12.0145C9.851 11.9598 9.99604 11.933 10.1421 11.9355C10.2881 11.9381 10.4321 11.9701 10.5655 12.0295C10.6989 12.089 10.8189 12.1747 10.9185 12.2815L13.4125 14.7755V7.25C13.4125 6.96158 13.5271 6.68497 13.731 6.48102C13.935 6.27708 14.2116 6.1625 14.5 6.1625ZM8.7 20.6625C8.41158 20.6625 8.13497 20.7771 7.93102 20.981C7.72708 21.185 7.6125 21.4616 7.6125 21.75C7.6125 22.0384 7.72708 22.315 7.93102 22.519C8.13497 22.7229 8.41158 22.8375 8.7 22.8375H20.3C20.5884 22.8375 20.865 22.7229 21.069 22.519C21.2729 22.315 21.3875 22.0384 21.3875 21.75C21.3875 21.4616 21.2729 21.185 21.069 20.981C20.865 20.7771 20.5884 20.6625 20.3 20.6625H8.7Z"
-                                        fill="#A0DEDE"
-                                    />
-                                </svg>
-                            </a>
-                        </div>
+                        <p class="file_name">${fileName}</p>
+                        <button class="download_button" onclick="window.open('${postFile}', '_blank')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 3V16M12 16L16 11.625M12 16L8 11.625" stroke="#A9F1FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3 15V16C3 17.6569 4.34315 19 6 19H18C19.6569 19 21 17.6569 21 16V15" stroke="#A9F1FF" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </button>
                     </div>
                 `;
             postFilesWrapper.innerHTML += postFileHTMLEl;
@@ -1832,17 +1832,6 @@ documentInput.addEventListener("change", function () {
         alert(`${this.files.length} file(s) selected.`);
     }
 });
-
-function getFileNameFromURL(url) {
-    // Split the URL by the '/' character and get the last part
-    const parts = url.split("/");
-    const fileName = parts[parts.length - 1];
-
-    // Split the file name by '.' to remove the file extension
-    const nameWithoutExtension = fileName.split(".")[0];
-
-    return nameWithoutExtension;
-}
 
 teacher_requests_modal = document.getElementById("teacher_requests_modal");
 teacher_request_btn.addEventListener("click", async () => {
