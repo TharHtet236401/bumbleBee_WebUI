@@ -2,16 +2,20 @@ import { checkCookie } from "../utils/cookies.js";
 import {mainApi, mainWebsite, getUserProfileApi, cookieCheckApi,  } from "./endpoints.js"
 
 let token;
-
+var currentUser;
 document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(cookieCheckApi);
-    console.log(statusCode)
+    console.log(resData);
+    
     if (statusCode !== 200) {
         alert("Please sign in first");
         window.location.href = `${mainWebsite}/signIn.html`;
     }
+    
+    // Extract the _id from userData
+    currentUser = resData.userData._id;  // This will get "6735a0fb511fe9fd300c8624"
     token = resData.token;
-    console.log(token);
+    console.log("Current User ID:", currentUser);
     
     const conversations = await getConversatinList(token);
     if (conversations.length > 0) {
@@ -128,8 +132,9 @@ async function fetchChatMessages(participantId) {
     const messagesContainer = document.querySelector('.chat_messages_container'); // Ensure this container exists in your HTML
     const loadingSpinner = document.querySelector('.loading-spinner');
 
-    // Show the loading spinner
-    loadingSpinner.style.display = 'flex';
+    // Clear previous messages
+    messagesContainer.innerHTML = ''; // Clear the messages container
+    loadingSpinner.style.display = 'flex'; // Show the loading spinner
 
     try {
         const res = await fetch(api, {
@@ -146,7 +151,7 @@ async function fetchChatMessages(participantId) {
         loadingSpinner.style.display = 'none';
 
         if (data.con) {
-            displayMessages(data.result);
+            displayMessages(data.result, participantId); // Display the new messages
         } else {
             console.error('Failed to fetch messages');
             messagesContainer.innerHTML = '<p>Error fetching messages.</p>';
@@ -159,17 +164,43 @@ async function fetchChatMessages(participantId) {
 }
 
 // New function to display messages
-function displayMessages(messages) {
+function displayMessages(messages, participantId) {
     const messagesContainer = document.querySelector('.chat_messages_container'); // Ensure this container exists in your HTML
     messagesContainer.innerHTML = ''; // Clear previous messages
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
         messageElement.className = 'chat_message';
+
+        // Determine if the message is from the current user or the receiver
+        const isCurrentUser = message.senderId === currentUser; // Check if the senderId matches the current user's ID
+        const isReceiver = message.receiverId === participantId; // Check if the receiverId matches the participant ID
+
+        // Debugging logs
+        console.log(`Message ID: ${message._id}`);
+        console.log(`Sender ID: ${message.senderId}`);
+        console.log(`Receiver ID: ${message.receiverId}`);
+        console.log(`Current User Token: ${token}`);
+        console.log(`Is Current User: ${isCurrentUser}`);
+        console.log(`Is Receiver: ${isReceiver}`);
+
         messageElement.innerHTML = `
-            <p><strong>${message.senderId}:</strong> ${message.message}</p>
-            <span>${new Date(message.createdAt).toLocaleString()}</span>
+            <div class="chat_message_profile ${isCurrentUser ? 'me' : ''}">
+                <img src="../assets/images/user.jpg" alt="User" /> <!-- Replace with actual user image -->
+            </div>
+            <div class="chat_message_content ${isCurrentUser ? 'me' : ''}">
+                <p>${message.message}</p>
+                <span class="chat_message_time">${new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
         `;
+
+        // Adjust alignment based on sender and receiver
+        if (isCurrentUser) {
+            messageElement.classList.add('current-user'); // Add class for current user
+        } else if (isReceiver) {
+            messageElement.classList.add('receiver'); // Add class for receiver
+        }
+
         messagesContainer.appendChild(messageElement);
     });
 }
