@@ -126,6 +126,11 @@ function openChat(participant) {
 async function fetchChatMessages(participantId) {
     const api = `https://tharhtetaung.xyz/api/message/get/${participantId}`;
     const messagesContainer = document.querySelector('.chat_messages_container'); // Ensure this container exists in your HTML
+    const loadingSpinner = document.querySelector('.loading-spinner');
+
+    // Show the loading spinner
+    loadingSpinner.style.display = 'flex';
+
     try {
         const res = await fetch(api, {
             method: "GET",
@@ -137,6 +142,9 @@ async function fetchChatMessages(participantId) {
         const data = await res.json();
         console.log(data);
 
+        // Hide the loading spinner
+        loadingSpinner.style.display = 'none';
+
         if (data.con) {
             displayMessages(data.result);
         } else {
@@ -145,6 +153,7 @@ async function fetchChatMessages(participantId) {
         }
     } catch (error) {
         console.error('Error fetching messages:', error);
+        loadingSpinner.style.display = 'none'; // Hide the spinner on error
         messagesContainer.innerHTML = '<p>Error fetching messages.</p>';
     }
 }
