@@ -3,6 +3,8 @@ import {mainApi, mainWebsite, getUserProfileApi, cookieCheckApi,  } from "./endp
 
 let token;
 var currentUser;
+let socket;
+
 document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(cookieCheckApi);
     currentUser = resData.userData._id;
@@ -15,11 +17,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentUser = resData.userData._id;  // This will get "6735a0fb511fe9fd300c8624"
     token = resData.token;
     
+    // Initialize socket connection
+    initializeSocket(token);
+    
     const conversations = await getConversatinList(token);
     if (conversations.length > 0) {
         openChat(conversations[0].participants[0]);
     }
 })
+
+// Add new function to initialize socket
+function initializeSocket(token) {
+    // Initialize socket with auth headers
+    socket = io('https://tharhtetaung.xyz/chat', {
+        extraHeaders: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    // Listen for connection
+    socket.on('connect', () => {
+        console.log('Connected to socket server');
+    });
+
+    // Listen for welcome event
+    socket.on('welcome', (data) => {
+        console.log('Received welcome event:', data);
+    });
+
+    // Handle connection errors
+    socket.on('connect_error', (error) => {
+        console.error('Socket connection error:', error);
+    });
+}
 
 async function getConversatinList(token) {
     const loadingSpinner = document.querySelector('.chat_history_list_wrapper .loading-spinner');
