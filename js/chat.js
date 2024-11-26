@@ -4,6 +4,7 @@ import {mainApi, mainWebsite, getUserProfileApi, cookieCheckApi,  } from "./endp
 let token;
 var currentUser;
 let socket;
+let currentRecipientId;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(cookieCheckApi);
@@ -24,6 +25,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (conversations.length > 0) {
         openChat(conversations[0].participants[0]);
     }
+
+    const messageForm = document.querySelector('.message_form');
+    const messageInput = messageForm.querySelector('.message_input');
+
+    messageForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const message = messageInput.value.trim();
+        if (!message || !currentRecipientId) return;
+
+        // Send the message
+        await sendMessage(message);
+        
+        // Clear input
+        messageInput.value = '';
+    });
 })
 
 // Add new function to initialize socket
@@ -54,28 +71,29 @@ function initializeSocket(token) {
     socket.on('newMessage', (data) => {
         console.log('Received new message:', data);
         
-        // Get the message object from the data
         const { message } = data;
         
-        // Create and append the new message element
-        const messagesContainer = document.querySelector('.chat_messages_container');
-        const messageElement = document.createElement('div');
-        
-        // Check if the sender is the current user
-        messageElement.className = `chat_message ${message.senderId._id === currentUser ? '' : 'me'}`;
+        // Only display if it's not our own message
+        if (message.senderId._id !== currentUser) {
+            const messagesContainer = document.querySelector('.chat_messages_container');
+            const messageElement = document.createElement('div');
+            
+            // Add 'me' class for right alignment for received messages
+            messageElement.className = 'chat_message me';
 
-        messageElement.innerHTML = `
-            <div class="chat_message_profile">
-                <img src="${message.senderId.profilePicture}" alt="${message.senderId.userName}" />
-            </div>
-            <div class="chat_message_content">
-                <p>${message.message}</p>
-                <span class="chat_message_time">${new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-            </div>
-        `;
+            messageElement.innerHTML = `
+                <div class="chat_message_profile">
+                    <img src="${message.senderId.profilePicture}" alt="${message.senderId.userName}" />
+                </div>
+                <div class="chat_message_content">
+                    <p>${message.message}</p>
+                    <span class="chat_message_time">${new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+            `;
 
-        messagesContainer.appendChild(messageElement);
-        scrollToLatestMessage();
+            messagesContainer.appendChild(messageElement);
+            scrollToLatestMessage();
+        }
     });
 }
 
@@ -172,6 +190,8 @@ function formatDate(date) {
 }
 
 function openChat(participant) {
+    currentRecipientId = participant._id;
+    
     // Update the chat header with participant info
     const profileImg = document.querySelector('.chat_right_top_profile_img img');
     const profileName = document.querySelector('.chat_right_top_profile_name');
@@ -265,4 +285,51 @@ function updateChatCount(count) {
 function scrollToLatestMessage() {
     const messagesContainer = document.querySelector('.chat_messages_container');
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Add new function to handle message sending
+async function sendMessage(message) {
+    const submitButton = document.querySelector('.submit_button');
+    submitButton.disabled = true; // Disable button while sending
+    
+    try {
+        const api = `${mainApi}/api/message/send/${currentRecipientId}`;
+        const res = await fetch(api, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ message })
+        });
+        
+        const data = await res.json();
+        if (data.con) {
+            // Create and display the sent message immediately
+            const messagesContainer = document.querySelector('.chat_messages_container');
+            const messageElement = document.createElement('div');
+            
+            // Remove 'me' class since it's from current user (should appear on left)
+            messageElement.className = 'chat_message';
+
+            messageElement.innerHTML = `
+                <div class="chat_message_profile">
+                    <img src="${data.result.senderId.profilePicture}" alt="${data.result.senderId.userName}" />
+                </div>
+                <div class="chat_message_content">
+                    <p>${message}</p>
+                    <span class="chat_message_time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageElement);
+            scrollToLatestMessage();
+        } else {
+            console.error('Failed to send message:', data);
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    } finally {
+        submitButton.disabled = false; // Re-enable button
+    }
 }
