@@ -175,11 +175,12 @@ function displayMessages(messages, participantId) {
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
-        messageElement.className = `chat_message ${message.senderId === currentUser ? '' : 'me'}`;
+        // Check if the sender is the current user
+        messageElement.className = `chat_message ${message.senderId._id === currentUser ? '' : 'me'}`;
 
         messageElement.innerHTML = `
             <div class="chat_message_profile">
-                <img src="../assets/images/user.jpg" alt="User" />
+                <img src="${message.senderId.profilePicture}" alt="${message.senderId.userName}" />
             </div>
             <div class="chat_message_content">
                 <p>${message.message}</p>
