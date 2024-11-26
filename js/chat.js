@@ -5,7 +5,6 @@ let token;
 var currentUser;
 document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(cookieCheckApi);
-    console.log(resData);
     currentUser = resData.userData._id;
     if (statusCode !== 200) {
         alert("Please sign in first");
@@ -15,7 +14,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Extract the _id from userData
     currentUser = resData.userData._id;  // This will get "6735a0fb511fe9fd300c8624"
     token = resData.token;
-    console.log("Current User ID:", currentUser);
     
     const conversations = await getConversatinList(token);
     if (conversations.length > 0) {
@@ -41,7 +39,6 @@ async function getConversatinList(token) {
             }
         });
         const data = await res.json();
-        console.log(data);
         
         if (data.con) {
             updateChatCount(data.result.length);
@@ -127,12 +124,11 @@ function openChat(participant) {
 
     // Fetch and display chat messages
     fetchChatMessages(participant._id);
-    console.log(participant._id);
 }
 
 // New function to fetch chat messages
 async function fetchChatMessages(participantId) {
-    const api = `https://tharhtetaung.xyz/api/message/get/${participantId}`;
+    const api = `${mainApi}/api/message/get/${participantId}`;
     const messagesContainer = document.querySelector('.chat_messages_container');
     const loadingSpinner = messagesContainer.querySelector('.loading-spinner');
 
@@ -152,7 +148,6 @@ async function fetchChatMessages(participantId) {
             }
         });
         const data = await res.json();
-        console.log(data);
 
         if (data.con) {
             displayMessages(data.result, participantId);
@@ -180,8 +175,6 @@ function displayMessages(messages, participantId) {
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
-        // console.log("check1", message.senderId);
-        // console.log("check2", currentUser);
         messageElement.className = `chat_message ${message.senderId === currentUser ? '' : 'me'}`;
 
         messageElement.innerHTML = `
