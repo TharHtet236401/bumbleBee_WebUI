@@ -44,16 +44,20 @@ async function getConversatinList(token) {
         console.log(data);
         
         if (data.con) {
+            updateChatCount(data.result.length);
+            
             displayConversations(data.result);
             return data.result;
         } else {
             console.error('Failed to fetch conversations');
             errorMessage.style.display = 'block';
+            updateChatCount(0);
             return [];
         }
     } catch (error) {
         console.error('Error fetching conversations:', error);
         errorMessage.style.display = 'block';
+        updateChatCount(0);
         return [];
     } finally {
         // Hide loading spinner when done
@@ -195,4 +199,12 @@ function displayMessages(messages, participantId) {
 
     // Scroll to bottom of messages
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Add this function to update the chat count
+function updateChatCount(count) {
+    const chatCountElement = document.querySelector('.chat_count');
+    if (chatCountElement) {
+        chatCountElement.textContent = count;
+    }
 }
