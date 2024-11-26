@@ -211,6 +211,13 @@ main {
     background-color: #242526;
     padding: 1em;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.chat_messages_container {
+    display: flex;
+    flex-direction: column;
 }
 
 .chat_message {

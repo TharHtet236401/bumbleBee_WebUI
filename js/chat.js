@@ -75,9 +75,7 @@ function initializeSocket(token) {
         `;
 
         messagesContainer.appendChild(messageElement);
-        
-        // Scroll to the bottom of the messages container
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        scrollToLatestMessage();
     });
 }
 
@@ -233,6 +231,7 @@ function displayMessages(messages, participantId) {
     messagesContainer.innerHTML = '';
     messagesContainer.appendChild(loadingSpinner);
 
+    // Display messages in chronological order
     messages.forEach(message => {
         const messageElement = document.createElement('div');
         // Check if the sender is the current user
@@ -251,8 +250,7 @@ function displayMessages(messages, participantId) {
         messagesContainer.appendChild(messageElement);
     });
 
-    // Scroll to bottom of messages
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    scrollToLatestMessage();
 }
 
 // Add this function to update the chat count
@@ -261,4 +259,10 @@ function updateChatCount(count) {
     if (chatCountElement) {
         chatCountElement.textContent = count;
     }
+}
+
+// Add this new function
+function scrollToLatestMessage() {
+    const messagesContainer = document.querySelector('.chat_messages_container');
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
