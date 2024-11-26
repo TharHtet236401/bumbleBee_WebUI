@@ -49,6 +49,36 @@ function initializeSocket(token) {
     socket.on('connect_error', (error) => {
         console.error('Socket connection error:', error);
     });
+
+    // Listen for new messages
+    socket.on('newMessage', (data) => {
+        console.log('Received new message:', data);
+        
+        // Get the message object from the data
+        const { message } = data;
+        
+        // Create and append the new message element
+        const messagesContainer = document.querySelector('.chat_messages_container');
+        const messageElement = document.createElement('div');
+        
+        // Check if the sender is the current user
+        messageElement.className = `chat_message ${message.senderId._id === currentUser ? '' : 'me'}`;
+
+        messageElement.innerHTML = `
+            <div class="chat_message_profile">
+                <img src="${message.senderId.profilePicture}" alt="${message.senderId.userName}" />
+            </div>
+            <div class="chat_message_content">
+                <p>${message.message}</p>
+                <span class="chat_message_time">${new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+        `;
+
+        messagesContainer.appendChild(messageElement);
+        
+        // Scroll to the bottom of the messages container
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
 }
 
 async function getConversatinList(token) {
