@@ -167,6 +167,8 @@ main {
     height: 36px;
     min-width: 36px;
     margin-right: 0.25em;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .active_status {
