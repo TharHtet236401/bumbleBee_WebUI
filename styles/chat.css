@@ -9,20 +9,21 @@ body {
 
 main {
     display: flex;
-    gap: 1em;
-    padding: 1em;
+    gap: 1.5em;
+    padding: 1.5em;
     height: 100vh;
     max-width: 1400px;
     margin: 0 auto;
+    background-color: #18191A;
 }
 
 .chat_left {
     background-color: #242526;
-    min-width: 320px;
-    width: 25%;
-    height: calc(100vh - 2em);
-    border-radius: 16px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    min-width: 340px;
+    width: 28%;
+    height: calc(100vh - 3em);
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Add logo styling */
@@ -30,14 +31,15 @@ main {
     display: flex;
     align-items: center;
     gap: 0.75em;
-    padding: 1em;
-    border-bottom: 1px solid #393A3B;
+    padding: 1.25em;
+    border-bottom: 1px solid rgba(57, 58, 59, 0.7);
 }
 
 .logo {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .logo_text {
@@ -67,18 +69,19 @@ main {
 
 .search_input {
     width: 100%;
-    height: 40px;
+    height: 44px;
     background-color: #3A3B3C;
-    border: none;
-    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 22px;
     padding: 0 20px 0 45px;
     font-size: 0.95rem;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .search_input:focus {
     background-color: #4E4F50;
-    outline: none;
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.2);
 }
 
 /* Chat History */
@@ -106,15 +109,16 @@ main {
 .chat_history_list {
     display: flex;
     align-items: center;
-    padding: 0.75em 1em;
+    padding: 1em 1.25em;
     cursor: pointer;
-    transition: background-color 0.2s;
-    position: relative;
-    gap: 0.25em;
+    transition: all 0.2s ease;
+    border-radius: 12px;
+    margin: 0.25em 0.75em;
 }
 
 .chat_history_list:hover {
     background-color: #3A3B3C;
+    transform: translateX(4px);
 }
 
 .chat_history_list.active {
@@ -134,6 +138,12 @@ main {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.chat_history_list:hover .chat_history_list_img img {
+    transform: scale(1.05);
 }
 
 /* Chat Right Section */
@@ -213,6 +223,7 @@ main {
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
+    scroll-behavior: smooth;
 }
 
 .chat_messages_container {
@@ -227,6 +238,7 @@ main {
     margin-bottom: 1em;
     max-width: 75%;
     margin-right: auto;
+    animation: fadeIn 0.3s ease;
 }
 
 .chat_message.me {
@@ -238,10 +250,12 @@ main {
 
 .chat_message_content {
     background-color: #3A3B3C;
-    padding: 0.8em 1.2em 0.4em;
-    border-radius: 18px;
+    padding: 1em 1.4em 0.6em;
+    border-radius: 20px;
     position: relative;
     min-width: 80px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
 }
 
 .chat_message_content p {
@@ -260,10 +274,15 @@ main {
 
 .chat_message.me .chat_message_content {
     background-color: #0084FF;
+    background-image: linear-gradient(to bottom right, #0084FF, #0073E6);
 }
 
 .chat_message.me .chat_message_time {
     color: rgba(255, 255, 255, 0.7);
+}
+
+.chat_message_content:hover {
+    transform: translateY(-1px);
 }
 
 /* Make chat message profile image smaller */
@@ -308,7 +327,15 @@ main {
     border-radius: 24px;
     display: flex;
     align-items: center;
-    height: 40px;
+    height: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.message_input_wrapper:focus-within {
+    border-color: rgba(0, 132, 255, 0.3);
+    box-shadow: 0 0 0 1px rgba(0, 132, 255, 0.1);
+    background-color: #3d3e3f;
 }
 
 .message_input {
@@ -317,6 +344,8 @@ main {
     border: none;
     padding: 8px 16px;
     font-size: 0.95rem;
+    outline: none;
+    color: #E4E6EB;
 }
 
 .attachment_btn, .emoji_btn {
@@ -328,20 +357,22 @@ main {
 }
 
 .submit_button {
-    background-color: #0084FF;
+    background-image: linear-gradient(to bottom right, #0084FF, #0073E6);
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .submit_button:hover {
-    background-color: #0073E6;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .submit_button i {
@@ -350,20 +381,22 @@ main {
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #4E4F50;
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #5E5F60;
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .loading-spinner {
@@ -381,14 +414,41 @@ main {
 .spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid #0084FF;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 0.8s linear infinite;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chat_message {
+    animation: fadeIn 0.3s ease;
+}
+
+.user_status {
+    font-size: 0.85rem;
+    color: #31A24C;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.user_status::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #31A24C;
+    border-radius: 50%;
 }
 
