@@ -577,7 +577,7 @@ main {
     background-image: none;
 }
 
-/* Add these styles for the sending animation */
+/* Update the sending animation styles */
 @keyframes pulse {
     0% { opacity: 1; }
     50% { opacity: 0.4; }
@@ -592,10 +592,11 @@ main {
     position: relative;
 }
 
-.chat_message.sending .chat_message_content::after {
+/* Adjust loading dots position for messages with 'me' class (right side) */
+.chat_message.sending.me .chat_message_content::after {
     content: '';
     position: absolute;
-    right: -40px;
+    left: -40px; /* Changed from right to left */
     bottom: 10px;
     width: 30px;
     height: 12px;
@@ -605,8 +606,33 @@ main {
     animation: pulse 1s infinite;
 }
 
-.chat_message.sending.image-only .chat_message_content::after {
-    right: -40px;
+/* Adjust for image-only messages */
+.chat_message.sending.me.image-only .chat_message_content::after {
+    left: -40px;
     bottom: 25px;
+}
+
+/* Add error state styling */
+.chat_message.error .chat_message_content {
+    border: 1px solid #ff4444;
+}
+
+.chat_message.error .chat_message_content::after {
+    content: '❌';
+    position: absolute;
+    left: -30px;
+    bottom: 10px;
+    font-size: 14px;
+}
+
+/* Adjust opacity for sending state images */
+.chat_message.sending img {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+/* Add transition for smooth opacity changes */
+.chat_message {
+    transition: opacity 0.3s ease;
 }
 

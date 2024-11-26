@@ -96,8 +96,8 @@ function initializeSocket(token) {
             const messagesContainer = document.querySelector('.chat_messages_container');
             const messageElement = document.createElement('div');
             
-            // Add 'me' class for right alignment for received messages
-            messageElement.className = 'chat_message me';
+            // Remove 'me' class for received messages - they should be on the left
+            messageElement.className = 'chat_message';
 
             // Create HTML for images if present
             const imagesHTML = message.image && message.image.length > 0 ? 
@@ -278,8 +278,8 @@ function displayMessages(messages, participantId) {
     // Display messages in chronological order
     messages.forEach(message => {
         const messageElement = document.createElement('div');
-        // Check if the sender is the current user
-        messageElement.className = `chat_message ${message.senderId._id === currentUser ? '' : 'me'}`;
+        // Reverse the logic - add 'me' class for current user's messages (right side)
+        messageElement.className = `chat_message ${message.senderId._id === currentUser ? 'me' : ''}`;
 
         // Create HTML for images if present
         const imagesHTML = message.image && message.image.length > 0 ? 
@@ -324,7 +324,7 @@ async function sendMessage(message) {
     
     // Create temporary message element with sending state
     const tempMessageElement = document.createElement('div');
-    tempMessageElement.className = 'chat_message sending';
+    tempMessageElement.className = 'chat_message sending me';
     if (!message && selectedImages.length > 0) {
         tempMessageElement.classList.add('image-only');
     }
@@ -338,8 +338,8 @@ async function sendMessage(message) {
 
     tempMessageElement.innerHTML = `
         <div class="chat_message_profile">
-            <img src="${document.querySelector('.chat_message_profile img')?.src || ''}" alt="You" />
-        </div>
+            <img src='https://png.pngtree.com/png-vector/20220705/ourmid/pngtree-loading-icon-vector-transparent-png-image_5687537.png' alt="You" />
+        </div>  
         <div class="chat_message_content">
             ${message ? `<p>${message}</p>` : ''}
             ${imagePreviewsHTML}
@@ -372,9 +372,9 @@ async function sendMessage(message) {
         
         const data = await res.json();
         if (data.con) {
-            // Replace temporary message with actual message
+            // Create final message with 'me' class
             const messageElement = document.createElement('div');
-            messageElement.className = 'chat_message';
+            messageElement.className = 'chat_message me';
 
             const imagesHTML = data.result.image && data.result.image.length > 0 ? 
                 data.result.image.map(img => `<img src="${img}" alt="Sent image" style="max-width: 200px; border-radius: 8px; margin: 4px 0;">`).join('') 
