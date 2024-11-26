@@ -526,12 +526,87 @@ main {
     transition: transform 0.2s ease;
 }
 
-/* When message has only images (no text) */
+/* Remove background and padding when message only contains image */
+.chat_message_content:not(:has(p)) {
+    background: none;
+    padding: 0;
+    box-shadow: none;
+}
+
+/* Style for images */
+.chat_message_content img {
+    max-width: 250px; /* Increased max-width for better visibility */
+    width: 100%;
+    border-radius: 12px;
+    margin: 4px 0;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust time display for image-only messages */
+.chat_message_content:not(:has(p)) .chat_message_time {
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    color: white;
+}
+
+/* When message has only images */
 .chat_message_content:not(:has(p)) img:first-child {
     margin-top: 0;
 }
 
 .chat_message_content:not(:has(p)) img:last-of-type {
-    margin-bottom: 4px;
+    margin-bottom: 20px; /* Space for the timestamp */
+}
+
+/* Gradient for sent messages with text */
+.chat_message.me .chat_message_content:has(p) {
+    background-color: #0084FF;
+    background-image: linear-gradient(to bottom right, #0084FF, #0073E6);
+}
+
+/* Remove gradient for image-only messages */
+.chat_message.me .chat_message_content:not(:has(p)) {
+    background: none;
+    background-image: none;
+}
+
+/* Add these styles for the sending animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+
+.chat_message.sending {
+    opacity: 0.7;
+}
+
+.chat_message.sending .chat_message_content {
+    position: relative;
+}
+
+.chat_message.sending .chat_message_content::after {
+    content: '';
+    position: absolute;
+    right: -40px;
+    bottom: 10px;
+    width: 30px;
+    height: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg width='30' height='12' viewBox='0 0 120 30' xmlns='http://www.w3.org/2000/svg' fill='%23fff'%3E%3Ccircle cx='15' cy='15' r='15'%3E%3Canimate attributeName='r' from='15' to='15' begin='0s' dur='0.8s' values='15;9;15' calcMode='linear' repeatCount='indefinite' /%3E%3Canimate attributeName='fill-opacity' from='1' to='1' begin='0s' dur='0.8s' values='1;.5;1' calcMode='linear' repeatCount='indefinite' /%3E%3C/circle%3E%3Ccircle cx='60' cy='15' r='9' fill-opacity='0.3'%3E%3Canimate attributeName='r' from='9' to='9' begin='0s' dur='0.8s' values='9;15;9' calcMode='linear' repeatCount='indefinite' /%3E%3Canimate attributeName='fill-opacity' from='0.5' to='0.5' begin='0s' dur='0.8s' values='.5;1;.5' calcMode='linear' repeatCount='indefinite' /%3E%3C/circle%3E%3Ccircle cx='105' cy='15' r='15'%3E%3Canimate attributeName='r' from='15' to='15' begin='0s' dur='0.8s' values='15;9;15' calcMode='linear' repeatCount='indefinite' /%3E%3Canimate attributeName='fill-opacity' from='1' to='1' begin='0s' dur='0.8s' values='1;.5;1' calcMode='linear' repeatCount='indefinite' /%3E%3C/circle%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: pulse 1s infinite;
+}
+
+.chat_message.sending.image-only .chat_message_content::after {
+    right: -40px;
+    bottom: 25px;
 }
 

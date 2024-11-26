@@ -322,13 +322,41 @@ async function sendMessage(message) {
     const submitButton = document.querySelector('.submit_button');
     submitButton.disabled = true;
     
+    // Create temporary message element with sending state
+    const tempMessageElement = document.createElement('div');
+    tempMessageElement.className = 'chat_message sending';
+    if (!message && selectedImages.length > 0) {
+        tempMessageElement.classList.add('image-only');
+    }
+
+    // Create temporary preview for images
+    const imagePreviewsHTML = selectedImages.length > 0 ? 
+        Array.from(selectedImages).map(file => {
+            const url = URL.createObjectURL(file);
+            return `<img src="${url}" alt="Sending image" style="opacity: 0.7;">`;
+        }).join('') : '';
+
+    tempMessageElement.innerHTML = `
+        <div class="chat_message_profile">
+            <img src="${document.querySelector('.chat_message_profile img')?.src || ''}" alt="You" />
+        </div>
+        <div class="chat_message_content">
+            ${message ? `<p>${message}</p>` : ''}
+            ${imagePreviewsHTML}
+            <span class="chat_message_time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+    `;
+
+    const messagesContainer = document.querySelector('.chat_messages_container');
+    messagesContainer.appendChild(tempMessageElement);
+    scrollToLatestMessage();
+    
     try {
         const formData = new FormData();
         if (message) {
             formData.append('message', message);
         }
         
-        // Append each selected image to the FormData
         selectedImages.forEach(image => {
             formData.append('images', image);
         });
@@ -344,12 +372,10 @@ async function sendMessage(message) {
         
         const data = await res.json();
         if (data.con) {
-            // Create and display the sent message immediately
-            const messagesContainer = document.querySelector('.chat_messages_container');
+            // Replace temporary message with actual message
             const messageElement = document.createElement('div');
             messageElement.className = 'chat_message';
 
-            // Create HTML for images if present
             const imagesHTML = data.result.image && data.result.image.length > 0 ? 
                 data.result.image.map(img => `<img src="${img}" alt="Sent image" style="max-width: 200px; border-radius: 8px; margin: 4px 0;">`).join('') 
                 : '';
@@ -365,20 +391,33 @@ async function sendMessage(message) {
                 </div>
             `;
 
-            messagesContainer.appendChild(messageElement);
-            scrollToLatestMessage();
+            // Replace the temporary message with the actual one
+            tempMessageElement.replaceWith(messageElement);
 
             // Clear the selected images and preview
             selectedImages = [];
             document.querySelector('.image_preview_container').innerHTML = '';
             document.querySelector('.message_input_wrapper').classList.remove('has_images');
         } else {
+            // Show error state
+            tempMessageElement.classList.remove('sending');
+            tempMessageElement.classList.add('error');
             console.error('Failed to send message:', data);
         }
     } catch (error) {
+        // Show error state
+        tempMessageElement.classList.remove('sending');
+        tempMessageElement.classList.add('error');
         console.error('Error sending message:', error);
     } finally {
         submitButton.disabled = false;
+        
+        // Clean up any object URLs we created
+        if (selectedImages.length > 0) {
+            tempMessageElement.querySelectorAll('img').forEach(img => {
+                URL.revokeObjectURL(img.src);
+            });
+        }
     }
 }
 
