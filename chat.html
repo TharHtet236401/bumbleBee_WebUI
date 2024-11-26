@@ -81,11 +81,13 @@
 
             <div class="chat_right_bottom">
                 <form class="message_form">
-                    <button type="button" class="attachment_btn">
+                    <input type="file" id="imageInput" accept="image/*" multiple style="display: none">
+                    <button type="button" class="attachment_btn" onclick="document.getElementById('imageInput').click()">
                         <i class="fas fa-paperclip"></i>
                     </button>
                     <div class="message_input_wrapper">
                         <input class="message_input" type="text" placeholder="Type a message...">
+                        <div class="image_preview_container"></div>
                         <button type="button" class="emoji_btn">
                             <i class="far fa-smile"></i>
                         </button>

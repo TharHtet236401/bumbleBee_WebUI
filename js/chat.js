@@ -5,6 +5,7 @@ let token;
 var currentUser;
 let socket;
 let currentRecipientId;
+let selectedImages = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
     const { statusCode, resData } = await checkCookie(cookieCheckApi);
@@ -33,13 +34,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         e.preventDefault();
         
         const message = messageInput.value.trim();
-        if (!message || !currentRecipientId) return;
+        if ((!message && selectedImages.length === 0) || !currentRecipientId) return;
 
         // Send the message
         await sendMessage(message);
         
         // Clear input
         messageInput.value = '';
+    });
+
+    // Add image input handler
+    const imageInput = document.getElementById('imageInput');
+    const imagePreviewContainer = document.querySelector('.image_preview_container');
+    
+    imageInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                selectedImages.push(file);
+                displayImagePreview(file);
+            }
+        });
+        if (selectedImages.length > 0) {
+            document.querySelector('.message_input_wrapper').classList.add('has_images');
+        }
     });
 })
 
@@ -81,12 +99,18 @@ function initializeSocket(token) {
             // Add 'me' class for right alignment for received messages
             messageElement.className = 'chat_message me';
 
+            // Create HTML for images if present
+            const imagesHTML = message.image && message.image.length > 0 ? 
+                message.image.map(img => `<img src="${img}" alt="Sent image" style="max-width: 200px; border-radius: 8px; margin: 4px 0;">`).join('') 
+                : '';
+
             messageElement.innerHTML = `
                 <div class="chat_message_profile">
                     <img src="${message.senderId.profilePicture}" alt="${message.senderId.userName}" />
                 </div>
                 <div class="chat_message_content">
-                    <p>${message.message}</p>
+                    ${message.message ? `<p>${message.message}</p>` : ''}
+                    ${imagesHTML}
                     <span class="chat_message_time">${new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
             `;
@@ -257,12 +281,18 @@ function displayMessages(messages, participantId) {
         // Check if the sender is the current user
         messageElement.className = `chat_message ${message.senderId._id === currentUser ? '' : 'me'}`;
 
+        // Create HTML for images if present
+        const imagesHTML = message.image && message.image.length > 0 ? 
+            message.image.map(img => `<img src="${img}" alt="Sent image" style="max-width: 200px; border-radius: 8px; margin: 4px 0;">`).join('') 
+            : '';
+
         messageElement.innerHTML = `
             <div class="chat_message_profile">
                 <img src="${message.senderId.profilePicture}" alt="${message.senderId.userName}" />
             </div>
             <div class="chat_message_content">
-                <p>${message.message}</p>
+                ${message.message ? `<p>${message.message}</p>` : ''}
+                ${imagesHTML}
                 <span class="chat_message_time">${new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
         `;
@@ -290,17 +320,26 @@ function scrollToLatestMessage() {
 // Add new function to handle message sending
 async function sendMessage(message) {
     const submitButton = document.querySelector('.submit_button');
-    submitButton.disabled = true; // Disable button while sending
+    submitButton.disabled = true;
     
     try {
+        const formData = new FormData();
+        if (message) {
+            formData.append('message', message);
+        }
+        
+        // Append each selected image to the FormData
+        selectedImages.forEach(image => {
+            formData.append('images', image);
+        });
+
         const api = `${mainApi}/api/message/send/${currentRecipientId}`;
         const res = await fetch(api, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify({ message })
+            body: formData
         });
         
         const data = await res.json();
@@ -308,28 +347,68 @@ async function sendMessage(message) {
             // Create and display the sent message immediately
             const messagesContainer = document.querySelector('.chat_messages_container');
             const messageElement = document.createElement('div');
-            
-            // Remove 'me' class since it's from current user (should appear on left)
             messageElement.className = 'chat_message';
+
+            // Create HTML for images if present
+            const imagesHTML = data.result.image && data.result.image.length > 0 ? 
+                data.result.image.map(img => `<img src="${img}" alt="Sent image" style="max-width: 200px; border-radius: 8px; margin: 4px 0;">`).join('') 
+                : '';
 
             messageElement.innerHTML = `
                 <div class="chat_message_profile">
                     <img src="${data.result.senderId.profilePicture}" alt="${data.result.senderId.userName}" />
                 </div>
                 <div class="chat_message_content">
-                    <p>${message}</p>
+                    ${message ? `<p>${message}</p>` : ''}
+                    ${imagesHTML}
                     <span class="chat_message_time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
             `;
 
             messagesContainer.appendChild(messageElement);
             scrollToLatestMessage();
+
+            // Clear the selected images and preview
+            selectedImages = [];
+            document.querySelector('.image_preview_container').innerHTML = '';
+            document.querySelector('.message_input_wrapper').classList.remove('has_images');
         } else {
             console.error('Failed to send message:', data);
         }
     } catch (error) {
         console.error('Error sending message:', error);
     } finally {
-        submitButton.disabled = false; // Re-enable button
+        submitButton.disabled = false;
+    }
+}
+
+function displayImagePreview(file) {
+    const previewContainer = document.querySelector('.image_preview_container');
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+        const previewWrapper = document.createElement('div');
+        previewWrapper.className = 'image_preview';
+        
+        previewWrapper.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <button class="remove_image" onclick="removeImage(this, '${file.name}')">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        previewContainer.appendChild(previewWrapper);
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function removeImage(button, fileName) {
+    const previewElement = button.parentElement;
+    selectedImages = selectedImages.filter(file => file.name !== fileName);
+    previewElement.remove();
+    
+    if (selectedImages.length === 0) {
+        document.querySelector('.message_input_wrapper').classList.remove('has_images');
     }
 }
