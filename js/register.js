@@ -41,6 +41,35 @@ rolesEl.addEventListener("change", (e) => {
     }
 });
 
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    const messageElement = notification.querySelector('.notification-message');
+    
+    // Set the message
+    messageElement.textContent = message;
+    
+    // Set color based on type
+    if (type === 'success') {
+        notification.style.backgroundColor = '#4CAF50';
+    } else if (type === 'error') {
+        notification.style.backgroundColor = '#f44336';
+    }
+    
+    // Show notification
+    notification.classList.add('show');
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        // Redirect after notification starts to fade
+        if (type === 'success') {
+            setTimeout(() => {
+                window.location.href = `${mainWebsite}/signIn.html`;
+            }, 300);
+        }
+    }, 2000);
+}
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let data;
@@ -53,7 +82,7 @@ form.addEventListener("submit", async (e) => {
     const roles = e.target.roles.value;
 
     if (!isPasswordSame(password, confirmedPassword)) {
-        alert("Password and Confirm Password must be same");
+        showNotification("Password and Confirm Password must be same", 'error');
         return;
     }
 
@@ -116,9 +145,7 @@ form.addEventListener("submit", async (e) => {
         
         if (registerRes.status === 200) {
             const registerData = await registerRes.json();
-            console.log(registerData);
             const token = registerData.result.token;
-            console.log(token);
             const schoolRes = await fetch(
                 createSchoolApi,
                 {
@@ -130,15 +157,13 @@ form.addEventListener("submit", async (e) => {
                     body: JSON.stringify(schoolData)
                 }
             )
-            console.log(schoolRes)
             if (schoolRes.status === 200) {
-                alert("Register successful");
-                window.location.href = `${mainWebsite}/signIn.html`
+                showNotification("Register successful");
                 return;
             }
         } else {
-            alert("Register failed! Check console for more information");
-            return
+            showNotification("Register failed! Check console for more information", 'error');
+            return;
         }
     }
 
@@ -157,11 +182,9 @@ form.addEventListener("submit", async (e) => {
     const resData = await res.json();
     
     if (res.status === 200) {
-        alert("Register successful");
-        window.location.href = `${mainWebsite}/signIn.html`;
+        showNotification("Register successful");
     } else if (res.status === 401) {
-        alert(resData.msg);
-        console.log(resData);
+        showNotification(resData.msg, 'error');
     }
 });
 

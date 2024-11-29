@@ -35,6 +35,34 @@ go_to_signUp.addEventListener("click", () => {
     window.location.href = `${mainWebsite}/signUp.html`;
 })
 
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    const messageElement = notification.querySelector('.notification-message');
+    
+    // Set the message
+    messageElement.textContent = message;
+    
+    // Set color based on type
+    if (type === 'success') {
+        notification.style.backgroundColor = '#4CAF50';
+    } else if (type === 'error') {
+        notification.style.backgroundColor = '#f44336';
+    }
+    
+    // Show notification
+    notification.classList.add('show');
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        // Redirect after notification starts to fade
+        if (type === 'success') {
+            setTimeout(() => {
+                window.location.href = `${mainWebsite}/index.html`;
+            }, 300);
+        }
+    }, 2000);
+}
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -46,15 +74,12 @@ form.addEventListener("submit", async (e) => {
         password,
     };
 
-    console.log(data);
     const {statusCode, resData} = await signIn(loginApi, data);
 
     if (statusCode === 200) {
-        alert("Sign in successful");
-        window.location.href = `${mainWebsite}/index.html`;
+        showNotification('Sign in successful');
     } else {
-        alert(resData.msg);
-        console.log(resData)
+        showNotification(resData.msg, 'error');
     }
 });
 
