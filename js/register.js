@@ -3,7 +3,23 @@ const form = document.querySelector("form");
 const rolesEl = document.getElementById("roles");
 const relationship_wrapper = document.getElementById("relationship_wrapper")
 const school_register_form = document.getElementById("school_register_form");
+const passwordToggles = document.querySelectorAll('.toggle_password');
 
+passwordToggles.forEach(toggle => {
+    toggle.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const passwordInput = document.getElementById(targetId);
+        
+        // Toggle password visibility
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            this.src = '../assets/images/eye.svg';
+        } else {
+            passwordInput.type = 'password';
+            this.src = '../assets/images/eye-off.svg';
+        }
+    });
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     form.reset();

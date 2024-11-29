@@ -80,7 +80,8 @@ form h1 {
     color: #DFDDFF;
     font-size: 2.5em;
     font-weight: bold;
-    margin-bottom: 1.25em;
+    margin-bottom: 0.75em;
+    text-align: center;
 }
 
 form h3{
@@ -100,6 +101,8 @@ form h3{
 
 .logo {
     display: none;
+    margin-inline: auto;
+    margin-bottom: 0.75em;
 }
 
 @media all and (max-width: 875px) {
@@ -127,7 +130,7 @@ form h3{
 
 
 .form_input_wrapper + .form_input_wrapper  {
-    margin-top: 1em;
+    margin-top: 0.75em;
 }
 
 
@@ -178,4 +181,59 @@ button:hover {
 
 .school_register_form {
     display: none;
+}
+
+.password_input_container {
+    position: relative;
+    width: 100%;
+}
+
+.password_input_container input {
+    width: 100%;
+}
+
+.toggle_password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    color: #6C757D;
+}
+
+.toggle_password:hover {
+    color: #495057;
+}
+
+#go_to_signIn {
+    color: #DFDDFF;
+    font-size: 1em;
+    text-align: center;
+    margin-bottom: 1em;
+    text-decoration: none;
+    position: relative;
+    width: fit-content;
+    margin-inline: auto;
+    padding-bottom: 2px;
+    cursor: pointer;
+}
+
+#go_to_signIn::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background-color: #DFDDFF;
+    bottom: 0;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+#go_to_signIn:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
 }
