@@ -59,6 +59,32 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.querySelector('.message_input_wrapper').classList.add('has_images');
         }
     });
+
+    // Add search input handler
+    const searchInput = document.querySelector('.search_input');
+    let debounceTimeout;
+
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimeout);
+        const searchTerm = e.target.value.trim();
+        
+        if (searchTerm.length === 0) {
+            clearSearchResults();
+            return;
+        }
+
+        // Debounce the search to avoid too many API calls
+        debounceTimeout = setTimeout(() => {
+            searchUsers(searchTerm);
+        }, 300);
+    });
+
+    // Close search results when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search_section')) {
+            clearSearchResults();
+        }
+    });
 })
 
 // Add new function to initialize socket
@@ -450,4 +476,71 @@ function removeImage(button, fileName) {
     if (selectedImages.length === 0) {
         document.querySelector('.message_input_wrapper').classList.remove('has_images');
     }
+}
+
+async function searchUsers(searchTerm) {
+    try {
+        const api = `${mainApi}/api/user/search?userName=${encodeURIComponent(searchTerm)}`;
+        const res = await fetch(api, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        const data = await res.json();
+        
+        if (data.con) {
+            displaySearchResults(data.result);
+        } else {
+            console.error('Failed to search users:', data.msg);
+        }
+    } catch (error) {
+        console.error('Error searching users:', error);
+    }
+}
+
+function displaySearchResults(users) {
+    const resultsWrapper = document.querySelector('.search_results_wrapper');
+    
+    if (!users || users.length === 0) {
+        resultsWrapper.innerHTML = '<p class="no_results">No users found</p>';
+        return;
+    }
+
+    resultsWrapper.innerHTML = users.map(user => `
+        <div class="search_result" data-user-id="${user._id}">
+            <div class="search_result_img">
+                <img src="${user.profilePicture}" alt="${user.userName}" />
+            </div>
+            <div class="search_result_info">
+                <h3 class="search_result_name">${user.userName}</h3>
+            </div>
+        </div>
+    `).join('');
+
+    // Add click handlers to search results
+    resultsWrapper.querySelectorAll('.search_result').forEach(result => {
+        result.addEventListener('click', () => {
+            const userId = result.dataset.userId;
+            const userName = result.querySelector('.search_result_name').textContent;
+            const profilePicture = result.querySelector('img').src;
+            
+            // Create a participant object that matches the structure expected by openChat
+            const participant = {
+                _id: userId,
+                userName: userName,
+                profilePicture: profilePicture
+            };
+            
+            openChat(participant);
+            clearSearchResults();
+        });
+    });
+}
+
+function clearSearchResults() {
+    const resultsWrapper = document.querySelector('.search_results_wrapper');
+    resultsWrapper.innerHTML = '';
+    document.querySelector('.search_input').value = '';
 }
