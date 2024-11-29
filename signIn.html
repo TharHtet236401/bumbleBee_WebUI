@@ -121,7 +121,7 @@
                     </defs>
                     </svg>
                     <div class="form_input_wrapper">
-                        <label id="go_to_signUp"  style="cursor: pointer; text-decoration: underline">Go to sign up page</label>
+                        <label id="go_to_signUp">Go to sign up page</label>
                     </div>
                 <div class="form_input_wrapper username_wrapper">
                     <label for="email">Email</label>
@@ -129,7 +129,10 @@
                 </div>
                 <div class="form_input_wrapper password_wrapper">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password">
+                    <div class="password_input_container">
+                        <input type="password" id="password" name="password">
+                        <img src="../assets/images/eye-off.svg" alt="toggle password" class="toggle_password" data-target="password">
+                    </div>
                 </div>
 
                 <button type="submit">Login</button>

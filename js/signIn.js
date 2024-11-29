@@ -2,6 +2,23 @@ import { checkCookie } from "../utils/cookies.js";
 import {mainWebsite, cookieCheckApi, loginApi} from "./endpoints.js";
 
 const form = document.querySelector("form");
+const passwordToggles = document.querySelectorAll('.toggle_password');
+
+passwordToggles.forEach(toggle => {
+    toggle.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const passwordInput = document.getElementById(targetId);
+        
+        // Toggle password visibility
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            this.src = '../assets/images/eye.svg';
+        } else {
+            passwordInput.type = 'password';
+            this.src = '../assets/images/eye-off.svg';
+        }
+    });
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
     form.reset();
