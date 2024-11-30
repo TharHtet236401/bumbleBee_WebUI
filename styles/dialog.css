@@ -171,14 +171,37 @@ form {
     margin-bottom: 0.35em;
 }
 
-.input_box_wrapper input, select {
+.input_box_wrapper input, 
+.input_box_wrapper select {
     width: 350px;
     height: 30px;
     outline: none;
     border-radius: 5px;
     border: none;
-    text-indent: 1em;
+    text-indent: 0;
     background-color: #d7d7d7;
+    color: #000000;
+    font-size: 14px;
+    text-align: center;
+}
+
+.input_box_wrapper input[type="date"] {
+    padding: 0 10px;
+    color: #000000;
+    text-align: center;
+}
+
+.input_box_wrapper select {
+    padding: 0 10px;
+    -moz-text-align-last: center;
+    text-align-last: center;
+}
+
+.input_box_wrapper select option {
+    background-color: #d7d7d7;
+    color: #000000;
+    padding: 5px;
+    text-align: center;
 }
 
 button {
@@ -243,5 +266,38 @@ button:hover {
 .custom-file-label:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.input_box_wrapper input::placeholder,
+.input_box_wrapper select option[disabled],
+.input_box_wrapper select:disabled {
+    color: #666666;
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* Style for disabled/placeholder options in select */
+.input_box_wrapper select option:first-child,
+.input_box_wrapper select[disabled] {
+    color: #666666;
+    font-style: italic;
+}
+
+/* Style for the actual select element when showing placeholder text */
+.input_box_wrapper select:required:invalid {
+    color: #666666;
+    font-style: italic;
+}
+
+/* Style for enabled options */
+.input_box_wrapper select option:not(:first-child) {
+    color: #000000;
+    font-style: normal;
+}
+
+/* Style for disabled input fields */
+.input_box_wrapper input:disabled,
+.input_box_wrapper select:disabled {
+    background-color: #e8e8e8;
 }
 
